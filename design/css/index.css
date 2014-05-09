@@ -7,3 +7,119 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
 }
+body {
+  margin: 0;
+  line-height: 1.4;
+  font-size: 20px;
+  color: #444;
+}
+h1 {
+  font-weight: 100;
+  text-transform: uppercase;
+}
+.gr {
+  font-size: 0;
+}
+[class^="grc-"] {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: top;
+  overflow: hidden;
+  margin: 0;
+  font-size: 1rem;
+}
+.grc-2 {
+  width: 50%;
+}
+.grc-3 {
+  width: 33.33333%;
+}
+.grc-4 {
+  width: 25%;
+}
+.logo {
+  min-height: 20rem;
+  background: center center url("../../assets/head.svg") no-repeat;
+  background-cover: contain;
+}
+.tags {
+  padding: 1rem;
+  list-style: none;
+  font-size: 0;
+  text-align: center;
+}
+.tags li {
+  overflow: hidden;
+  font-size: 1rem;
+  display: inline-block;
+  white-space: nowrap;
+  padding: 1rem;
+  color: #eee;
+}
+.tags li:first-child {
+  background: #2ecc71;
+}
+.tags li:nth-child(2) {
+  background: #27ae60;
+}
+.tags li:nth-child(3) {
+  background: #3498db;
+}
+.tags li:nth-child(4) {
+  background: #2980b9;
+}
+.tags li:nth-child(5) {
+  background: #f39c12;
+}
+.tags li:nth-child(6) {
+  background: #e74c3c;
+}
+.tags li:nth-child(7) {
+  background: #9b59b6;
+}
+.tags li.last {
+  display: block;
+  color: #2980b9;
+}
+.heading {
+  background: #2980b9;
+  padding: 3rem;
+  margin: 0 0 2rem;
+  text-align: center;
+  color: rgba(255,255,255,0.6);
+}
+.heading h1 {
+  color: #eee;
+}
+.edito {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 2rem 1rem;
+  max-width: 40rem;
+  margin: 1rem auto;
+}
+p:first-child {
+  margin-top: 0;
+}
+p:last-child {
+  margin-bottom: 0;
+}
+.loader {
+  background: center center url("../../assets/loader.gif") no-repeat;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  background-size: contain;
+  height: 6rem;
+}
+.c_river {
+  background: #3498db;
+  color: rgba(255,255,255,0.65);
+}
+@media screen and (max-width: 599px) {
+  .grc-2 {
+    width: 100%;
+  }
+}

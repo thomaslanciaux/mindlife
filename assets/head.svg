@@ -7,41 +7,11 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.1"
    width="100%"
    height="100%"
    viewBox="0 0 861.841 1014.438"
-   id="svg2"
-   inkscape:version="0.48.2 r9819"
-   sodipodi:docname="head.svg">
-  <sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1142"
-     inkscape:window-height="688"
-     id="namedview13"
-     showgrid="false"
-     showguides="true"
-     inkscape:guide-bbox="true"
-     inkscape:zoom="0.36417996"
-     inkscape:cx="532.33326"
-     inkscape:cy="606.20808"
-     inkscape:window-x="183"
-     inkscape:window-y="276"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg2"
-     fit-margin-top="30"
-     fit-margin-left="30"
-     fit-margin-right="30"
-     fit-margin-bottom="30" />
+   id="svg2">
   <metadata
      id="metadata24">
     <rdf:RDF>
@@ -57,39 +27,30 @@
   <defs
      id="defs22" />
   <g
-     id="g4"
-     transform="translate(-2.771,10)">
+     transform="translate(-2.771,10)"
+     id="g4">
     <g
        id="g6">
       <path
          d="m 173.207,471.536 h 64.991 C 310.22,465.534 344.784,215.719 409.664,204.657 l -67.757,-0.528 C 274.676,214.3 239.472,459.745 173.206,471.537 z"
          id="path8"
-         style="fill:#f39c12;fill-opacity:1"
-         inkscape:connector-curvature="0" />
+         style="fill:#f39c12;fill-opacity:1" />
       <path
          d="m 391.86522,246.48505 c 21.598,40.351 34.14673,75.02852 52.02573,117.00852 9.207,-23.929 9.50108,-24.80455 35.53708,-81.40055 C 468.51503,253.80802 461.016,235.19 450.44,229.111 c -23.13028,-15.90674 -38.95029,-5.71423 -58.57478,17.37405 z m 96.20373,58.69081 c -16.33379,40.97646 -24.52009,56.19438 -34.68284,83.27648 24.62305,49.71716 35.74646,83.31214 62.39189,83.46473 l 72.95105,0 c -34.63252,0.096 -99.31097,-170.78948 -100.6601,-166.74121 z"
          id="path10"
-         style="fill:#e74c3f;fill-opacity:0.94117647"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="cccccccccc" />
+         style="fill:#e74c3f;fill-opacity:0.94117647" />
       <path
          d="m 527.691,243.775 c 19.06,-19.11 40.66232,-28.82043 58.667,-13.689 58.505,79.068 68.964,227.153 141.779,242.49 l -72.356,0 C 594.038,455.933 576.055,322.834 527.691,243.775 z"
          id="path12"
-         style="fill:#2980bf;fill-opacity:0.94117647"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="ccccc" />
+         style="fill:#2980bf;fill-opacity:0.94117647" />
       <path
          d="M 302.28089,472.11811 379.068,471.91707 C 445.44095,424.26524 463.98,241.273 548.234,204.373 l -69.386,0 C 400.57,236.885 367.71109,431.51272 302.28089,471.91707 z"
          id="path14"
-         style="fill:#27ae6f;fill-opacity:1"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="cccccc" />
+         style="fill:#27ae6f;fill-opacity:1" />
     </g>
     <path
        d="M 439.415,20 C 278.733,20 173.09,84.678 111.311,204.907 75.85,262.011 54.709,332.97393 32.771,571.68293 L 97.622,597.472 c 13.47782,220.19904 47.15121,235.61089 194.891,232.3 l 1.937,144.666 350.437,-4.918 0,-309.601 C 758.656,599.332 834.612,489.95 834.612,365.073 834.612,174.478 657.676,20.001 439.413,20.001 z m 10.88,42.923 c 163.953,0 296.883,133.848 296.883,298.97 0,165.122 -132.93,298.97 -296.883,298.97 -163.953,0 -296.883,-133.848 -296.883,-298.97 0,-165.122 132.93,-298.97 296.883,-298.97 z"
        id="path16"
-       style="color:#000000;fill:#dcdcdc;overflow:visible;enable-background:accumulate;fill-opacity:1"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccccccsccsssss" />
+       style="color:#000000;fill:#d6d6d6;fill-opacity:1;overflow:visible;enable-background:accumulate" />
   </g>
 </svg>

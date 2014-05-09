@@ -7,6 +7,7 @@ c_green = rgb(39, 174, 96)
 c_orange = rgb(243, 156, 18)
 c_blue = rgb(41, 128, 185)
 c_grey = rgb(236, 240, 241)
+c_purple = rgb(155, 89, 182)
 
 body
   margin 0
@@ -16,6 +17,7 @@ body
 
 h1
   font-weight 100
+  text-transform uppercase
 
 .gr
   font-size 0
@@ -44,6 +46,7 @@ h1
   padding 1rem
   list-style none
   font-size 0
+  text-align center
   li
     overflow hidden
     font-size 1rem
@@ -64,15 +67,39 @@ h1
     &:nth-child(6)
       background c_red
     &:nth-child(7)
-      background c_grey
-      color rgba(black, .6)
+      background c_purple
+    &.last
+      display block
+      color c_belize
 
 .heading
   background c_belize
   padding 3rem
   margin 0 0 2rem
   text-align center
-  color rgba(black, .4)
+  color rgba(white, .6)
+  h1
+    color #eee
+
+.edito
+  box-sizing border-box
+  padding 2rem 1rem
+  max-width 40rem
+  margin 1rem auto
+
+p:first-child
+  margin-top 0
+p:last-child
+  margin-bottom 0
+
+.loader
+  background center center url('../../assets/loader.gif') no-repeat
+  background-size contain
+  height 6rem
+
+.c_river
+  background c_river
+  color rgba(white, .65)
 
 @media screen and (max-width: 599px)
   .grc-2

@@ -6,6 +6,7 @@ body {
 }
 h1 {
   font-weight: 100;
+  text-transform: uppercase;
 }
 .gr {
   font-size: 0;
@@ -36,6 +37,7 @@ h1 {
   padding: 1rem;
   list-style: none;
   font-size: 0;
+  text-align: center;
 }
 .tags li {
   overflow: hidden;
@@ -64,8 +66,11 @@ h1 {
   background: #e74c3c;
 }
 .tags li:nth-child(7) {
-  background: #ecf0f1;
-  color: rgba(0,0,0,0.6);
+  background: #9b59b6;
+}
+.tags li.last {
+  display: block;
+  color: #2980b9;
 }
 .heading {
   background: #2980b9;
@@ -73,6 +78,30 @@ h1 {
   margin: 0 0 2rem;
   text-align: center;
   color: rgba(0,0,0,0.4);
+}
+.heading h1 {
+  color: #eee;
+}
+.edito {
+  box-sizing: border-box;
+  padding: 2rem 1rem;
+  max-width: 40rem;
+  margin: 1rem auto;
+}
+p:first-child {
+  margin-top: 0;
+}
+p:last-child {
+  margin-bottom: 0;
+}
+.loader {
+  background: center center url("../../assets/loader.gif") no-repeat;
+  background-size: contain;
+  height: 6rem;
+}
+.c_river {
+  background: #3498db;
+  color: rgba(0,0,0,0.5);
 }
 @media screen and (max-width: 599px) {
   .grc-2 {
