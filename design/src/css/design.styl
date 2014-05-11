@@ -11,12 +11,13 @@ c_purple = rgb(155, 89, 182)
 
 body
   margin 0
+  min-width 320px
   line-height 1.4
   font-size 20px
   color #444
 
 h1
-  font-weight 100
+  font-weight 200
   text-transform uppercase
 
 .gr
@@ -25,7 +26,7 @@ h1
 [class^="grc-"]
   box-sizing border-box
   display inline-block
-  vertical-align top
+  vertical-align middle
   overflow hidden
   margin 0
   font-size 1rem
@@ -43,7 +44,7 @@ h1
   background-cover contain
 
 .tags
-  padding 1rem
+  padding 2rem
   list-style none
   font-size 0
   text-align center
@@ -75,17 +76,36 @@ h1
 .heading
   background c_belize
   padding 3rem
-  margin 0 0 2rem
   text-align center
   color rgba(white, .6)
   h1
     color #eee
 
 .edito
+  overflow hidden
   box-sizing border-box
   padding 2rem 1rem
   max-width 40rem
-  margin 1rem auto
+  margin 0 auto
+
+.icons
+  text-align center
+
+[class^="icon-"]
+  display inline-block
+  vertical-align middle
+  margin 0 1rem
+  width 96px
+  height 96px
+  background-position center center
+  background-size contain
+  background-repeat no-repeat
+
+.icon-heart
+  background-image url('../../assets/icon-heart.svg')
+
+.icon-network
+  background-image url('../../assets/icon-network.svg')
 
 p:first-child
   margin-top 0
@@ -100,6 +120,20 @@ p:last-child
 .c_river
   background c_river
   color rgba(white, .65)
+
+.snap-container
+  position relative
+  padding-bottom 56.25%
+  height 0
+  m
+
+#snap
+  position absolute
+  top 0
+  left 0
+  right 0
+  bottom 0
+  min-width 320px
 
 @media screen and (max-width: 599px)
   .grc-2
