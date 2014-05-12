@@ -122,6 +122,12 @@ h1 {
 .icon-network {
   background-image: url("../../assets/icon-network.svg");
 }
+.icon-graph {
+  background-image: url("../../assets/icon-graph.svg");
+}
+.icon-human {
+  background-image: url("../../assets/icon-human.svg");
+}
 p:first-child {
   margin-top: 0;
 }
