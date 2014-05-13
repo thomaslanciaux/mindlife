@@ -53,7 +53,7 @@ var svg = document.querySelector('#snap');
 window.onscroll = function() {
   var pos = svg.parentElement.offsetTop;
   var scrollPos = document.body.scrollTop;
-  var ratio = window.innerHeight/4;
+  var ratio = window.innerHeight/3;
   if (scrollPos < pos - ratio || drawn) return;
   draw();
 }
