@@ -1,0 +1,4 @@
+nav.navbar
+  ul
+    li(ng-repeat='item in nav', ng-class='navClass(item.path)')
+      a(ng-href='#{{item.path}}', ng-bind='item.label')

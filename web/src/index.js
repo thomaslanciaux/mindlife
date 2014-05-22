@@ -1,7 +1,6 @@
 require('./vendors/angular');
 var env = require('./framework/env');
 var nav = require('./framework/navigation');
-var REST_URL = '//192.168.0.13/AppWebRest';
 
 var app = angular.module('ML', [
   'ngRoute', 'ngSanitize', 'ngCookies', 'ngTouch', 'ngAnimate',
@@ -38,4 +37,16 @@ app.run(function($rootScope, $http) {
     $rootScope.nav = res;
   });
 
+  // Active state of nav on route changes
+  $rootScope.$on('$routeChangeSuccess', function(next, current) {
+    $rootScope.activeNav = current.params.page;
+  });
+
+  // Active class on current route
+  $rootScope.navClass = function(path) {
+    var path = path.split('/').pop();
+    return (path === $rootScope.activeNav)? 'active' : '';
+  }
+
 });
+

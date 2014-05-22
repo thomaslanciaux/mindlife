@@ -126,63 +126,63 @@ function NavCtrl($rootScope, $scope, $http,  $window, $location, $document) {
   $url = 'http://localhost';
   if($rootScope.lang_loop != $segment[1])
   {
-    $rootScope.lang = $segment[1];
-    $rootScope.activeNav = $segment[2];
-
-    $http({ method: 'GET', url: $url, cache: false}).
-      success(function(data, status) {
-        $rootScope.nav = data;
-
-        for(var j = 0; j < len; j++){
-            navigation.push({
-              "path": '/'+$segment[1]+'/'+$scope.nav[j].target, 
-              "label": $scope.nav[j].name,
-              "is_button": $scope.nav[j].is_button,
-              "icon_class": $scope.nav[j].icon_class,
-              "file_dir": $scope.nav[j].file_dir
-            });
-
-            if('/'+$segment[1]+'/'+$scope.nav[j].target == $location.path())
-            {
-              $rootScope.bannerFileDir = $rootScope.nav[j].file_dir;
-            }
-          }
-
-          if(AuthenticationService.isLoggedIn()) {
-            navigation.push({
-              "path": '/'+$segment[1]+'/dashboard', 
-              "label": 'Dashboard',
-              "is_button": 1,
-              "icon_class": "",
-              "file_dir": ""
-            });
-
-          }
-
-          if(!AuthenticationService.isLoggedIn()) {
-            
-            navigation.push({
-              "path": '/'+$segment[1]+'/signin', 
-              "label": 'Sign In',
-              "is_button": 1,
-              "icon_class": "",
-              "file_dir": ""
-            });
-          }
-
-          if($rootScope.bannerFileDir == null) {
-            //$rootScope.bannerFileDir = $rootScope.nav[0].file_dir;
-          }
-          
-          $rootScope.navigation = navigation;
-          
-          $rootScope.navClass = function(navPath){
-            var currentPath = $location.path();
-            return ( currentPath === navPath ) ? 'active' : ''
-          }
-
-      }).
-      error(function(data, status) { });
+    // $:rootScope.lang = $segment[1];
+    // $rootScope.activeNav = $segment[2];
+    //
+    // $http({ method: 'GET', url: $url, cache: false}).
+    //   success(function(data, status) {
+    //     $rootScope.nav = data;
+    //
+    //     for(var j = 0; j < len; j++){
+    //         navigation.push({
+    //           "path": '/'+$segment[1]+'/'+$scope.nav[j].target, 
+    //           "label": $scope.nav[j].name,
+    //           "is_button": $scope.nav[j].is_button,
+    //           "icon_class": $scope.nav[j].icon_class,
+    //           "file_dir": $scope.nav[j].file_dir
+    //         });
+    //
+    //         if('/'+$segment[1]+'/'+$scope.nav[j].target == $location.path())
+    //         {
+    //           $rootScope.bannerFileDir = $rootScope.nav[j].file_dir;
+    //         }
+    //       }
+    //
+    //       if(AuthenticationService.isLoggedIn()) {
+    //         navigation.push({
+    //           "path": '/'+$segment[1]+'/dashboard', 
+    //           "label": 'Dashboard',
+    //           "is_button": 1,
+    //           "icon_class": "",
+    //           "file_dir": ""
+    //         });
+    //
+    //       }
+    //
+    //       if(!AuthenticationService.isLoggedIn()) {
+    //         
+    //         navigation.push({
+    //           "path": '/'+$segment[1]+'/signin', 
+    //           "label": 'Sign In',
+    //           "is_button": 1,
+    //           "icon_class": "",
+    //           "file_dir": ""
+    //         });
+    //       }
+    //
+    //       if($rootScope.bannerFileDir == null) {
+    //         //$rootScope.bannerFileDir = $rootScope.nav[0].file_dir;
+    //       }
+    //       
+    //       $rootScope.navigation = navigation;
+    //       
+    //       $rootScope.navClass = function(navPath){
+    //         var currentPath = $location.path();
+    //         return ( currentPath === navPath ) ? 'active' : ''
+    //       }
+    //
+    //   }).
+    //   error(function(data, status) { });
   }
 
   if($segment[3] !== null && $segment[2] == 'search') {

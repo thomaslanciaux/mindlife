@@ -127,10 +127,13 @@ function getNav($http, cb) {
 
 function formatNav(raw) {
   var nav = [];
-  console.log(raw)
   for (var i = 0; i < raw.length; i++) {
     nav.push({
-      path: '/' + env.getLang() + '/' + raw[i].target
+      label: raw[i].name,
+      path: '/' + env.getLang() + '/' + raw[i].target,
+      is_button: raw[i].is_button,
+      icon_class: raw[i].icon_class,
+      file_dir: raw[i].file_dir
     });
   }
   return nav;
@@ -149,65 +152,63 @@ function NavCtrl($rootScope, $scope, $http,  $window, $location, $document) {
   $url = 'http://localhost';
   if($rootScope.lang_loop != $segment[1])
   {
-    $rootScope.lang = $segment[1];
-    $rootScope.activeNav = $segment[2];
-
-    $http({ method: 'GET', url: $url, cache: false}).
-      success(function(data, status) {
-        $rootScope.nav = data;
-        var len=$rootScope.nav.length;
-        var navigation = [];
-
-        for(var j = 0; j < len; j++){
-            navigation.push({
-              "path": '/'+$segment[1]+'/'+$scope.nav[j].target, 
-              "label": $scope.nav[j].name,
-              "is_button": $scope.nav[j].is_button,
-              "icon_class": $scope.nav[j].icon_class,
-              "file_dir": $scope.nav[j].file_dir
-            });
-
-            if('/'+$segment[1]+'/'+$scope.nav[j].target == $location.path())
-            {
-              $rootScope.bannerFileDir = $rootScope.nav[j].file_dir;
-            }
-          }
-
-          if(AuthenticationService.isLoggedIn()) {
-            navigation.push({
-              "path": '/'+$segment[1]+'/dashboard', 
-              "label": 'Dashboard',
-              "is_button": 1,
-              "icon_class": "",
-              "file_dir": ""
-            });
-
-          }
-
-          if(!AuthenticationService.isLoggedIn()) {
-            
-            navigation.push({
-              "path": '/'+$segment[1]+'/signin', 
-              "label": 'Sign In',
-              "is_button": 1,
-              "icon_class": "",
-              "file_dir": ""
-            });
-          }
-
-          if($rootScope.bannerFileDir == null) {
-            //$rootScope.bannerFileDir = $rootScope.nav[0].file_dir;
-          }
-          
-          $rootScope.navigation = navigation;
-          
-          $rootScope.navClass = function(navPath){
-            var currentPath = $location.path();
-            return ( currentPath === navPath ) ? 'active' : ''
-          }
-
-      }).
-      error(function(data, status) { });
+    // $:rootScope.lang = $segment[1];
+    // $rootScope.activeNav = $segment[2];
+    //
+    // $http({ method: 'GET', url: $url, cache: false}).
+    //   success(function(data, status) {
+    //     $rootScope.nav = data;
+    //
+    //     for(var j = 0; j < len; j++){
+    //         navigation.push({
+    //           "path": '/'+$segment[1]+'/'+$scope.nav[j].target, 
+    //           "label": $scope.nav[j].name,
+    //           "is_button": $scope.nav[j].is_button,
+    //           "icon_class": $scope.nav[j].icon_class,
+    //           "file_dir": $scope.nav[j].file_dir
+    //         });
+    //
+    //         if('/'+$segment[1]+'/'+$scope.nav[j].target == $location.path())
+    //         {
+    //           $rootScope.bannerFileDir = $rootScope.nav[j].file_dir;
+    //         }
+    //       }
+    //
+    //       if(AuthenticationService.isLoggedIn()) {
+    //         navigation.push({
+    //           "path": '/'+$segment[1]+'/dashboard', 
+    //           "label": 'Dashboard',
+    //           "is_button": 1,
+    //           "icon_class": "",
+    //           "file_dir": ""
+    //         });
+    //
+    //       }
+    //
+    //       if(!AuthenticationService.isLoggedIn()) {
+    //         
+    //         navigation.push({
+    //           "path": '/'+$segment[1]+'/signin', 
+    //           "label": 'Sign In',
+    //           "is_button": 1,
+    //           "icon_class": "",
+    //           "file_dir": ""
+    //         });
+    //       }
+    //
+    //       if($rootScope.bannerFileDir == null) {
+    //         //$rootScope.bannerFileDir = $rootScope.nav[0].file_dir;
+    //       }
+    //       
+    //       $rootScope.navigation = navigation;
+    //       
+    //       $rootScope.navClass = function(navPath){
+    //         var currentPath = $location.path();
+    //         return ( currentPath === navPath ) ? 'active' : ''
+    //       }
+    //
+    //   }).
+    //   error(function(data, status) { });
   }
 
   if($segment[3] !== null && $segment[2] == 'search') {
@@ -942,7 +943,6 @@ module.exports = {
 require('./vendors/angular');
 var env = require('./framework/env');
 var nav = require('./framework/navigation');
-var REST_URL = '//192.168.0.13/AppWebRest';
 
 var app = angular.module('ML', [
   'ngRoute', 'ngSanitize', 'ngCookies', 'ngTouch', 'ngAnimate',
@@ -977,10 +977,21 @@ app.run(function($rootScope, $http) {
   // Get nav
   nav.getNav($http, function(err, res) {
     $rootScope.nav = res;
-    console.log($rootScope.nav);
   });
 
+  // Active state of nav on route changes
+  $rootScope.$on('$routeChangeSuccess', function(next, current) {
+    $rootScope.activeNav = current.params.page;
+  });
+
+  // Active class on current route
+  $rootScope.navClass = function(path) {
+    var path = path.split('/').pop();
+    return (path === $rootScope.activeNav)? 'active' : '';
+  }
+
 });
+
 
 },{"./framework/env":1,"./framework/navigation":2,"./vendors/angular":14}],7:[function(require,module,exports){
 /**
