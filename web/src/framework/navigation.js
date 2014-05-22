@@ -87,7 +87,6 @@ var FormImageUploadController = [ '$scope', '$http', '$routeParams', function($s
   }
 }];
 
-var AuthenticationService = require('./services/authentication').initService();
 var env = require('./env');
 
 function getNav($http, cb) {

@@ -113,7 +113,6 @@ var FormImageUploadController = [ '$scope', '$http', '$routeParams', function($s
   }
 }];
 
-var AuthenticationService = require('./services/authentication').initService();
 var env = require('./env');
 
 function getNav($http, cb) {
@@ -842,7 +841,7 @@ module.exports = {
   NavCtrl: NavCtrl
 };
 
-},{"./env":1,"./services/authentication":3}],3:[function(require,module,exports){
+},{"./env":1}],3:[function(require,module,exports){
 var SessionService = require('./session.js').initService();
 var FlashService = require('./flash.js');
 
@@ -941,8 +940,12 @@ module.exports = {
 
 },{}],6:[function(require,module,exports){
 require('./vendors/angular');
-var env = require('./framework/env');
-var nav = require('./framework/navigation');
+var env            = require('./framework/env');
+var nav            = require('./framework/navigation');
+var auth           = require('./framework/services/authentication');
+var SessionService = require('./framework/services/session').initService();
+
+console.log(SessionService);
 
 var app = angular.module('ML', [
   'ngRoute', 'ngSanitize', 'ngCookies', 'ngTouch', 'ngAnimate',
@@ -989,11 +992,11 @@ app.run(function($rootScope, $http) {
     var path = path.split('/').pop();
     return (path === $rootScope.activeNav)? 'active' : '';
   }
-
+  
 });
 
 
-},{"./framework/env":1,"./framework/navigation":2,"./vendors/angular":14}],7:[function(require,module,exports){
+},{"./framework/env":1,"./framework/navigation":2,"./framework/services/authentication":3,"./framework/services/session":5,"./vendors/angular":14}],7:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org

@@ -4,7 +4,7 @@ nav.navbar.navbar-default.navbar-fixed-top
   ul
     li(ng-repeat='item in nav', ng-class='navClass(item.path)')
       a(ng-href='#{{item.path}}', ng-bind='item.label')
-    li.last
+    li.search
       form.navbar-form.navbar-right
         .input-group
           input.form-control.input-sm(type='search', 

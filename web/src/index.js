@@ -1,6 +1,10 @@
 require('./vendors/angular');
-var env = require('./framework/env');
-var nav = require('./framework/navigation');
+var env            = require('./framework/env');
+var nav            = require('./framework/navigation');
+var auth           = require('./framework/services/authentication');
+var SessionService = require('./framework/services/session').initService();
+
+console.log(SessionService);
 
 var app = angular.module('ML', [
   'ngRoute', 'ngSanitize', 'ngCookies', 'ngTouch', 'ngAnimate',
@@ -47,6 +51,6 @@ app.run(function($rootScope, $http) {
     var path = path.split('/').pop();
     return (path === $rootScope.activeNav)? 'active' : '';
   }
-
+  
 });
 
