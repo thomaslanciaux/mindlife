@@ -36,8 +36,6 @@ app.controller('PagesCtl', pages.initCtl);
 app.run(function($rootScope, $http, $cookieStore, AuthenticationService,
                  $sce) {
 
-  $rootScope.pageTitle = 'Home';
-
   // Get Env vars
   env.getVars($http, function(err, res){ $rootScope.envVars = res; });
   $rootScope.lang = env.getLang();
