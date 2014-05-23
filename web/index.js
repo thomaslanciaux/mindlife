@@ -331,6 +331,7 @@ app.run(function($rootScope, $http, $cookieStore, AuthenticationService,
   $rootScope.$on('$routeChangeSuccess', function(e, current, prev) {
     var active = current.params.page || 'home';
     $rootScope.activeNav = active;
+    $rootScope.pageTitle = 'Home';
 
     // Go to top of the page
     document.body.scrollTop = 0;
