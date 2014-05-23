@@ -6,11 +6,12 @@ html(lang='en', ng-app='ML')
     link(rel='stylsheet', 
          href='http://fonts.googleapis.com/css?family=Lato:300,400,700')
     link(rel='stylesheet', href='index.css')
+
   body
-    .header
+    .header(style='border-bottom:2px solid #999')
       include mixins/header
     .content(ng-view)
-    .footer
+    .footer(style='border-top:2px solid #999')
       include mixins/footer
 
     script(src='index.js')

@@ -115,15 +115,6 @@ var FormImageUploadController = [ '$scope', '$http', '$routeParams', function($s
 
 var env = require('./env');
 
-function getNav($http, cb) {
-  var lang = env.getLang();
-  var url = env.API.REST_URL + '/_restPublicNav/' + lang;
-  var q = $http.get(url);
-  q.then(function(res) {
-    return cb(null, formatNav(res.data));
-  });
-}
-
 function formatNav(raw) {
   var nav = [];
   for (var i = 0; i < raw.length; i++) {
@@ -138,8 +129,16 @@ function formatNav(raw) {
   return nav;
 }
 
-function NavCtrl($rootScope, $scope, $http,  $window, $location, $document) {
+function getNav($http, cb) {
+  var lang = env.getLang();
+  var url = env.API.REST_URL + '/_restPublicNav/' + lang;
+  var q = $http.get(url);
+  q.then(function(res) {
+    return cb(null, formatNav(res.data));
+  });
+}
 
+function NavCtrl($rootScope, $scope, $http,  $window, $location, $document) {
   var url = $location.url();
   $segment = url.split('/');
 
@@ -842,15 +841,38 @@ module.exports = {
 };
 
 },{"./env":1}],3:[function(require,module,exports){
-var SessionService = require('./session.js').initService();
-var FlashService = require('./flash.js');
+var env = require('./env');
+
+function initCtl($scope, sections) {
+  $scope.sections = sections.data;
+}
+
+function resolvePageSections($q, $http, $route) {
+  var routeName = $route.current.params.page;
+  // var deferred = $q.defer();
+  var promise = $http.get(env.API.REST_URL + '/_restPage/' + routeName);
+  promise.success(function(res) { return res; });
+  return promise;
+}
+
+module.exports = {
+  initCtl: initCtl,
+  resolve: {
+    sections: resolvePageSections
+  }
+};
+
+},{"./env":1}],4:[function(require,module,exports){
+var SessionService = require('./session');
+var FlashService = require('./flash');
+var Base64 = require('./base64');
 
 function sanitizeCredentials(credentials) {
   var encoded = Base64.encode(credentials.email + ':' + credentials.password);
   $http.defaults.headers.common.Authorization = 'Basic ' + encoded;
   return {
     email: $sanitize(credentials.email),
-    password: $sanitize(credentials.password),
+    password: $sanitize(credentials.password)
     //csrf_token: CSRF_TOKEN,
   };
 }
@@ -867,7 +889,7 @@ function loginError(FlashService, res) {
   FlashService.show(res.val);
 }
 
-function initService($http, $rootScope, Base64, $sanitize, $cookieStore) {
+module.exports = function ($http, $rootScope, $sanitize, $cookieStore) {
   return {
     login: function(credentials) {
       var login = $http.post($rootScope.production_url_4LRest + 
@@ -899,13 +921,95 @@ function initService($http, $rootScope, Base64, $sanitize, $cookieStore) {
       return SessionService.get('authenticated');
     }
   };
-}
-
-module.exports = {
-  initService: initService
 };
 
-},{"./flash.js":4,"./session.js":5}],4:[function(require,module,exports){
+},{"./base64":5,"./flash":6,"./session":7}],5:[function(require,module,exports){
+var keyStr = 'ABCDEFGHIJKLMNOP' +
+             'QRSTUVWXYZabcdef' +
+             'ghijklmnopqrstuv' +
+             'wxyz0123456789+/' +
+             '=';
+
+module.exports = {
+  encode: function (input) {
+    var output = "";
+    var chr1, chr2, chr3 = "";
+    var enc1, enc2, enc3, enc4 = "";
+    var i = 0;
+
+    do {
+      chr1 = input.charCodeAt(i++);
+      chr2 = input.charCodeAt(i++);
+      chr3 = input.charCodeAt(i++);
+
+      enc1 = chr1 >> 2;
+      enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+      enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+      enc4 = chr3 & 63;
+
+      if (isNaN(chr2)) {
+        enc3 = enc4 = 64;
+      } else if (isNaN(chr3)) {
+        enc4 = 64;
+      }
+
+      output = output +
+        keyStr.charAt(enc1) +
+        keyStr.charAt(enc2) +
+        keyStr.charAt(enc3) +
+        keyStr.charAt(enc4);
+      chr1 = chr2 = chr3 = "";
+      enc1 = enc2 = enc3 = enc4 = "";
+    } while (i < input.length);
+
+    return output;
+  },
+
+  decode: function (input) {
+    var output = "";
+    var chr1, chr2, chr3 = "";
+    var enc1, enc2, enc3, enc4 = "";
+    var i = 0;
+
+    // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
+    var base64test = /[^A-Za-z0-9\+\/\=]/g;
+    if (base64test.exec(input)) {
+      alert("There were invalid base64 characters in the input text.\n" +
+            "Valid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\n" +
+            "Expect errors in decoding.");
+    }
+    input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+    do {
+      enc1 = keyStr.indexOf(input.charAt(i++));
+      enc2 = keyStr.indexOf(input.charAt(i++));
+      enc3 = keyStr.indexOf(input.charAt(i++));
+      enc4 = keyStr.indexOf(input.charAt(i++));
+
+      chr1 = (enc1 << 2) | (enc2 >> 4);
+      chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+      chr3 = ((enc3 & 3) << 6) | enc4;
+
+      output = output + String.fromCharCode(chr1);
+
+      if (enc3 != 64) {
+        output = output + String.fromCharCode(chr2);
+      }
+      if (enc4 != 64) {
+        output = output + String.fromCharCode(chr3);
+      }
+
+      chr1 = chr2 = chr3 = "";
+      enc1 = enc2 = enc3 = enc4 = "";
+
+    } while (i < input.length);
+
+    return output;
+  }
+};
+
+
+},{}],6:[function(require,module,exports){
 function displayFlash($rootScope, msg) {
   $rootScope.flash = msg;
 }
@@ -919,33 +1023,25 @@ module.exports = {
   clear: clearFlash
 };
 
-},{}],5:[function(require,module,exports){
-function initService() {
-  return {
-    get: function(key) {
-      return sessionStorage.getItem(key);
-    },
-    set: function(key, val) {
-      return sessionStorage.setItem(key, val);
-    },
-    unset: function(key) {
-      return sessionStorage.removeItem(key);
-    }
+},{}],7:[function(require,module,exports){
+module.exports = {
+  get: function(key) {
+    return sessionStorage.getItem(key);
+  },
+  set: function(key, val) {
+    return sessionStorage.setItem(key, val);
+  },
+  unset: function(key) {
+    return sessionStorage.removeItem(key);
   }
 };
 
-module.exports = {
-  initService: initService
-};
-
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 require('./vendors/angular');
-var env            = require('./framework/env');
-var nav            = require('./framework/navigation');
-var auth           = require('./framework/services/authentication');
-var SessionService = require('./framework/services/session').initService();
 
-console.log(SessionService);
+var env = require('./framework/env');
+var nav = require('./framework/navigation');
+var pages = require('./framework/pages');
 
 var app = angular.module('ML', [
   'ngRoute', 'ngSanitize', 'ngCookies', 'ngTouch', 'ngAnimate',
@@ -956,7 +1052,8 @@ app.config(function($routeProvider, AnalyticsProvider) {
   
   $routeProvider.when('/en/:page', {
     templateUrl: './views/page.html',
-    controller: nav.NavCtrl
+    controller: 'PagesCtl',
+    resolve: pages.resolve
   });
   $routeProvider.otherwise({ redirectTo: '/en/home' });
 
@@ -970,21 +1067,23 @@ app.config(function($routeProvider, AnalyticsProvider) {
   AnalyticsProvider.setPageEvent('$stateChangeSuccess');
 });
 
-app.run(function($rootScope, $http) {
+app.factory('AuthenticationService', 
+            require('./framework/services/authentication'));
+app.controller('PagesCtl', pages.initCtl);
+
+app.run(function($rootScope, $http, $cookieStore, AuthenticationService) {
   
-  // Get ENV_VARS
-  env.getVars($http, function(err, res){
-    $rootScope.envVars = res;
-  });
+  // Get Env vars
+  env.getVars($http, function(err, res){ $rootScope.envVars = res; });
+  $rootScope.lang = env.getLang();
   
   // Get nav
-  nav.getNav($http, function(err, res) {
-    $rootScope.nav = res;
-  });
+  nav.getNav($http, function(err, res) { $rootScope.nav = res; });
 
   // Active state of nav on route changes
-  $rootScope.$on('$routeChangeSuccess', function(next, current) {
-    $rootScope.activeNav = current.params.page;
+  $rootScope.$on('$routeChangeSuccess', function(e, current, prev) {
+    var active = current.params.page;
+    $rootScope.activeNav = active;
   });
 
   // Active class on current route
@@ -992,11 +1091,16 @@ app.run(function($rootScope, $http) {
     var path = path.split('/').pop();
     return (path === $rootScope.activeNav)? 'active' : '';
   }
-  
+
+  // Check if user is logged in
+  $rootScope.isLoggedIn = !!AuthenticationService.isLoggedIn()
+
+  // Get user info if logged in
+  if (!$rootScope.isLoggedIn) return;
+  $rootScope.user = $cookieStore.get('userdata');
 });
 
-
-},{"./framework/env":1,"./framework/navigation":2,"./framework/services/authentication":3,"./framework/services/session":5,"./vendors/angular":14}],7:[function(require,module,exports){
+},{"./framework/env":1,"./framework/navigation":2,"./framework/pages":3,"./framework/services/authentication":4,"./vendors/angular":16}],9:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -2614,7 +2718,7 @@ angular.module('ngAnimate', ['ng'])
 
 })(window, window.angular);
 
-},{}],8:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -2812,7 +2916,7 @@ angular.module('ngCookies', ['ng']).
 
 })(window, window.angular);
 
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /* global angular, console */
 
 'use strict';
@@ -3160,7 +3264,7 @@ angular.module('angular-google-analytics', [])
 
     });
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -4089,7 +4193,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
 })(window, window.angular);
 
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -4715,7 +4819,7 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 
 })(window, window.angular);
 
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -5292,7 +5396,7 @@ makeSwipeDirective('ngSwipeRight', 1, 'swiperight');
 
 })(window, window.angular);
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -26757,7 +26861,7 @@ var styleDirective = valueFn({
 })(window, document);
 
 !angular.$$csp() && angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\\:form{display:block;}.ng-animate-block-transitions{transition:0s all!important;-webkit-transition:0s all!important;}</style>');
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 require('./angular');
 require('./angular-route');
 require('./angular-sanitize');
@@ -26769,5 +26873,5 @@ require('./angular-google-analytics');
 
 module.exports = {};
 
-},{"./angular":13,"./angular-animate":7,"./angular-cookies":8,"./angular-google-analytics":9,"./angular-route":10,"./angular-sanitize":11,"./angular-touch":12}]},{},[6])
+},{"./angular":15,"./angular-animate":9,"./angular-cookies":10,"./angular-google-analytics":11,"./angular-route":12,"./angular-sanitize":13,"./angular-touch":14}]},{},[8])
 ;

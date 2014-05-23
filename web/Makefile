@@ -8,3 +8,4 @@ css:
 
 html:
 	jade src/views/index.jade -o .
+	jade src/views/page.jade -o ./views

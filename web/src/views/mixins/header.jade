@@ -4,6 +4,11 @@ nav.navbar.navbar-default.navbar-fixed-top
   ul
     li(ng-repeat='item in nav', ng-class='navClass(item.path)')
       a(ng-href='#{{item.path}}', ng-bind='item.label')
+
+    li(ng-switch='isLoggedIn')
+      a(ng-switch-when='true', ng-href='#/{{lang}}/logout') Log out
+      a(ng-switch-default, ng-href='#/{{lang}}/signin') Sign in
+
     li.search
       form.navbar-form.navbar-right
         .input-group
@@ -17,4 +22,3 @@ nav.navbar.navbar-default.navbar-fixed-top
                                      ) 
           span.form-group-btn
             button.btn.btn-primary(type='submit') Search
-  h1 {{activeNav}} {{item.path}}

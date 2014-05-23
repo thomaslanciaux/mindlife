@@ -1,10 +1,8 @@
 require('./vendors/angular');
-var env            = require('./framework/env');
-var nav            = require('./framework/navigation');
-var auth           = require('./framework/services/authentication');
-var SessionService = require('./framework/services/session').initService();
 
-console.log(SessionService);
+var env = require('./framework/env');
+var nav = require('./framework/navigation');
+var pages = require('./framework/pages');
 
 var app = angular.module('ML', [
   'ngRoute', 'ngSanitize', 'ngCookies', 'ngTouch', 'ngAnimate',
@@ -15,7 +13,8 @@ app.config(function($routeProvider, AnalyticsProvider) {
   
   $routeProvider.when('/en/:page', {
     templateUrl: './views/page.html',
-    controller: nav.NavCtrl
+    controller: 'PagesCtl',
+    resolve: pages.resolve
   });
   $routeProvider.otherwise({ redirectTo: '/en/home' });
 
@@ -29,21 +28,23 @@ app.config(function($routeProvider, AnalyticsProvider) {
   AnalyticsProvider.setPageEvent('$stateChangeSuccess');
 });
 
-app.run(function($rootScope, $http) {
+app.factory('AuthenticationService', 
+            require('./framework/services/authentication'));
+app.controller('PagesCtl', pages.initCtl);
+
+app.run(function($rootScope, $http, $cookieStore, AuthenticationService) {
   
-  // Get ENV_VARS
-  env.getVars($http, function(err, res){
-    $rootScope.envVars = res;
-  });
+  // Get Env vars
+  env.getVars($http, function(err, res){ $rootScope.envVars = res; });
+  $rootScope.lang = env.getLang();
   
   // Get nav
-  nav.getNav($http, function(err, res) {
-    $rootScope.nav = res;
-  });
+  nav.getNav($http, function(err, res) { $rootScope.nav = res; });
 
   // Active state of nav on route changes
-  $rootScope.$on('$routeChangeSuccess', function(next, current) {
-    $rootScope.activeNav = current.params.page;
+  $rootScope.$on('$routeChangeSuccess', function(e, current, prev) {
+    var active = current.params.page;
+    $rootScope.activeNav = active;
   });
 
   // Active class on current route
@@ -51,6 +52,11 @@ app.run(function($rootScope, $http) {
     var path = path.split('/').pop();
     return (path === $rootScope.activeNav)? 'active' : '';
   }
-  
-});
 
+  // Check if user is logged in
+  $rootScope.isLoggedIn = !!AuthenticationService.isLoggedIn()
+
+  // Get user info if logged in
+  if (!$rootScope.isLoggedIn) return;
+  $rootScope.user = $cookieStore.get('userdata');
+});

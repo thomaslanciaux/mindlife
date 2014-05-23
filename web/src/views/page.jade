@@ -1,2 +1,5 @@
-.test
-  h1 MindLife
+.container
+  section(ng-repeat='section in sections')
+    header
+      h1(ng-bind='section.anchor')
+      div(ng-bind-html='section.description_only')

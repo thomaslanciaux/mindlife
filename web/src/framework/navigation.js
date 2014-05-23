@@ -89,15 +89,6 @@ var FormImageUploadController = [ '$scope', '$http', '$routeParams', function($s
 
 var env = require('./env');
 
-function getNav($http, cb) {
-  var lang = env.getLang();
-  var url = env.API.REST_URL + '/_restPublicNav/' + lang;
-  var q = $http.get(url);
-  q.then(function(res) {
-    return cb(null, formatNav(res.data));
-  });
-}
-
 function formatNav(raw) {
   var nav = [];
   for (var i = 0; i < raw.length; i++) {
@@ -112,8 +103,16 @@ function formatNav(raw) {
   return nav;
 }
 
-function NavCtrl($rootScope, $scope, $http,  $window, $location, $document) {
+function getNav($http, cb) {
+  var lang = env.getLang();
+  var url = env.API.REST_URL + '/_restPublicNav/' + lang;
+  var q = $http.get(url);
+  q.then(function(res) {
+    return cb(null, formatNav(res.data));
+  });
+}
 
+function NavCtrl($rootScope, $scope, $http,  $window, $location, $document) {
   var url = $location.url();
   $segment = url.split('/');
 
