@@ -3,7 +3,6 @@ require('./vendors/angular');
 var env = require('./framework/env');
 var nav = require('./framework/navigation');
 var pages = require('./framework/pages');
-var _ = require('lodash');
 
 var app = angular.module('ML', [
   'ngRoute', 'ngSanitize', 'ngCookies', 'ngTouch', 'ngAnimate',
