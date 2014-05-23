@@ -32,7 +32,8 @@ app.factory('AuthenticationService',
             require('./framework/services/authentication'));
 app.controller('PagesCtl', pages.initCtl);
 
-app.run(function($rootScope, $http, $cookieStore, AuthenticationService) {
+app.run(function($rootScope, $http, $cookieStore, AuthenticationService,
+                 $sce) {
   
   // Get Env vars
   env.getVars($http, function(err, res){ $rootScope.envVars = res; });
@@ -45,6 +46,8 @@ app.run(function($rootScope, $http, $cookieStore, AuthenticationService) {
   $rootScope.$on('$routeChangeSuccess', function(e, current, prev) {
     var active = current.params.page;
     $rootScope.activeNav = active;
+
+    // Get active page title
     var i = $rootScope.nav.length;
     while (i--) {
       var path = $rootScope.nav[i].path.split('/').pop();
@@ -52,6 +55,9 @@ app.run(function($rootScope, $http, $cookieStore, AuthenticationService) {
       $rootScope.pageTitle = $rootScope.nav[i].label;
       break;
     }
+
+    // Go to top of the page
+    document.body.scrollTop = 0;
   });
 
   // Active class on current route
@@ -60,10 +66,17 @@ app.run(function($rootScope, $http, $cookieStore, AuthenticationService) {
     return (path === $rootScope.activeNav)? 'active' : '';
   }
 
+  // trustAsResourceUrl external URL in data
+  $rootScope.trustSrc = function(src) {
+    console.log(src)
+    return $sce.trustAsResourceUrl(src);
+  }
+
   // Check if user is logged in
   $rootScope.isLoggedIn = !!AuthenticationService.isLoggedIn()
 
   // Get user info if logged in
   if (!$rootScope.isLoggedIn) return;
   $rootScope.user = $cookieStore.get('userdata');
+  
 });

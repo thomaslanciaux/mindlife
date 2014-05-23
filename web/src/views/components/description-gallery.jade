@@ -1,4 +1,4 @@
-.gallery(style='height:20rem')
+.gallery(style='height:20rem', ng-class='galleryClass(section.description_gallery_left)')
   ul(style='overflow:hidden;overflow-x:auto;padding:0;text-align:center;font-size:0;white-space:nowrap;list-style:none')
     li(ng-repeat='item in section.gallery',
        style='display:inline-block')
