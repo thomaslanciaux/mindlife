@@ -1,0 +1,9 @@
+.gallery(style='height:20rem')
+  ul(style='overflow:hidden;overflow-x:auto;padding:0;text-align:center;font-size:0;white-space:nowrap;list-style:none')
+    li(ng-repeat='item in section.gallery',
+       style='display:inline-block')
+      img(ng-src='http://mindlife.co.uk/AppWebRest/uploads/{{item.file_dir}}',
+          style="display:block;max-height:100%;max-width:100%")
+  // pre {{section.gallery | json}}
+div(ng-bind-html='section.description')
+div(ng-bind-html='section.description_only')

@@ -6,6 +6,7 @@ var API = {
 
 function getLang() {
   var url = document.location.hash.split('/');
+  if (url.length < 2) url.push('en');
   return url[1];
 }
 

@@ -1,5 +1,13 @@
 .container
-  section(ng-repeat='section in sections')
-    header
-      h1(ng-bind='section.anchor')
-      div(ng-bind-html='section.description_only')
+  h1.page-title(ng-bind='pageTitle', ng-if='pageTitle')
+  section.section(style='border-top:1px solid #ccc',
+                  ng-repeat='section in sections')
+    header.section-header(ng-if='section.title')
+      h1(ng-id='{{section.anchor}}', ng-bind='section.title')
+
+    pre {{section.type}}
+    .section-content
+      div(ng-if="section.type == 'DescriptionOnly'",
+          ng-include="'views/components/description-only.html'")
+      div(ng-if="section.type == 'DescriptionGallery'",
+          ng-include="'views/components/description-gallery.html'")

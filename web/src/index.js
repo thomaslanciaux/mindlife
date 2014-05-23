@@ -3,6 +3,7 @@ require('./vendors/angular');
 var env = require('./framework/env');
 var nav = require('./framework/navigation');
 var pages = require('./framework/pages');
+var _ = require('lodash');
 
 var app = angular.module('ML', [
   'ngRoute', 'ngSanitize', 'ngCookies', 'ngTouch', 'ngAnimate',
@@ -45,6 +46,13 @@ app.run(function($rootScope, $http, $cookieStore, AuthenticationService) {
   $rootScope.$on('$routeChangeSuccess', function(e, current, prev) {
     var active = current.params.page;
     $rootScope.activeNav = active;
+    var i = $rootScope.nav.length;
+    while (i--) {
+      var path = $rootScope.nav[i].path.split('/').pop();
+      if (path !== active) continue;
+      $rootScope.pageTitle = $rootScope.nav[i].label;
+      break;
+    }
   });
 
   // Active class on current route

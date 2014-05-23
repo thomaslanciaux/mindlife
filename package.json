@@ -21,5 +21,8 @@
     "nib": "^1.0.2",
     "stylus": "^0.44.0",
     "svgo": "^0.4.4"
+  },
+  "devDependencies": {
+    "lodash": "^2.4.1"
   }
 }
