@@ -1,4 +1,14 @@
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+function initCtl($rootScope) {
+  $rootScope.activeNav = 'signin';
+  $rootScope.pageTitle = 'Sign in';
+}
+
+module.exports = {
+  initCtl: initCtl
+};
+
+},{}],2:[function(require,module,exports){
 var BASE = 'http://mindlife.co.uk';
 var API = {
   REST_URL: BASE + '/AppWebRest',
@@ -24,7 +34,7 @@ module.exports = {
   getVars: getVars
 };
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 var env = require('./env');
 
 function getGallery(id, cb) {
@@ -38,7 +48,7 @@ function getGallery(id, cb) {
 
 module.exports = getGallery;
 
-},{"./env":1}],3:[function(require,module,exports){
+},{"./env":2}],4:[function(require,module,exports){
 var env = require('./env');
 
 function formatNav(raw) {
@@ -68,7 +78,7 @@ module.exports = {
   getNav: getNav
 };
 
-},{"./env":1}],4:[function(require,module,exports){
+},{"./env":2}],5:[function(require,module,exports){
 var env = require('./env');
 var Gallery = require('./gallery');
 
@@ -107,7 +117,7 @@ module.exports = {
   }
 };
 
-},{"./env":1,"./gallery":2}],5:[function(require,module,exports){
+},{"./env":2,"./gallery":3}],6:[function(require,module,exports){
 var SessionService = require('./session');
 var FlashService = require('./flash');
 var Base64 = require('./base64');
@@ -168,7 +178,7 @@ module.exports = function ($http, $rootScope, $sanitize, $cookieStore) {
   };
 };
 
-},{"./base64":6,"./flash":7,"./session":8}],6:[function(require,module,exports){
+},{"./base64":7,"./flash":8,"./session":9}],7:[function(require,module,exports){
 var keyStr = 'ABCDEFGHIJKLMNOP' +
              'QRSTUVWXYZabcdef' +
              'ghijklmnopqrstuv' +
@@ -254,7 +264,7 @@ module.exports = {
 };
 
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 function displayFlash($rootScope, msg) {
   $rootScope.flash = msg;
 }
@@ -268,7 +278,7 @@ module.exports = {
   clear: clearFlash
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 module.exports = {
   get: function(key) {
     return sessionStorage.getItem(key);
@@ -281,12 +291,13 @@ module.exports = {
   }
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 require('./vendors/angular');
 
 var env = require('./framework/env');
 var nav = require('./framework/navigation');
 var pages = require('./framework/pages');
+var credentials = require('./framework/credentials');
 
 var app = angular.module('ML', [
   'ngRoute', 'ngSanitize', 'ngCookies', 'ngTouch', 'ngAnimate',
@@ -297,7 +308,8 @@ app.config(function($routeProvider, AnalyticsProvider) {
   
   $routeProvider.when('/en/home', { templateUrl: './views/home.html' });
   $routeProvider.when('/en/signin', { 
-    templateUrl: './views/signin.html'
+    templateUrl: './views/signin.html',
+    controller: 'SigninCtl'
   });
   $routeProvider.when('/en/:page', {
     templateUrl: './views/page.html',
@@ -319,6 +331,7 @@ app.config(function($routeProvider, AnalyticsProvider) {
 app.factory('AuthenticationService', 
             require('./framework/services/authentication'));
 app.controller('PagesCtl', pages.initCtl);
+app.controller('SigninCtl', credentials.initCtl);
 
 app.run(function($rootScope, $http, $cookieStore, AuthenticationService,
                  $sce) {
@@ -372,7 +385,7 @@ app.run(function($rootScope, $http, $cookieStore, AuthenticationService,
   
 });
 
-},{"./framework/env":1,"./framework/navigation":3,"./framework/pages":4,"./framework/services/authentication":5,"./vendors/angular":17}],10:[function(require,module,exports){
+},{"./framework/credentials":1,"./framework/env":2,"./framework/navigation":4,"./framework/pages":5,"./framework/services/authentication":6,"./vendors/angular":18}],11:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -1990,7 +2003,7 @@ angular.module('ngAnimate', ['ng'])
 
 })(window, window.angular);
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -2188,7 +2201,7 @@ angular.module('ngCookies', ['ng']).
 
 })(window, window.angular);
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /* global angular, console */
 
 'use strict';
@@ -2536,7 +2549,7 @@ angular.module('angular-google-analytics', [])
 
     });
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -3465,7 +3478,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
 })(window, window.angular);
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -4091,7 +4104,7 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 
 })(window, window.angular);
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -4668,7 +4681,7 @@ makeSwipeDirective('ngSwipeRight', 1, 'swiperight');
 
 })(window, window.angular);
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -26133,7 +26146,7 @@ var styleDirective = valueFn({
 })(window, document);
 
 !angular.$$csp() && angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\\:form{display:block;}.ng-animate-block-transitions{transition:0s all!important;-webkit-transition:0s all!important;}</style>');
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 require('./angular');
 require('./angular-route');
 require('./angular-sanitize');
@@ -26145,5 +26158,5 @@ require('./angular-google-analytics');
 
 module.exports = {};
 
-},{"./angular":16,"./angular-animate":10,"./angular-cookies":11,"./angular-google-analytics":12,"./angular-route":13,"./angular-sanitize":14,"./angular-touch":15}]},{},[9])
+},{"./angular":17,"./angular-animate":11,"./angular-cookies":12,"./angular-google-analytics":13,"./angular-route":14,"./angular-sanitize":15,"./angular-touch":16}]},{},[10])
 ;

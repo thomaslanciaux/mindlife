@@ -2,12 +2,15 @@ h1.navbar-brand(ng-bind='envVars.website_name')
 
 nav.navbar.navbar-default.navbar-fixed-top
   ul
-    li(ng-repeat='item in nav', ng-class='navClass(item.path)')
-      a(ng-href='#{{item.path}}', ng-bind='item.label')
+    li(ng-repeat='item in nav')
+      a(ng-href='#{{item.path}}', ng-class='navClass(item.path)',
+        ng-bind='item.label')
 
     li(ng-switch='isLoggedIn')
-      a(ng-switch-when='true', ng-href='#/{{lang}}/logout') Log out
-      a(ng-switch-default, ng-href='#/{{lang}}/signin') Sign in
+      a(ng-switch-when='true', ng-class="navClass('logout')", 
+        ng-href='#/{{lang}}/logout') Log out
+      a(ng-switch-default, ng-class="navClass('signin')",
+        ng-href='#/{{lang}}/signin') Sign in
 
     li.search
       form.navbar-form.navbar-right
