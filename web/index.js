@@ -319,7 +319,9 @@ app.controller('PagesCtl', pages.initCtl);
 
 app.run(function($rootScope, $http, $cookieStore, AuthenticationService,
                  $sce) {
-  
+
+  $rootScope.pageTitle = 'Home';
+
   // Get Env vars
   env.getVars($http, function(err, res){ $rootScope.envVars = res; });
   $rootScope.lang = env.getLang();
@@ -329,20 +331,22 @@ app.run(function($rootScope, $http, $cookieStore, AuthenticationService,
 
   // Active state of nav on route changes
   $rootScope.$on('$routeChangeSuccess', function(e, current, prev) {
-    var active = current.params.page;
+    var active = current.params.page || 'home';
     $rootScope.activeNav = active;
-
-    // Get active page title
-    var i = $rootScope.nav.length;
-    while (i--) {
-      var path = $rootScope.nav[i].path.split('/').pop();
-      if (path !== active) continue;
-      $rootScope.pageTitle = $rootScope.nav[i].label;
-      break;
-    }
 
     // Go to top of the page
     document.body.scrollTop = 0;
+
+    // Get active page title
+    if ($rootScope.nav) {
+      var i = $rootScope.nav.length;
+      while (i--) {
+        var path = $rootScope.nav[i].path.split('/').pop();
+        if (path !== active) continue;
+        $rootScope.pageTitle = $rootScope.nav[i].label;
+        break;
+       }
+    }
   });
 
   // Active class on current route
