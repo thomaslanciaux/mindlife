@@ -295,7 +295,10 @@ var app = angular.module('ML', [
 
 app.config(function($routeProvider, AnalyticsProvider) {
   
-  $routeProvider.when('/en/home', { templateUrl: './views/home.html' })
+  $routeProvider.when('/en/home', { templateUrl: './views/home.html' });
+  $routeProvider.when('/en/signin', { 
+    templateUrl: './views/signin.html'
+  });
   $routeProvider.when('/en/:page', {
     templateUrl: './views/page.html',
     controller: 'PagesCtl',
