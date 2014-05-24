@@ -4,8 +4,6 @@
                   ng-repeat='section in sections')
     header.section-header(ng-if='section.title')
       h1(ng-id='{{section.anchor}}', ng-bind='section.title')
-
-    pre {{section.type}}
     .section-content
       div(ng-if="section.type == 'DescriptionOnly'",
           ng-include="'views/components/description-only.html'")

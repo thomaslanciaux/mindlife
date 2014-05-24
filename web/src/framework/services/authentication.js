@@ -1,8 +1,8 @@
+var env = require('../env');
 var SessionService = require('./session');
-var FlashService = require('./flash');
 var Base64 = require('./base64');
 
-function sanitizeCredentials(credentials) {
+function sanitizeCredentials($http, $sanitize, credentials) {
   var encoded = Base64.encode(credentials.email + ':' + credentials.password);
   $http.defaults.headers.common.Authorization = 'Basic ' + encoded;
   return {
@@ -20,19 +20,17 @@ function uncacheSession(SessionService) {
   SessionService.unset('authenticated');
 }
 
-function loginError(FlashService, res) {
-  FlashService.show(res.val);
+function loginError(res) {
+  alert(res.val);
 }
 
 module.exports = function ($http, $rootScope, $sanitize, $cookieStore) {
   return {
     login: function(credentials) {
-      var login = $http.post($rootScope.production_url_4LRest + 
-                             '/_restAuth/login', 
-                             sanitizeCredentials(credentials));
+      var login = $http.post(env.API.REST_URL + '/_restAuth/login', 
+                             sanitizeCredentials($http, $sanitize, credentials));
       login.success(cacheSession);
-      login.success(FlashService.clear);
-      login.success(function(data, status) {
+      login.success(function(data) {
         $cookieStore.put('userdata', data);
         $rootScope.user = $cookieStore.get('userdata');
       });
