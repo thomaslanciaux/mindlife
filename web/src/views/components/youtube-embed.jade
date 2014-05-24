@@ -1,4 +1,5 @@
 .youtube
-  iframe(ng-src="{{trustSrc(section.youtube_video_link)}}", frameborder='0')
-  p(ng-if='section.youtube_video_description',
+  iframe(ng-src="{{trustSrc(section.youtube_video_link)}}", 
+         frameborder='0', seamless)
+  div(ng-if='section.youtube_video_description',
     ng-bind-html='section.youtube_video_description')

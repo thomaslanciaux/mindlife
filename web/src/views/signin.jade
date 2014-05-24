@@ -1,1 +1,22 @@
-h1 Sign-in template
+.container
+  section.signin
+    header
+      h1 Sign in
+  form(ng-submit='login()', class='signin', style='margin-bottom:1rem')
+    fieldset
+      p
+        label(for='login-email') Email 
+        input(type='email', name='email', id='login-email',
+              ng-model='credentials.email', required,
+              placeholder='Please enter your email here')
+      p
+        label(for='login-password') Password
+        input(type='password', name='password', id='login-password',
+              ng-model='credentials.password', required,
+              placeholder='Please enter your password here')
+      p.submit
+        button(type='submit', class='btn btn-primary') Sign in
+  
+  p
+    strong New to MINDLIFE? 
+    a(href='#/{{lang}}/signup') Sign up

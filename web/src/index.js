@@ -11,13 +11,19 @@ var app = angular.module('ML', [
 ]);
 
 app.config(function($routeProvider, AnalyticsProvider) {
-  
-  $routeProvider.when('/en/home', { templateUrl: './views/home.html' });
-  $routeProvider.when('/en/signin', { 
+  var lang = env.getLang() || 'en';
+  var base = '/' + lang + '/';
+  $routeProvider.when(base + 'home', { 
+    templateUrl: './views/home.html'
+  });
+  $routeProvider.when(base + 'signin', { 
     templateUrl: './views/signin.html',
     controller: 'SigninCtl'
   });
-  $routeProvider.when('/en/:page', {
+  $routeProvider.when(base + 'signup', {
+    templateUrl: './views/signup.html'
+  });
+  $routeProvider.when(base + ':page', {
     templateUrl: './views/page.html',
     controller: 'PagesCtl',
     resolve: pages.resolve

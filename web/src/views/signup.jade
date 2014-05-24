@@ -1,0 +1,34 @@
+.container
+  section.signup-form
+    header
+      h1 Sign up to MINDLIFE
+    form
+      fieldset
+        p
+          label(for='signup-name') Printable name
+          input(type='text', id='signup-name', required,
+                placeholder='Your printable name, (eg. John Doe)')
+        p
+          label(for='signup-username') Username
+          input(type='text', id='signup-username', required,
+                placeholder='Username to be shown publicly')
+        p
+          label(for='signup-password') Password
+          input(type='password', id='signup-password', required,
+                placeholder='Please enter a password')
+          br
+          small This password will be your HELPconnect password
+        p
+          label(for='signup-password-confirm') Password confirmation
+          input(type='password', id='signup-password-confirm', required,
+                placeholder='Please confirm the password')
+        p
+          label(for='signup-country') Country of residence
+          select(id='signup-country', required)
+            option(value='null') Please select
+        p
+          label(for='signup-lang') Prefered reading language
+          select(id='signup-lang', required)
+            option(value='null') Please select
+        p.submit
+          button(type='submit') Sign up
