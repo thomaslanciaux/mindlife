@@ -3,7 +3,6 @@ require('./vendors/angular');
 var env = require('./framework/env');
 var nav = require('./framework/navigation');
 var pages = require('./framework/pages');
-var credentials = require('./framework/credentials');
 
 var app = angular.module('ML', [
   'ngRoute', 'ngSanitize', 'ngCookies', 'ngTouch', 'ngAnimate',
@@ -17,15 +16,13 @@ app.config(function($routeProvider, AnalyticsProvider) {
     templateUrl: './views/home.html'
   });
   $routeProvider.when(base + 'signin', { 
-    templateUrl: './views/signin.html',
-    controller: 'SigninCtl'
+    templateUrl: './views/signin.html', controller: 'SigninCtl'
   });
   $routeProvider.when(base + 'signup', {
-    templateUrl: './views/signup.html'
+    templateUrl: './views/signup.html', controller: 'SignupCtl'
   });
   $routeProvider.when(base + ':page', {
-    templateUrl: './views/page.html',
-    controller: 'PagesCtl',
+    templateUrl: './views/page.html', controller: 'PagesCtl',
     resolve: pages.resolve
   });
   $routeProvider.otherwise({ redirectTo: '/en/home' });
@@ -43,7 +40,8 @@ app.config(function($routeProvider, AnalyticsProvider) {
 app.factory('AuthenticationService', 
             require('./framework/services/authentication'));
 app.controller('PagesCtl', pages.initCtl);
-app.controller('SigninCtl', credentials.initCtl);
+app.controller('SigninCtl', require('./framework/signin'));
+app.controller('SignupCtl', require('./framework/signup'));
 
 app.run(function($rootScope, $http, $cookieStore, AuthenticationService,
                  $sce) {

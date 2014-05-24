@@ -292,6 +292,14 @@ module.exports = {
 };
 
 },{}],10:[function(require,module,exports){
+function initCtl($rootScope) {
+  $rootScope.pageTitle = 'Sign up';
+  $rootScope.activeNav = 'signin';
+}
+
+module.exports = initCtl;
+
+},{}],11:[function(require,module,exports){
 require('./vendors/angular');
 
 var env = require('./framework/env');
@@ -311,15 +319,13 @@ app.config(function($routeProvider, AnalyticsProvider) {
     templateUrl: './views/home.html'
   });
   $routeProvider.when(base + 'signin', { 
-    templateUrl: './views/signin.html',
-    controller: 'SigninCtl'
+    templateUrl: './views/signin.html', controller: 'SigninCtl'
   });
   $routeProvider.when(base + 'signup', {
-    templateUrl: './views/signup.html'
+    templateUrl: './views/signup.html', controller: 'SignupCtl'
   });
   $routeProvider.when(base + ':page', {
-    templateUrl: './views/page.html',
-    controller: 'PagesCtl',
+    templateUrl: './views/page.html', controller: 'PagesCtl',
     resolve: pages.resolve
   });
   $routeProvider.otherwise({ redirectTo: '/en/home' });
@@ -338,6 +344,7 @@ app.factory('AuthenticationService',
             require('./framework/services/authentication'));
 app.controller('PagesCtl', pages.initCtl);
 app.controller('SigninCtl', credentials.initCtl);
+app.controller('SignupCtl', require('./framework/signup'))
 
 app.run(function($rootScope, $http, $cookieStore, AuthenticationService,
                  $sce) {
@@ -391,7 +398,7 @@ app.run(function($rootScope, $http, $cookieStore, AuthenticationService,
   
 });
 
-},{"./framework/credentials":1,"./framework/env":2,"./framework/navigation":4,"./framework/pages":5,"./framework/services/authentication":6,"./vendors/angular":18}],11:[function(require,module,exports){
+},{"./framework/credentials":1,"./framework/env":2,"./framework/navigation":4,"./framework/pages":5,"./framework/services/authentication":6,"./framework/signup":10,"./vendors/angular":19}],12:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -2009,7 +2016,7 @@ angular.module('ngAnimate', ['ng'])
 
 })(window, window.angular);
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -2207,7 +2214,7 @@ angular.module('ngCookies', ['ng']).
 
 })(window, window.angular);
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /* global angular, console */
 
 'use strict';
@@ -2555,7 +2562,7 @@ angular.module('angular-google-analytics', [])
 
     });
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -3484,7 +3491,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
 })(window, window.angular);
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -4110,7 +4117,7 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 
 })(window, window.angular);
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -4687,7 +4694,7 @@ makeSwipeDirective('ngSwipeRight', 1, 'swiperight');
 
 })(window, window.angular);
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -26152,7 +26159,7 @@ var styleDirective = valueFn({
 })(window, document);
 
 !angular.$$csp() && angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\\:form{display:block;}.ng-animate-block-transitions{transition:0s all!important;-webkit-transition:0s all!important;}</style>');
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 require('./angular');
 require('./angular-route');
 require('./angular-sanitize');
@@ -26164,5 +26171,5 @@ require('./angular-google-analytics');
 
 module.exports = {};
 
-},{"./angular":17,"./angular-animate":11,"./angular-cookies":12,"./angular-google-analytics":13,"./angular-route":14,"./angular-sanitize":15,"./angular-touch":16}]},{},[10])
+},{"./angular":18,"./angular-animate":12,"./angular-cookies":13,"./angular-google-analytics":14,"./angular-route":15,"./angular-sanitize":16,"./angular-touch":17}]},{},[11])
 ;

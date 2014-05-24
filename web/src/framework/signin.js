@@ -3,6 +3,4 @@ function initCtl($rootScope) {
   $rootScope.pageTitle = 'Sign in';
 }
 
-module.exports = {
-  initCtl: initCtl
-};
+module.exports = initCtl;
