@@ -15,6 +15,8 @@ app.controller('SigninCtl', require('./framework/signin'));
 app.controller('SignupCtl', require('./framework/signup'));
 app.controller('SignoutCtl', require('./framework/signout'));
 
+app.directive('bindOnce', require('./framework/directives/bind-once'));
+
 app.config(require('./config'));
 
 app.run(function($rootScope, $http, $cookieStore, $sce) {

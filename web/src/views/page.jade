@@ -1,8 +1,8 @@
 .container
-  h1.page-title(ng-bind='pageTitle', ng-if='pageTitle')
+  h1.page-title(bind-once ng-bind='pageTitle', ng-if='pageTitle')
   section.section(ng-repeat='section in sections')
     header.section-header(ng-if='section.title')
-      h1(ng-id='{{section.anchor}}', ng-bind='section.title')
+      h1(ng-id='{{section.anchor}}', bind-once, ng-bind='section.title')
     .section-content
       div(ng-if="section.type == 'DescriptionOnly'",
           ng-include="'views/components/description-only.html'")

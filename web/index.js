@@ -31,7 +31,20 @@ module.exports = function($routeProvider, AnalyticsProvider) {
   AnalyticsProvider.setPageEvent('$stateChangeSuccess');
 }
 
-},{"./framework/env":2,"./framework/pages":5}],2:[function(require,module,exports){
+},{"./framework/env":3,"./framework/pages":6}],2:[function(require,module,exports){
+module.exports = function() {
+  return {
+    scope: true,
+    link: function( $scope, $element  ) {
+      setTimeout(function() {
+        $scope.$destroy();
+        $element.removeClass('ng-binding ng-scope');
+      }, 0);
+    }
+  }
+}
+
+},{}],3:[function(require,module,exports){
 var BASE = 'http://mindlife.co.uk';
 var API = {
   REST_URL: BASE + '/AppWebRest',
@@ -57,7 +70,7 @@ module.exports = {
   getVars: getVars
 };
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 var env = require('./env');
 
 function getGallery(id, cb) {
@@ -71,7 +84,7 @@ function getGallery(id, cb) {
 
 module.exports = getGallery;
 
-},{"./env":2}],4:[function(require,module,exports){
+},{"./env":3}],5:[function(require,module,exports){
 var env = require('./env');
 
 function formatNav(raw) {
@@ -101,7 +114,7 @@ module.exports = {
   getNav: getNav
 };
 
-},{"./env":2}],5:[function(require,module,exports){
+},{"./env":3}],6:[function(require,module,exports){
 var env = require('./env');
 var Gallery = require('./gallery');
 
@@ -140,7 +153,7 @@ module.exports = {
   }
 };
 
-},{"./env":2,"./gallery":3}],6:[function(require,module,exports){
+},{"./env":3,"./gallery":4}],7:[function(require,module,exports){
 var keyStr = 'ABCDEFGHIJKLMNOP' +
              'QRSTUVWXYZabcdef' +
              'ghijklmnopqrstuv' +
@@ -226,7 +239,7 @@ module.exports = {
 };
 
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 module.exports = {
   get: function(key) {
     return sessionStorage.getItem(key);
@@ -239,7 +252,7 @@ module.exports = {
   }
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var env = require('./env');
 var Base64 = require('./services/base64');
 var Session = require('./services/session');
@@ -280,7 +293,7 @@ function initCtl($rootScope, $http, $sanitize, $cookieStore, $scope) {
 
 module.exports = initCtl;
 
-},{"./env":2,"./services/base64":6,"./services/session":7}],9:[function(require,module,exports){
+},{"./env":3,"./services/base64":7,"./services/session":8}],10:[function(require,module,exports){
 var env = require('./env');
 var Session = require('./services/session');
 
@@ -302,7 +315,7 @@ function initCtl($rootScope, $http, $cookieStore) {
 
 module.exports = initCtl;
 
-},{"./env":2,"./services/session":7}],10:[function(require,module,exports){
+},{"./env":3,"./services/session":8}],11:[function(require,module,exports){
 function initCtl($rootScope) {
   $rootScope.pageTitle = 'Sign up';
   $rootScope.activeNav = 'signin';
@@ -310,7 +323,7 @@ function initCtl($rootScope) {
 
 module.exports = initCtl;
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 require('./vendors/angular');
 
 var env = require('./framework/env');
@@ -327,6 +340,8 @@ app.controller('PagesCtl', pages.initCtl);
 app.controller('SigninCtl', require('./framework/signin'));
 app.controller('SignupCtl', require('./framework/signup'));
 app.controller('SignoutCtl', require('./framework/signout'));
+
+app.directive('bindOnce', require('./framework/directives/bind-once'));
 
 app.config(require('./config'));
 
@@ -378,7 +393,7 @@ app.run(function($rootScope, $http, $cookieStore, $sce) {
   
 });
 
-},{"./config":1,"./framework/env":2,"./framework/navigation":4,"./framework/pages":5,"./framework/services/session":7,"./framework/signin":8,"./framework/signout":9,"./framework/signup":10,"./vendors/angular":19}],12:[function(require,module,exports){
+},{"./config":1,"./framework/directives/bind-once":2,"./framework/env":3,"./framework/navigation":5,"./framework/pages":6,"./framework/services/session":8,"./framework/signin":9,"./framework/signout":10,"./framework/signup":11,"./vendors/angular":20}],13:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -1996,7 +2011,7 @@ angular.module('ngAnimate', ['ng'])
 
 })(window, window.angular);
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -2194,7 +2209,7 @@ angular.module('ngCookies', ['ng']).
 
 })(window, window.angular);
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /* global angular, console */
 
 'use strict';
@@ -2542,7 +2557,7 @@ angular.module('angular-google-analytics', [])
 
     });
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -3471,7 +3486,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
 })(window, window.angular);
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -4097,7 +4112,7 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 
 })(window, window.angular);
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -4674,7 +4689,7 @@ makeSwipeDirective('ngSwipeRight', 1, 'swiperight');
 
 })(window, window.angular);
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -26139,7 +26154,7 @@ var styleDirective = valueFn({
 })(window, document);
 
 !angular.$$csp() && angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\\:form{display:block;}.ng-animate-block-transitions{transition:0s all!important;-webkit-transition:0s all!important;}</style>');
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 require('./angular');
 require('./angular-route');
 require('./angular-sanitize');
@@ -26151,5 +26166,5 @@ require('./angular-google-analytics');
 
 module.exports = {};
 
-},{"./angular":18,"./angular-animate":12,"./angular-cookies":13,"./angular-google-analytics":14,"./angular-route":15,"./angular-sanitize":16,"./angular-touch":17}]},{},[11])
+},{"./angular":19,"./angular-animate":13,"./angular-cookies":14,"./angular-google-analytics":15,"./angular-route":16,"./angular-sanitize":17,"./angular-touch":18}]},{},[12])
 ;
