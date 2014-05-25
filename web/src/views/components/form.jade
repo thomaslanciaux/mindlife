@@ -33,5 +33,6 @@ ol.quiz
         option(ng-repeat='opt in field.opts', value='{{$index}}',
                ng-bind='opt') 
 
-      select(ng-switch-when='Country',
-             ng-options='opt.code as opt.name for opt in countries')
+      select(ng-switch-when='Country')
+        option(ng-repeat='opt in countries', value='opt.code', 
+               ng-bind='opt.name') 

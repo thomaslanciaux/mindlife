@@ -3087,11 +3087,11 @@ function initCtl($scope, sections) {
 
     if (section.type === 'Questionnaire' || section.type === 'Form') {
       $scope.current = 1;
+      $scope.countries = countries.list;
       var id = section.form_template_id;
       Forms.getFields(id, function(err, res) {
         if (err) return alert(err);
         $scope.$apply(function() { 
-          $scope.countries = countries.list;
           $scope.fields = Forms.cleanOptions(res); 
         });
       });
