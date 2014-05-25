@@ -10,6 +10,7 @@ nav.navbar.navbar-default.navbar-fixed-top
       span(ng-switch-when='true')
         a(ng-class="navClass('dashboard')", 
           ng-href='#/{{lang}}/dashboard') Dashboard
+        br
         a(ng-class="navClass('signout')", 
           ng-href='#/{{lang}}/signout') Sign out 
       a(ng-switch-default, ng-class="navClass('signin')",

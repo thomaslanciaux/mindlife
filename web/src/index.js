@@ -11,13 +11,14 @@ var app = angular.module('ML', [
 ]);
 
 app.controller('PagesCtl', pages.initCtl);
-app.controller('SigninCtl', require('./framework/signin'));
-app.controller('SignupCtl', require('./framework/signup'));
-app.controller('SignoutCtl', require('./framework/signout'));
+app.controller('SigninCtl', require('./framework/controllers/signin'));
+app.controller('SignupCtl', require('./framework/controllers/signup'));
+app.controller('SignoutCtl', require('./framework/controllers/signout'));
+app.controller('DashboardCtl', require('./framework/controllers/dashboard'));
 
 app.directive('bindOnce', require('./framework/directives/bind-once'));
 
-app.config(require('./config'));
+app.config(require('./framework/config'));
 
 app.run(function($rootScope, $http, $cookieStore, $sce) {
 

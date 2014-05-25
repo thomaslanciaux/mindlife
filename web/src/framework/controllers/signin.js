@@ -1,6 +1,6 @@
-var env = require('./env');
-var Base64 = require('./services/base64');
-var Session = require('./services/session');
+var env = require('../env');
+var Base64 = require('../services/base64');
+var Session = require('../services/session');
 
 function sanitizeCredentials($sanitize, credentials) {
   return {
@@ -21,7 +21,7 @@ function submitCredentials($http, credentials, cb) {
   })
 }
 
-function initCtl($rootScope, $http, $sanitize, $cookieStore, $scope) {
+function initCtl($rootScope, $http, $sanitize, $cookieStore, $location, $scope) {
   // Set app state
   $rootScope.activeNav = 'signin';
   $rootScope.pageTitle = 'Sign in';
@@ -32,6 +32,8 @@ function initCtl($rootScope, $http, $sanitize, $cookieStore, $scope) {
       $rootScope.isLoggedIn = true;
       Session.set('authenticated', true);
       $cookieStore.put('userdata', res);
+      // Redirect to dashboard
+      $location.path('/' + env.getLang() + '/dashboard');
     });
   }
 }

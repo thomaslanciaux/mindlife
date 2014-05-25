@@ -1,5 +1,5 @@
-var env = require('./framework/env');
-var pages = require('./framework/pages');
+var env = require('./env');
+var pages = require('./pages');
 
 module.exports = function($routeProvider, AnalyticsProvider) {
   var lang = env.getLang() || 'en';
@@ -13,6 +13,9 @@ module.exports = function($routeProvider, AnalyticsProvider) {
   });
   $routeProvider.when(base + 'signout', {
     templateUrl: './views/home.html', controller: 'SignoutCtl'
+  });
+  $routeProvider.when(base + 'dashboard', {
+    templateUrl: './views/dashboard.html', controller: 'DashboardCtl'
   });
   $routeProvider.when(base + ':page', {
     templateUrl: './views/page.html', controller: 'PagesCtl',

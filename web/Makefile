@@ -12,6 +12,7 @@ html:
 	jade src/views/page.jade -o ./views
 	jade src/views/signin.jade -o ./views
 	jade src/views/signup.jade -o ./views
+	jade src/views/dashboard.jade -o ./views
 	jade src/views/components/description-only.jade -o ./views/components
 	jade src/views/components/description-gallery.jade -o ./views/components
 	jade src/views/components/youtube-embed.jade -o ./views/components

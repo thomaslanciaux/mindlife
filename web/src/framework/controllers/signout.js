@@ -1,5 +1,5 @@
-var env = require('./env');
-var Session = require('./services/session');
+var env = require('../env');
+var Session = require('../services/session');
 
 function redirectToHome() {
   return document.location.hash = '/' + env.getLang() + '/home';

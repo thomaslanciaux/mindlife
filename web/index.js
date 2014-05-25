@@ -1,6 +1,6 @@
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var env = require('./framework/env');
-var pages = require('./framework/pages');
+var env = require('./env');
+var pages = require('./pages');
 
 module.exports = function($routeProvider, AnalyticsProvider) {
   var lang = env.getLang() || 'en';
@@ -14,6 +14,9 @@ module.exports = function($routeProvider, AnalyticsProvider) {
   });
   $routeProvider.when(base + 'signout', {
     templateUrl: './views/home.html', controller: 'SignoutCtl'
+  });
+  $routeProvider.when(base + 'dashboard', {
+    templateUrl: './views/dashboard.html', controller: 'DashboardCtl'
   });
   $routeProvider.when(base + ':page', {
     templateUrl: './views/page.html', controller: 'PagesCtl',
@@ -31,7 +34,90 @@ module.exports = function($routeProvider, AnalyticsProvider) {
   AnalyticsProvider.setPageEvent('$stateChangeSuccess');
 }
 
-},{"./framework/env":3,"./framework/pages":6}],2:[function(require,module,exports){
+},{"./env":7,"./pages":10}],2:[function(require,module,exports){
+function initCtl($rootScope, $location) {
+  if (!$rootScope.isLoggedIn) return $location.path('/');
+
+  $rootScope.pageTitle = 'Dashboard';
+  $rootScope.activeNav = 'dashboard';
+}
+
+module.exports = initCtl;
+
+},{}],3:[function(require,module,exports){
+var env = require('../env');
+var Base64 = require('../services/base64');
+var Session = require('../services/session');
+
+function sanitizeCredentials($sanitize, credentials) {
+  return {
+    email: $sanitize(credentials.email),
+    password: $sanitize(credentials.password)
+  };
+}
+
+function submitCredentials($http, credentials, cb) {
+  var encoded = Base64.encode(credentials.email + ':' + credentials.password);
+  $http.defaults.headers.common.Authorization = 'Basic ' + encoded;
+  var req = $http.post(env.API.REST_URL + '/_restAuth/login', credentials);
+  req.success(function(res) {
+    return cb(null, res);
+  });
+  req.error(function(res) {
+    return cb(res, null);
+  })
+}
+
+function initCtl($rootScope, $http, $sanitize, $cookieStore, $location, $scope) {
+  // Set app state
+  $rootScope.activeNav = 'signin';
+  $rootScope.pageTitle = 'Sign in';
+  $scope.login = function() {
+    var credentials = sanitizeCredentials($sanitize, $scope.credentials);
+    submitCredentials($http, credentials, function(err, res) {
+      if (err) return console.log(err);
+      $rootScope.isLoggedIn = true;
+      Session.set('authenticated', true);
+      $cookieStore.put('userdata', res);
+      // Redirect to dashboard
+      $location.path('/' + env.getLang() + '/dashboard');
+    });
+  }
+}
+
+module.exports = initCtl;
+
+},{"../env":7,"../services/base64":11,"../services/session":12}],4:[function(require,module,exports){
+var env = require('../env');
+var Session = require('../services/session');
+
+function redirectToHome() {
+  return document.location.hash = '/' + env.getLang() + '/home';
+}
+
+function initCtl($rootScope, $http, $cookieStore) {
+  if (!$rootScope.isLoggedIn) redirectToHome();
+  var req = $http.get(env.API.REST_URL + '/_restAuth/logout');
+  req.success(function(res) {
+    $rootScope.isLoggedIn = false;
+    Session.unset('authenticated');
+    $cookieStore.remove('userdata');
+    delete $rootScope.user;
+    redirectToHome();
+  });
+}
+
+module.exports = initCtl;
+
+},{"../env":7,"../services/session":12}],5:[function(require,module,exports){
+function initCtl($rootScope) {
+  $rootScope.pageTitle = 'Sign up';
+  $rootScope.activeNav = 'signin';
+}
+
+module.exports = initCtl;
+
+},{}],6:[function(require,module,exports){
 module.exports = function() {
   return {
     scope: true,
@@ -44,7 +130,7 @@ module.exports = function() {
   }
 }
 
-},{}],3:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 var BASE = 'http://mindlife.co.uk';
 var API = {
   REST_URL: BASE + '/AppWebRest',
@@ -70,7 +156,7 @@ module.exports = {
   getVars: getVars
 };
 
-},{}],4:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 var env = require('./env');
 
 function getGallery(id, cb) {
@@ -84,7 +170,7 @@ function getGallery(id, cb) {
 
 module.exports = getGallery;
 
-},{"./env":3}],5:[function(require,module,exports){
+},{"./env":7}],9:[function(require,module,exports){
 var env = require('./env');
 
 function formatNav(raw) {
@@ -114,7 +200,7 @@ module.exports = {
   getNav: getNav
 };
 
-},{"./env":3}],6:[function(require,module,exports){
+},{"./env":7}],10:[function(require,module,exports){
 var env = require('./env');
 var Gallery = require('./gallery');
 
@@ -153,7 +239,7 @@ module.exports = {
   }
 };
 
-},{"./env":3,"./gallery":4}],7:[function(require,module,exports){
+},{"./env":7,"./gallery":8}],11:[function(require,module,exports){
 var keyStr = 'ABCDEFGHIJKLMNOP' +
              'QRSTUVWXYZabcdef' +
              'ghijklmnopqrstuv' +
@@ -239,7 +325,7 @@ module.exports = {
 };
 
 
-},{}],8:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 module.exports = {
   get: function(key) {
     return sessionStorage.getItem(key);
@@ -252,78 +338,7 @@ module.exports = {
   }
 };
 
-},{}],9:[function(require,module,exports){
-var env = require('./env');
-var Base64 = require('./services/base64');
-var Session = require('./services/session');
-
-function sanitizeCredentials($sanitize, credentials) {
-  return {
-    email: $sanitize(credentials.email),
-    password: $sanitize(credentials.password)
-  };
-}
-
-function submitCredentials($http, credentials, cb) {
-  var encoded = Base64.encode(credentials.email + ':' + credentials.password);
-  $http.defaults.headers.common.Authorization = 'Basic ' + encoded;
-  var req = $http.post(env.API.REST_URL + '/_restAuth/login', credentials);
-  req.success(function(res) {
-    return cb(null, res);
-  });
-  req.error(function(res) {
-    return cb(res, null);
-  })
-}
-
-function initCtl($rootScope, $http, $sanitize, $cookieStore, $scope) {
-  // Set app state
-  $rootScope.activeNav = 'signin';
-  $rootScope.pageTitle = 'Sign in';
-  $scope.login = function() {
-    var credentials = sanitizeCredentials($sanitize, $scope.credentials);
-    submitCredentials($http, credentials, function(err, res) {
-      if (err) return console.log(err);
-      $rootScope.isLoggedIn = true;
-      Session.set('authenticated', true);
-      $cookieStore.put('userdata', res);
-    });
-  }
-}
-
-module.exports = initCtl;
-
-},{"./env":3,"./services/base64":7,"./services/session":8}],10:[function(require,module,exports){
-var env = require('./env');
-var Session = require('./services/session');
-
-function redirectToHome() {
-  return document.location.hash = '/' + env.getLang() + '/home';
-}
-
-function initCtl($rootScope, $http, $cookieStore) {
-  if (!$rootScope.isLoggedIn) redirectToHome();
-  var req = $http.get(env.API.REST_URL + '/_restAuth/logout');
-  req.success(function(res) {
-    $rootScope.isLoggedIn = false;
-    Session.unset('authenticated');
-    $cookieStore.remove('userdata');
-    delete $rootScope.user;
-    redirectToHome();
-  });
-}
-
-module.exports = initCtl;
-
-},{"./env":3,"./services/session":8}],11:[function(require,module,exports){
-function initCtl($rootScope) {
-  $rootScope.pageTitle = 'Sign up';
-  $rootScope.activeNav = 'signin';
-}
-
-module.exports = initCtl;
-
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 require('./vendors/angular');
 
 var env = require('./framework/env');
@@ -337,13 +352,14 @@ var app = angular.module('ML', [
 ]);
 
 app.controller('PagesCtl', pages.initCtl);
-app.controller('SigninCtl', require('./framework/signin'));
-app.controller('SignupCtl', require('./framework/signup'));
-app.controller('SignoutCtl', require('./framework/signout'));
+app.controller('SigninCtl', require('./framework/controllers/signin'));
+app.controller('SignupCtl', require('./framework/controllers/signup'));
+app.controller('SignoutCtl', require('./framework/controllers/signout'));
+app.controller('DashboardCtl', require('./framework/controllers/dashboard'));
 
 app.directive('bindOnce', require('./framework/directives/bind-once'));
 
-app.config(require('./config'));
+app.config(require('./framework/config'));
 
 app.run(function($rootScope, $http, $cookieStore, $sce) {
 
@@ -393,7 +409,7 @@ app.run(function($rootScope, $http, $cookieStore, $sce) {
   
 });
 
-},{"./config":1,"./framework/directives/bind-once":2,"./framework/env":3,"./framework/navigation":5,"./framework/pages":6,"./framework/services/session":8,"./framework/signin":9,"./framework/signout":10,"./framework/signup":11,"./vendors/angular":20}],13:[function(require,module,exports){
+},{"./framework/config":1,"./framework/controllers/dashboard":2,"./framework/controllers/signin":3,"./framework/controllers/signout":4,"./framework/controllers/signup":5,"./framework/directives/bind-once":6,"./framework/env":7,"./framework/navigation":9,"./framework/pages":10,"./framework/services/session":12,"./vendors/angular":21}],14:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -2011,7 +2027,7 @@ angular.module('ngAnimate', ['ng'])
 
 })(window, window.angular);
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -2209,7 +2225,7 @@ angular.module('ngCookies', ['ng']).
 
 })(window, window.angular);
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /* global angular, console */
 
 'use strict';
@@ -2557,7 +2573,7 @@ angular.module('angular-google-analytics', [])
 
     });
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -3486,7 +3502,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
 })(window, window.angular);
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -4112,7 +4128,7 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 
 })(window, window.angular);
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -4689,7 +4705,7 @@ makeSwipeDirective('ngSwipeRight', 1, 'swiperight');
 
 })(window, window.angular);
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -26154,7 +26170,7 @@ var styleDirective = valueFn({
 })(window, document);
 
 !angular.$$csp() && angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\\:form{display:block;}.ng-animate-block-transitions{transition:0s all!important;-webkit-transition:0s all!important;}</style>');
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 require('./angular');
 require('./angular-route');
 require('./angular-sanitize');
@@ -26166,5 +26182,5 @@ require('./angular-google-analytics');
 
 module.exports = {};
 
-},{"./angular":19,"./angular-animate":13,"./angular-cookies":14,"./angular-google-analytics":15,"./angular-route":16,"./angular-sanitize":17,"./angular-touch":18}]},{},[12])
+},{"./angular":20,"./angular-animate":14,"./angular-cookies":15,"./angular-google-analytics":16,"./angular-route":17,"./angular-sanitize":18,"./angular-touch":19}]},{},[13])
 ;
