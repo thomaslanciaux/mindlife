@@ -2565,6 +2565,7 @@ function initCtl($rootScope, $http, $cookieStore, $location, $scope) {
     });
   }
 
+  // Autofocus on the first input once the view is loaded
   var $input = document.getElementById('login-email');
   $input.focus();
 }
@@ -3218,13 +3219,12 @@ app.run(function($rootScope, $http, $cookieStore, $sce) {
   $rootScope.$on('$routeChangeSuccess', function(e, current, prev) {
     var active = current.params.page || 'home';
     $rootScope.activeNav = active;
-    $rootScope.pageTitle = 'Home';
 
     // Go to top of the page
     document.body.scrollTop = 0;
 
     // Get active page title
-    if ($rootScope.nav) {
+    if ($rootScope.nav && active) {
       var i = $rootScope.nav.length;
       while (i--) {
         var path = $rootScope.nav[i].path.split('/').pop();
