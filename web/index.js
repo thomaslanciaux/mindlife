@@ -3067,7 +3067,18 @@ var Gallery = require('./gallery');
 var Forms = require('./forms');
 var countries = require('./countries');
 
-function initCtl($scope, sections) {
+var authRoute = [ 'life-expectency-calculator', 'private' ];
+
+function initCtl($rootScope, $scope, sections, $route, $location) {
+
+  if (!$rootScope.isLoggedIn) {
+    var i = authRoute.length;
+    while(i--) {
+      if (authRoute[i] !== $route.current.params.page) continue;
+      return $location.path('/');
+    }
+  }
+
   var sections = sections.data;
   $scope.sections = sections;
 
