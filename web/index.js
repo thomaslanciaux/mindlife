@@ -2534,7 +2534,7 @@ function initCtl($rootScope, $location) {
   $rootScope.pageTitle = 'Dashboard';
   $rootScope.activeNav = 'dashboard';
   var lastUpdate = $rootScope.user.updated_at;
-  var dateFormat = 'Mo MMM YYYY, h:mm a';
+  var dateFormat = 'Do MMM YYYY, h:mm a';
   $rootScope.user.lastUpdate = moment(lastUpdate).format(dateFormat);
 }
 
@@ -2545,7 +2545,7 @@ var env = require('../env');
 var Session = require('../services/session');
 var Auth = require('../services/auth');
 
-function initCtl($rootScope, $http, $sanitize, $cookieStore, $location, $scope) {
+function initCtl($rootScope, $http, $cookieStore, $location, $scope) {
   // Set app state
   $rootScope.activeNav = 'signin';
   $rootScope.pageTitle = 'Sign in';

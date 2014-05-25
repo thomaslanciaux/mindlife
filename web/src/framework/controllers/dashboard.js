@@ -6,7 +6,7 @@ function initCtl($rootScope, $location) {
   $rootScope.pageTitle = 'Dashboard';
   $rootScope.activeNav = 'dashboard';
   var lastUpdate = $rootScope.user.updated_at;
-  var dateFormat = 'Mo MMM YYYY, h:mm a';
+  var dateFormat = 'Do MMM YYYY, h:mm a';
   $rootScope.user.lastUpdate = moment(lastUpdate).format(dateFormat);
 }
 
