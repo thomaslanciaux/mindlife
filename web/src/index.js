@@ -6,8 +6,7 @@ var pages = require('./framework/pages');
 var SessionService = require('./framework/services/session');
 
 var app = angular.module('ML', [
-  'ngRoute', 'ngSanitize', 'ngCookies', 'ngTouch', 'ngAnimate',
-  'angular-google-analytics'
+  'ngRoute', 'ngSanitize', 'ngCookies', 'ngTouch', 'angular-google-analytics'
 ]);
 
 app.controller('PagesCtl', pages.initCtl);
