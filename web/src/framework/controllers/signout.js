@@ -6,7 +6,7 @@ function redirectToHome() {
 }
 
 function initCtl($rootScope, $http, $cookieStore) {
-  if (!$rootScope.isLoggedIn) redirectToHome();
+  if (!$rootScope.isLoggedIn) return redirectToHome();
   var req = $http.get(env.API.REST_URL + '/_restAuth/logout');
   req.success(function(res) {
     $rootScope.isLoggedIn = false;

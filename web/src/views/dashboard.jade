@@ -3,7 +3,10 @@
   section
     header
       h1 Hello 
-        strong(ng-bind='user.printable_name', bind-once)
+        strong(ng-bind='user.printable_name', bind-once) 
+        br
+        small
+          a(href='#/{{lang}}/signout') Sign out
       p(bind-once) {{user.role}} since the {{user.lastUpdate}}
     p
       | Please 

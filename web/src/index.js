@@ -19,7 +19,7 @@ app.directive('bindOnce', require('./framework/directives/bind-once'));
 
 app.config(require('./framework/config'));
 
-app.run(function($rootScope, $http, $cookieStore, $sce) {
+app.run(function($rootScope, $http, $cookieStore, $sce, $route) {
 
   // Get Env vars
   env.getVars($http, function(err, res){ $rootScope.envVars = res; });

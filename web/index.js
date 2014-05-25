@@ -2581,7 +2581,7 @@ function redirectToHome() {
 }
 
 function initCtl($rootScope, $http, $cookieStore) {
-  if (!$rootScope.isLoggedIn) redirectToHome();
+  if (!$rootScope.isLoggedIn) return redirectToHome();
   var req = $http.get(env.API.REST_URL + '/_restAuth/logout');
   req.success(function(res) {
     $rootScope.isLoggedIn = false;
@@ -3266,7 +3266,7 @@ app.directive('bindOnce', require('./framework/directives/bind-once'));
 
 app.config(require('./framework/config'));
 
-app.run(function($rootScope, $http, $cookieStore, $sce) {
+app.run(function($rootScope, $http, $cookieStore, $sce, $route) {
 
   // Get Env vars
   env.getVars($http, function(err, res){ $rootScope.envVars = res; });
