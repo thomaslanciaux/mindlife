@@ -12,7 +12,7 @@ function initCtl($rootScope, $http, $cookieStore, $location, $scope) {
 
   $scope.login = function() {
     Auth.submitCredentials($http, $scope.credentials, function(err, res) {
-      if (err) return console.log(err);
+      if (err) return alert(err.flash);
       $rootScope.isLoggedIn = true;
       Session.set('authenticated', true);
       $cookieStore.put('userdata', res);
