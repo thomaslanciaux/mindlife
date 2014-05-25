@@ -8,7 +8,7 @@ minjs:
 	uglifyjs index.min.js -o index.min.js
 
 css:
-	stylus --include ../node_modules/nib/lib ./src/css/index.styl -o .
+	stylus -c --include ../node_modules/nib/lib ./src/css/index.styl -o .
 
 html:
 	jade src/views/index.jade -o .
