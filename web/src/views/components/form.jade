@@ -28,3 +28,10 @@ ol.quiz
                 value='{{$index}}', id='quiz-{{$parent.$index}}-{{$index}}')
           label(for='quiz-{{$parent.$index}}-{{$index}}', 
                 ng-bind='opt')
+
+      select(ng-switch-when='Select')
+        option(ng-repeat='opt in field.opts', value='{{$index}}',
+               ng-bind='opt') 
+
+      select(ng-switch-when='Country',
+             ng-options='opt.code as opt.name for opt in countries')

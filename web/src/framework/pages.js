@@ -1,6 +1,7 @@
 var env = require('./env');
 var Gallery = require('./gallery');
 var Forms = require('./forms');
+var countries = require('./countries');
 
 function initCtl($scope, sections) {
   var sections = sections.data;
@@ -20,12 +21,13 @@ function initCtl($scope, sections) {
       break;
     }
 
-    if (section.type === 'Questionnaire') {
+    if (section.type === 'Questionnaire' || section.type === 'Form') {
       $scope.current = 1;
       var id = section.form_template_id;
       Forms.getFields(id, function(err, res) {
         if (err) return alert(err);
         $scope.$apply(function() { 
+          $scope.countries = countries.list;
           $scope.fields = Forms.cleanOptions(res); 
         });
       });
