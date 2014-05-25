@@ -1,4 +1,37 @@
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var env = require('./framework/env');
+var pages = require('./framework/pages');
+
+module.exports = function($routeProvider, AnalyticsProvider) {
+  var lang = env.getLang() || 'en';
+  var base = '/' + lang + '/';
+  $routeProvider.when(base + 'home', { templateUrl: './views/home.html' });
+  $routeProvider.when(base + 'signin', { 
+    templateUrl: './views/signin.html', controller: 'SigninCtl'
+  });
+  $routeProvider.when(base + 'signup', {
+    templateUrl: './views/signup.html', controller: 'SignupCtl'
+  });
+  $routeProvider.when(base + 'signout', {
+    templateUrl: './views/home.html', controller: 'SignoutCtl'
+  });
+  $routeProvider.when(base + ':page', {
+    templateUrl: './views/page.html', controller: 'PagesCtl',
+    resolve: pages.resolve
+  });
+  $routeProvider.otherwise({ redirectTo: '/en/home' });
+
+  AnalyticsProvider.setAccount('UA-12411151-8');
+  AnalyticsProvider.trackPages(true); // track all routes (or not)
+  AnalyticsProvider.useAnalytics(true); // Use analytics.js instead of ga.js
+  AnalyticsProvider.ignoreFirstPageLoad(true) ; // Ignore first page view
+  AnalyticsProvider.useECommerce(true); //Enabled eCommerce module
+  AnalyticsProvider.useEnhancedLinkAttribution(true);
+  // change page event name
+  AnalyticsProvider.setPageEvent('$stateChangeSuccess');
+}
+
+},{"./framework/env":2,"./framework/pages":5}],2:[function(require,module,exports){
 var BASE = 'http://mindlife.co.uk';
 var API = {
   REST_URL: BASE + '/AppWebRest',
@@ -24,7 +57,7 @@ module.exports = {
   getVars: getVars
 };
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 var env = require('./env');
 
 function getGallery(id, cb) {
@@ -38,7 +71,7 @@ function getGallery(id, cb) {
 
 module.exports = getGallery;
 
-},{"./env":1}],3:[function(require,module,exports){
+},{"./env":2}],4:[function(require,module,exports){
 var env = require('./env');
 
 function formatNav(raw) {
@@ -68,7 +101,7 @@ module.exports = {
   getNav: getNav
 };
 
-},{"./env":1}],4:[function(require,module,exports){
+},{"./env":2}],5:[function(require,module,exports){
 var env = require('./env');
 var Gallery = require('./gallery');
 
@@ -107,7 +140,7 @@ module.exports = {
   }
 };
 
-},{"./env":1,"./gallery":2}],5:[function(require,module,exports){
+},{"./env":2,"./gallery":3}],6:[function(require,module,exports){
 var keyStr = 'ABCDEFGHIJKLMNOP' +
              'QRSTUVWXYZabcdef' +
              'ghijklmnopqrstuv' +
@@ -193,7 +226,7 @@ module.exports = {
 };
 
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 module.exports = {
   get: function(key) {
     return sessionStorage.getItem(key);
@@ -206,10 +239,10 @@ module.exports = {
   }
 };
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 var env = require('./env');
 var Base64 = require('./services/base64');
-var SessionService = require('./services/session');
+var Session = require('./services/session');
 
 function sanitizeCredentials($sanitize, credentials) {
   return {
@@ -239,7 +272,7 @@ function initCtl($rootScope, $http, $sanitize, $cookieStore, $scope) {
     submitCredentials($http, credentials, function(err, res) {
       if (err) return console.log(err);
       $rootScope.isLoggedIn = true;
-      SessionService.set('authenticated', true);
+      Session.set('authenticated', true);
       $cookieStore.put('userdata', res);
     });
   }
@@ -247,7 +280,29 @@ function initCtl($rootScope, $http, $sanitize, $cookieStore, $scope) {
 
 module.exports = initCtl;
 
-},{"./env":1,"./services/base64":5,"./services/session":6}],8:[function(require,module,exports){
+},{"./env":2,"./services/base64":6,"./services/session":7}],9:[function(require,module,exports){
+var env = require('./env');
+var Session = require('./services/session');
+
+function redirectToHome() {
+  return document.location.hash = '/' + env.getLang() + '/home';
+}
+
+function initCtl($rootScope, $http, $cookieStore) {
+  if (!$rootScope.isLoggedIn) redirectToHome();
+  var req = $http.get(env.API.REST_URL + '/_restAuth/logout');
+  req.success(function(res) {
+    $rootScope.isLoggedIn = false;
+    Session.unset('authenticated');
+    $cookieStore.remove('userdata');
+    delete $rootScope.user;
+    redirectToHome();
+  });
+}
+
+module.exports = initCtl;
+
+},{"./env":2,"./services/session":7}],10:[function(require,module,exports){
 function initCtl($rootScope) {
   $rootScope.pageTitle = 'Sign up';
   $rootScope.activeNav = 'signin';
@@ -255,7 +310,7 @@ function initCtl($rootScope) {
 
 module.exports = initCtl;
 
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 require('./vendors/angular');
 
 var env = require('./framework/env');
@@ -268,37 +323,12 @@ var app = angular.module('ML', [
   'angular-google-analytics'
 ]);
 
-app.config(function($routeProvider, AnalyticsProvider) {
-  var lang = env.getLang() || 'en';
-  var base = '/' + lang + '/';
-  $routeProvider.when(base + 'home', { 
-    templateUrl: './views/home.html'
-  });
-  $routeProvider.when(base + 'signin', { 
-    templateUrl: './views/signin.html', controller: 'SigninCtl'
-  });
-  $routeProvider.when(base + 'signup', {
-    templateUrl: './views/signup.html', controller: 'SignupCtl'
-  });
-  $routeProvider.when(base + ':page', {
-    templateUrl: './views/page.html', controller: 'PagesCtl',
-    resolve: pages.resolve
-  });
-  $routeProvider.otherwise({ redirectTo: '/en/home' });
-
-  AnalyticsProvider.setAccount('UA-12411151-8');
-  AnalyticsProvider.trackPages(true); // track all routes (or not)
-  AnalyticsProvider.useAnalytics(true); // Use analytics.js instead of ga.js
-  AnalyticsProvider.ignoreFirstPageLoad(true) ; // Ignore first page view
-  AnalyticsProvider.useECommerce(true); //Enabled eCommerce module
-  AnalyticsProvider.useEnhancedLinkAttribution(true);
-  // change page event name
-  AnalyticsProvider.setPageEvent('$stateChangeSuccess');
-});
-
 app.controller('PagesCtl', pages.initCtl);
 app.controller('SigninCtl', require('./framework/signin'));
 app.controller('SignupCtl', require('./framework/signup'));
+app.controller('SignoutCtl', require('./framework/signout'));
+
+app.config(require('./config'));
 
 app.run(function($rootScope, $http, $cookieStore, $sce) {
 
@@ -337,9 +367,7 @@ app.run(function($rootScope, $http, $cookieStore, $sce) {
   }
 
   // trustAsResourceUrl external URL in data
-  $rootScope.trustSrc = function(src) {
-    return $sce.trustAsResourceUrl(src);
-  }
+  $rootScope.trustSrc = function(src) { return $sce.trustAsResourceUrl(src); }
 
   // Check if user is logged in
   $rootScope.isLoggedIn = !!SessionService.get('authenticated');
@@ -350,7 +378,7 @@ app.run(function($rootScope, $http, $cookieStore, $sce) {
   
 });
 
-},{"./framework/env":1,"./framework/navigation":3,"./framework/pages":4,"./framework/services/session":6,"./framework/signin":7,"./framework/signup":8,"./vendors/angular":17}],10:[function(require,module,exports){
+},{"./config":1,"./framework/env":2,"./framework/navigation":4,"./framework/pages":5,"./framework/services/session":7,"./framework/signin":8,"./framework/signout":9,"./framework/signup":10,"./vendors/angular":19}],12:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -1968,7 +1996,7 @@ angular.module('ngAnimate', ['ng'])
 
 })(window, window.angular);
 
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -2166,7 +2194,7 @@ angular.module('ngCookies', ['ng']).
 
 })(window, window.angular);
 
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /* global angular, console */
 
 'use strict';
@@ -2514,7 +2542,7 @@ angular.module('angular-google-analytics', [])
 
     });
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -3443,7 +3471,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
 })(window, window.angular);
 
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -4069,7 +4097,7 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 
 })(window, window.angular);
 
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -4646,7 +4674,7 @@ makeSwipeDirective('ngSwipeRight', 1, 'swiperight');
 
 })(window, window.angular);
 
-},{}],16:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -26111,7 +26139,7 @@ var styleDirective = valueFn({
 })(window, document);
 
 !angular.$$csp() && angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\\:form{display:block;}.ng-animate-block-transitions{transition:0s all!important;-webkit-transition:0s all!important;}</style>');
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 require('./angular');
 require('./angular-route');
 require('./angular-sanitize');
@@ -26123,5 +26151,5 @@ require('./angular-google-analytics');
 
 module.exports = {};
 
-},{"./angular":16,"./angular-animate":10,"./angular-cookies":11,"./angular-google-analytics":12,"./angular-route":13,"./angular-sanitize":14,"./angular-touch":15}]},{},[9])
+},{"./angular":18,"./angular-animate":12,"./angular-cookies":13,"./angular-google-analytics":14,"./angular-route":15,"./angular-sanitize":16,"./angular-touch":17}]},{},[11])
 ;

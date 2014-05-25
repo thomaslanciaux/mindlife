@@ -8,10 +8,10 @@ nav.navbar.navbar-default.navbar-fixed-top
 
     li(ng-switch='isLoggedIn')
       span(ng-switch-when='true')
-        a(ng-class="navClass('logout')", 
-          ng-href='#/{{lang}}/logout') Log out 
         a(ng-class="navClass('dashboard')", 
           ng-href='#/{{lang}}/dashboard') Dashboard
+        a(ng-class="navClass('signout')", 
+          ng-href='#/{{lang}}/signout') Sign out 
       a(ng-switch-default, ng-class="navClass('signin')",
         ng-href='#/{{lang}}/signin') Sign in
 

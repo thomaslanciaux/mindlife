@@ -1,6 +1,6 @@
 var env = require('./env');
 var Base64 = require('./services/base64');
-var SessionService = require('./services/session');
+var Session = require('./services/session');
 
 function sanitizeCredentials($sanitize, credentials) {
   return {
@@ -30,7 +30,7 @@ function initCtl($rootScope, $http, $sanitize, $cookieStore, $scope) {
     submitCredentials($http, credentials, function(err, res) {
       if (err) return console.log(err);
       $rootScope.isLoggedIn = true;
-      SessionService.set('authenticated', true);
+      Session.set('authenticated', true);
       $cookieStore.put('userdata', res);
     });
   }
