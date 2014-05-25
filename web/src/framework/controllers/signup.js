@@ -36,6 +36,10 @@ function formatUser(user) {
 }
 
 function initCtl($rootScope, $scope, $http, $location, $cookieStore) {
+  // Redirect to dashboard if logged in
+  var lang = env.getLang();
+  if ($rootScope.isLoggedIn) return $location.path('/' + lang + '/dashboard');
+
   $rootScope.pageTitle = 'Sign up';
   $rootScope.activeNav = 'signin';
   $scope.countries = countries.list;

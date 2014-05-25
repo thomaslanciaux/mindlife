@@ -3,9 +3,13 @@ var Session = require('../services/session');
 var Auth = require('../services/auth');
 
 function initCtl($rootScope, $http, $cookieStore, $location, $scope) {
-  // Set app state
+  var lang = env.getLang();
+  // Redirect to dashboard if logged in
+  if ($rootScope.isLoggedIn) return $location.path('/' + lang + '/dashboard');
+
   $rootScope.activeNav = 'signin';
   $rootScope.pageTitle = 'Sign in';
+
   $scope.login = function() {
     Auth.submitCredentials($http, $scope.credentials, function(err, res) {
       if (err) return console.log(err);
@@ -14,7 +18,7 @@ function initCtl($rootScope, $http, $cookieStore, $location, $scope) {
       $cookieStore.put('userdata', res);
       $rootScope.user = res;
       // Redirect to dashboard
-      $location.path('/' + env.getLang() + '/dashboard');
+      $location.path('/' + lang + '/dashboard');
     });
   }
 }
