@@ -3,7 +3,8 @@
   .footer-em(ng-bind='envVars.company_description')
   .footer-address
     .address(ng-bind='envVars.company_address')
-    .phone(ng-bind='envVars.company_telephone')
-    a.mail(ng-href='mailto:{{envVars.company_email}}',
-           ng-bind='envVars.company_email')
+    address
+      .phone(ng-bind='envVars.company_telephone')
+      a.mail(ng-href='mailto:{{envVars.company_email}}',
+             ng-bind='envVars.company_email')
     include navigation

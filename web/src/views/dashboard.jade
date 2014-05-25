@@ -1,2 +1,6 @@
 .container
   h1 Dashboard
+  section
+    header
+      h1(bind-once) Hello {{user.printable_name}}
+      p(bind-once) {{user.role}} since the {{user.lastUpdate}}

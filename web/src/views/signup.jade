@@ -5,30 +5,34 @@
     form
       fieldset
         p
-          label(for='signup-name') Printable name
-          input(type='text', id='signup-name', required,
+          label(for='printable') Printable name: 
+          input(type='text', id='printable', required, 
+                ng-model='printable',
                 placeholder='Your printable name, (eg. John Doe)')
         p
-          label(for='signup-username') Username
-          input(type='text', id='signup-username', required,
-                placeholder='Username to be shown publicly')
+          label(for='username') Username: 
+          input(type='text', id='username', required,
+                ng-model='username', placeholder='Username to be shown publicly')
         p
-          label(for='signup-password') Password
+          label(for='email') Email: 
+          input(type='email', id='email', required,
+                ng-model='email', placeholder='Email address')
+        p
+          label(for='password') Password: 
           input(type='password', id='signup-password', required,
-                placeholder='Please enter a password')
-          br
-          small This password will be your HELPconnect password
+                ng-model='password', placeholder='Please enter a password')
         p
-          label(for='signup-password-confirm') Password confirmation
+          label(for='password-confirm') Password confirmation
           input(type='password', id='signup-password-confirm', required,
+                ng-model='passwordConfirm'
                 placeholder='Please confirm the password')
         p
-          label(for='signup-country') Country of residence
-          select(id='signup-country', required)
-            option(value='null') Please select
+          label(for='country') Country of residence
+          select(id='country', ng-model='country',
+                 ng-options='opt.code as opt.name for opt in countries')
         p
-          label(for='signup-lang') Prefered reading language
-          select(id='signup-lang', required)
-            option(value='null') Please select
+          label(for='lang') Prefered reading language
+          select(id='lang', ng-model='lang',
+                 ng-options='opt.value as opt.label for opt in langs')
         p.submit
           button(type='submit') Sign up

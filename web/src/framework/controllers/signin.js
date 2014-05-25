@@ -32,6 +32,7 @@ function initCtl($rootScope, $http, $sanitize, $cookieStore, $location, $scope) 
       $rootScope.isLoggedIn = true;
       Session.set('authenticated', true);
       $cookieStore.put('userdata', res);
+      $rootScope.user = res;
       // Redirect to dashboard
       $location.path('/' + env.getLang() + '/dashboard');
     });

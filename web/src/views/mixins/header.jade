@@ -16,16 +16,15 @@ nav.navbar.navbar-default.navbar-fixed-top
       a(ng-switch-default, ng-class="navClass('signin')",
         ng-href='#/{{lang}}/signin') Sign in
 
-    li.search
-      form.navbar-form.navbar-right
-        .input-group
-          input.form-control.input-sm(type='search', 
-                                      name='searchInput', 
-                                      ng-model='searchString',
-                                      autocomplete='off',
-                                      placeholder='Type your query here…',
-                                      spellcheck='false',
-                                      required
-                                     ) 
-          span.form-group-btn
-            button.btn.btn-primary(type='submit') Search
+  form.navbar-form.navbar-right
+    .input-group
+      input.form-control.input-sm(type='search', 
+                                  name='searchInput', 
+                                  ng-model='searchString',
+                                  autocomplete='off',
+                                  placeholder='Type your query here…',
+                                  spellcheck='false',
+                                  required
+                                 ) 
+      span.form-group-btn
+        button.btn.btn-primary(type='submit') Search
