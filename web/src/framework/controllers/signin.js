@@ -21,6 +21,10 @@ function initCtl($rootScope, $http, $cookieStore, $location, $scope) {
       $location.path('/' + lang + '/dashboard');
     });
   }
+
+  // Autofocus on the first input once the view is loaded
+  var $input = document.getElementById('login-email');
+  $input.focus();
 }
 
 module.exports = initCtl;

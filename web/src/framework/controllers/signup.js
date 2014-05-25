@@ -72,6 +72,10 @@ function initCtl($rootScope, $scope, $http, $location, $cookieStore) {
       });
     });
   }
+
+  // Autofocus on the first input once the view is loaded
+  var $input = document.getElementById('printable');
+  $input.focus();
 }
 
 module.exports = initCtl;
