@@ -4,8 +4,8 @@ js:
 	browserify src/index.js -o index.js
 
 minjs:
-	ngmin index.js index.min.js
-	uglifyjs index.min.js -o index.min.js
+	ngmin index.js index.js
+	uglifyjs index.js -o index.js
 
 css:
 	stylus -c --include ../node_modules/nib/lib ./src/css/index.styl -o .
