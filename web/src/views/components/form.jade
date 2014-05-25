@@ -1,38 +1,41 @@
 section
   header
     h1(ng-bind="'Question ' + current + ' of ' + fields.length")
-ol.form
-  li(ng-repeat='field in fields')
-    label(for='form-{{$index}}', ng-bind='field.field_label', bind-once)
+  form
+    ol.form
+      li(ng-repeat='field in fields')
+        label(for='form-{{$index}}', ng-bind='field.field_label', bind-once)
 
-    span(ng-switch='field.type')
+        span(ng-switch='field.type')
 
-      input(ng-switch-when='Text', type='text', id='form-{{$index}}')
+          input(ng-switch-when='Text', type='text', id='form-{{$index}}')
 
-      textarea(ng-switch-when='Longtext', rows='5', id='form-{{$index}}')
+          textarea(ng-switch-when='Longtext', rows='5', id='form-{{$index}}')
 
-      input(ng-switch-when='Email', type='email', id='form-{{$index}}')
+          input(ng-switch-when='Email', type='email', id='form-{{$index}}')
 
-      input(ng-switch-when='Date', type='date', id='form-{{$index}}')
+          input(ng-switch-when='Date', type='date', id='form-{{$index}}')
 
-      ul(ng-switch-when='Checkboxes')
-        li(ng-repeat='opt in field.opts')
-          input(type='checkbox', name='form-{{$parent.$index}}[]',
-                value='{{$index}}', id='form-{{$parent.$index}}-{{$index}}')
-          label(for='form-{{$parent.$index}}-{{$index}}', 
-                ng-bind='opt')
+          ul(ng-switch-when='Checkboxes')
+            li(ng-repeat='opt in field.opts')
+              input(type='checkbox', name='form-{{$parent.$index}}[]',
+                    value='{{$index}}', id='form-{{$parent.$index}}-{{$index}}')
+              label(for='form-{{$parent.$index}}-{{$index}}', 
+                    ng-bind='opt')
 
-      ul(ng-switch-when='Radio')
-        li(ng-repeat='opt in field.opts')
-          input(type='radio', name='form-{{$parent.$index}}',
-                value='{{$index}}', id='form-{{$parent.$index}}-{{$index}}')
-          label(for='form-{{$parent.$index}}-{{$index}}', 
-                ng-bind='opt')
+          ul(ng-switch-when='Radio')
+            li(ng-repeat='opt in field.opts')
+              input(type='radio', name='form-{{$parent.$index}}',
+                    value='{{$index}}', id='form-{{$parent.$index}}-{{$index}}')
+              label(for='form-{{$parent.$index}}-{{$index}}', 
+                    ng-bind='opt')
 
-      select(ng-switch-when='Select', id='form-{{$index}}')
-        option(ng-repeat='opt in field.opts', value='{{$index}}',
-               ng-bind='opt') 
+          select(ng-switch-when='Select', id='form-{{$index}}')
+            option(ng-repeat='opt in field.opts', value='{{$index}}',
+                   ng-bind='opt') 
 
-      select(ng-switch-when='Country', id='form-{{$index}}')
-        option(ng-repeat='opt in countries', value='opt.code', 
-               ng-bind='opt.name') 
+          select(ng-switch-when='Country', id='form-{{$index}}')
+            option(ng-repeat='opt in countries', value='opt.code', 
+                   ng-bind='opt.name') 
+    p.submit
+      button(type='submit') Submit
