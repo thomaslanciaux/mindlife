@@ -6,25 +6,25 @@ ol.quiz
     label(for='quiz-{{$index}}', ng-bind='field.field_label', bind-once)
 
     span(ng-switch='field.type')
-      // Text
+
       input(ng-switch-when='Text', type='text', id='quiz-{{$index}}')
-      // Textarea
+
       textarea(ng-switch-when='Longtext', rows='5', id='quiz-{{$index}}')
-      // Email
+
       input(ng-switch-when='Email', type='email', id='quiz-{{$index}}')
-      // Date
+
       input(ng-switch-when='Date', type='date', id='quiz-{{$index}}')
-      // Checkboxes
+
       ul(ng-switch-when='Checkboxes')
         li(ng-repeat='opt in field.opts')
           input(type='checkbox', name='quiz-{{$parent.$index}}[]',
-                id='quiz-{{$parent.$index}}-{{$index}}')
+                value='{{$index}}', id='quiz-{{$parent.$index}}-{{$index}}')
           label(for='quiz-{{$parent.$index}}-{{$index}}', 
                 ng-bind='opt')
-      // Radio
+
       ul(ng-switch-when='Radio')
         li(ng-repeat='opt in field.opts')
           input(type='radio', name='quiz-{{$parent.$index}}',
-                id='quiz-{{$parent.$index}}-{{$index}}')
+                value='{{$index}}', id='quiz-{{$parent.$index}}-{{$index}}')
           label(for='quiz-{{$parent.$index}}-{{$index}}', 
                 ng-bind='opt')
