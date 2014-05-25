@@ -16,3 +16,4 @@ html:
 	jade src/views/components/description-only.jade -o ./views/components
 	jade src/views/components/description-gallery.jade -o ./views/components
 	jade src/views/components/youtube-embed.jade -o ./views/components
+	jade src/views/components/quiz.jade -o ./views/components

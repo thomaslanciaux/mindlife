@@ -10,3 +10,5 @@
           ng-include="'views/components/description-gallery.html'")
       div(ng-if="section.type == 'YoutubeVideo'",
           ng-include="'views/components/youtube-embed.html'")
+      div(ng-if="section.type == 'Questionnaire'",
+          ng-include="'views/components/quiz.html'")
