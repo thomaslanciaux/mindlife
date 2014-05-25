@@ -3089,6 +3089,7 @@ function initCtl($rootScope, $scope, sections, $route, $location) {
     if (section.type === 'DescriptionGallery') {
       var id = section.description_gallery_id || section.gallery_id;
       Gallery(id, function(err, res ) {
+        if (err) return alert(err);
         $scope.$apply(function() { section.gallery = res; });
         $scope.galleryClass = function(isLeft) {
           return (!!isLeft)? 'gallery-left' : '';
