@@ -1,5 +1,6 @@
 var env = require('./env');
 var Base64 = require('./services/base64');
+var SessionService = require('./services/session');
 
 function sanitizeCredentials($sanitize, credentials) {
   return {
@@ -8,24 +9,30 @@ function sanitizeCredentials($sanitize, credentials) {
   };
 }
 
-function submitCredentials(credentials, cb) {
-  var data = new FormData();
-  for (var key in credentials) data.append(key, credentials[key]);
-  var xhr = new XMLHttpRequest();
-  xhr.onload = function() {
-    cb(null, JSON.parse(this.responseText));
-  }
-  xhr.open('POST', env.API.REST_URL + '/_restAuth/login')
-  xhr.send(data);
+function submitCredentials($http, credentials, cb) {
+  var encoded = Base64.encode(credentials.email + ':' + credentials.password);
+  $http.defaults.headers.common.Authorization = 'Basic ' + encoded;
+  var req = $http.post(env.API.REST_URL + '/_restAuth/login', credentials);
+  req.success(function(res) {
+    return cb(null, res);
+  });
+  req.error(function(res) {
+    return cb(res, null);
+  })
 }
 
-function initCtl($rootScope, $http, $sanitize, $scope) {
+function initCtl($rootScope, $http, $sanitize, $cookieStore, $scope) {
   // Set app state
   $rootScope.activeNav = 'signin';
   $rootScope.pageTitle = 'Sign in';
   $scope.login = function() {
     var credentials = sanitizeCredentials($sanitize, $scope.credentials);
-    submitCredentials(credentials);
+    submitCredentials($http, credentials, function(err, res) {
+      if (err) return console.log(err);
+      $rootScope.isLoggedIn = true;
+      SessionService.set('authenticated', true);
+      $cookieStore.put('userdata', res);
+    });
   }
 }
 

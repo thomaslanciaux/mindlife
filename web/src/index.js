@@ -3,6 +3,7 @@ require('./vendors/angular');
 var env = require('./framework/env');
 var nav = require('./framework/navigation');
 var pages = require('./framework/pages');
+var SessionService = require('./framework/services/session');
 
 var app = angular.module('ML', [
   'ngRoute', 'ngSanitize', 'ngCookies', 'ngTouch', 'ngAnimate',
@@ -37,14 +38,11 @@ app.config(function($routeProvider, AnalyticsProvider) {
   AnalyticsProvider.setPageEvent('$stateChangeSuccess');
 });
 
-app.factory('AuthenticationService', 
-            require('./framework/services/authentication'));
 app.controller('PagesCtl', pages.initCtl);
 app.controller('SigninCtl', require('./framework/signin'));
 app.controller('SignupCtl', require('./framework/signup'));
 
-app.run(function($rootScope, $http, $cookieStore, AuthenticationService,
-                 $sce) {
+app.run(function($rootScope, $http, $cookieStore, $sce) {
 
   // Get Env vars
   env.getVars($http, function(err, res){ $rootScope.envVars = res; });
@@ -82,12 +80,11 @@ app.run(function($rootScope, $http, $cookieStore, AuthenticationService,
 
   // trustAsResourceUrl external URL in data
   $rootScope.trustSrc = function(src) {
-    console.log(src)
     return $sce.trustAsResourceUrl(src);
   }
 
   // Check if user is logged in
-  $rootScope.isLoggedIn = !!AuthenticationService.isLoggedIn()
+  $rootScope.isLoggedIn = !!SessionService.get('authenticated');
 
   // Get user info if logged in
   if (!$rootScope.isLoggedIn) return;
