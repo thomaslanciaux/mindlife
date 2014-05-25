@@ -1,4 +1,4 @@
-module.exports = [
+var list = [
   {name: 'Please select', code: 'null'},
   {name: 'Afghanistan', code: 'AF'}, 
   {name: 'Åland Islands', code: 'AX'}, 
@@ -244,3 +244,21 @@ module.exports = [
   {name: 'Zambia', code: 'ZM'}, 
   {name: 'Zimbabwe', code: 'ZW'} 
 ];
+
+
+function getCurrentIPCountry(cb) {
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function() {
+    var self = this;
+    if (self.status !== 200) return cb('Error on fetch Geoip');
+    var res = JSON.parse(self.responseText);
+    return cb(null, res.countryCode);
+  }
+  xhr.open('GET', 'http://geoip.smart-ip.net/json');
+  xhr.send();
+}
+
+module.exports = {
+  list: list,
+  getCurrentIPCountry: getCurrentIPCountry
+}

@@ -2,37 +2,38 @@
   section.signup-form
     header
       h1 Sign up to MINDLIFE
-    form
+    form(ng-submit='signup()')
       fieldset
         p
           label(for='printable') Printable name: 
           input(type='text', id='printable', required, 
-                ng-model='printable',
+                ng-model='user.printable_name',
                 placeholder='Your printable name, (eg. John Doe)')
         p
           label(for='username') Username: 
           input(type='text', id='username', required,
-                ng-model='username', placeholder='Username to be shown publicly')
+                ng-model='user.username', 
+                placeholder='Username to be shown publicly')
         p
           label(for='email') Email: 
           input(type='email', id='email', required,
-                ng-model='email', placeholder='Email address')
+                ng-model='user.email', placeholder='Email address')
         p
           label(for='password') Password: 
           input(type='password', id='signup-password', required,
-                ng-model='password', placeholder='Please enter a password')
+                ng-model='user.password', placeholder='Please enter a password')
         p
           label(for='password-confirm') Password confirmation
           input(type='password', id='signup-password-confirm', required,
-                ng-model='passwordConfirm'
+                ng-model='user.passwordConfirm',
                 placeholder='Please confirm the password')
         p
           label(for='country') Country of residence
-          select(id='country', ng-model='country',
+          select(id='country', ng-model='user.country',
                  ng-options='opt.code as opt.name for opt in countries')
         p
           label(for='lang') Prefered reading language
-          select(id='lang', ng-model='lang',
+          select(id='lang', ng-model='user.lang',
                  ng-options='opt.value as opt.label for opt in langs')
         p.submit
           button(type='submit') Sign up

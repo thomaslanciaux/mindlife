@@ -2542,35 +2542,15 @@ module.exports = initCtl;
 
 },{"moment":1}],4:[function(require,module,exports){
 var env = require('../env');
-var Base64 = require('../services/base64');
 var Session = require('../services/session');
-
-function sanitizeCredentials($sanitize, credentials) {
-  return {
-    email: $sanitize(credentials.email),
-    password: $sanitize(credentials.password)
-  };
-}
-
-function submitCredentials($http, credentials, cb) {
-  var encoded = Base64.encode(credentials.email + ':' + credentials.password);
-  $http.defaults.headers.common.Authorization = 'Basic ' + encoded;
-  var req = $http.post(env.API.REST_URL + '/_restAuth/login', credentials);
-  req.success(function(res) {
-    return cb(null, res);
-  });
-  req.error(function(res) {
-    return cb(res, null);
-  })
-}
+var Auth = require('../services/auth');
 
 function initCtl($rootScope, $http, $sanitize, $cookieStore, $location, $scope) {
   // Set app state
   $rootScope.activeNav = 'signin';
   $rootScope.pageTitle = 'Sign in';
   $scope.login = function() {
-    var credentials = sanitizeCredentials($sanitize, $scope.credentials);
-    submitCredentials($http, credentials, function(err, res) {
+    Auth.submitCredentials($http, $scope.credentials, function(err, res) {
       if (err) return console.log(err);
       $rootScope.isLoggedIn = true;
       Session.set('authenticated', true);
@@ -2584,7 +2564,7 @@ function initCtl($rootScope, $http, $sanitize, $cookieStore, $location, $scope) 
 
 module.exports = initCtl;
 
-},{"../env":9,"../services/base64":13,"../services/session":14}],5:[function(require,module,exports){
+},{"../env":9,"../services/auth":13,"../services/session":15}],5:[function(require,module,exports){
 var env = require('../env');
 var Session = require('../services/session');
 
@@ -2606,46 +2586,83 @@ function initCtl($rootScope, $http, $cookieStore) {
 
 module.exports = initCtl;
 
-},{"../env":9,"../services/session":14}],6:[function(require,module,exports){
+},{"../env":9,"../services/session":15}],6:[function(require,module,exports){
+var env = require('../env');
+var Auth = require('../services/auth');
+var Session = require('../services/session');
 var countries = require('../countries');
+
 var langs = [
-  { label: 'English', value: 0 },
-  { label: 'Spanish', value: 1 },
-  { label: 'French', value: 2 },
-  { label: 'German', value: 3 }
+  { label: 'English', value: 'en' },
+  { label: 'Spanish', value: 'sp' },
+  { label: 'French', value: 'fr' },
+  { label: 'German', value: 'de' }
+];
+var roles = [
+  { label: 'Registered reader', rank: 5 }
 ];
 
-function getCurrentIPCountry(cb) {
+function signUp(user, cb) {
+  user = formatUser(user);
   var xhr = new XMLHttpRequest();
+  xhr.open('POST', env.API.REST_URL + '/_restUserRegistration');
+  xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
   xhr.onload = function() {
     var self = this;
-    if (self.status !== 200) return cb('Error on fetch Geoip');
-    var res = JSON.parse(self.responseText);
-    return cb(null, res.countryCode);
+    if (self.status !== 200) return cb('Error on registration');
+    return cb(null, JSON.parse(self.responseText));
   }
-  xhr.open('GET', 'http://geoip.smart-ip.net/json');
-  xhr.send();
+  xhr.send(JSON.stringify(user));
 }
 
-function initCtl($rootScope, $scope) {
+function formatUser(user) {
+  delete user.country;
+  delete user.passwordConfirm;
+  user.is_confirmed = false;
+  user.role = roles[0].label;
+  user.role_rank = roles[0].rank;
+  return user;
+}
+
+function initCtl($rootScope, $scope, $http, $location, $cookieStore) {
   $rootScope.pageTitle = 'Sign up';
   $rootScope.activeNav = 'signin';
-  $scope.countries = countries;
+  $scope.countries = countries.list;
   $scope.langs = langs;
-  $scope.lang = langs[0].value;
+  $scope.user = {};
+  $scope.user.lang = langs[0].value;
 
-  getCurrentIPCountry(function(err, res) {
-    if (err) return $scope.country = 'GB';
+  countries.getCurrentIPCountry(function(err, res) {
+    if (err) return $scope.user.country = 'GB';
     $scope.$apply(function() {
-      $scope.country = res;
+      $scope.user.country = res;
     });
   });
+  
+  $scope.signup = function() {
+    signUp($scope.user, function(err, res) {
+      if (err) return console.log(err);
+      credentials = {
+        email: $scope.user.email,
+        password: $scope.user.password
+      };
+      Auth.submitCredentials($http, credentials, function(err, res) {
+        if (err) return console.log(err);
+        $rootScope.isLoggedIn = true;
+        Session.set('authenticated', true);
+        $cookieStore.put('userdata', res);
+        $rootScope.user = res;
+        // Redirect to dashboard
+        $location.path('/' + env.getLang() + '/dashboard');
+      });
+    });
+  }
 }
 
 module.exports = initCtl;
 
-},{"../countries":7}],7:[function(require,module,exports){
-module.exports = [
+},{"../countries":7,"../env":9,"../services/auth":13,"../services/session":15}],7:[function(require,module,exports){
+var list = [
   {name: 'Please select', code: 'null'},
   {name: 'Afghanistan', code: 'AF'}, 
   {name: 'Åland Islands', code: 'AX'}, 
@@ -2892,6 +2909,24 @@ module.exports = [
   {name: 'Zimbabwe', code: 'ZW'} 
 ];
 
+
+function getCurrentIPCountry(cb) {
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function() {
+    var self = this;
+    if (self.status !== 200) return cb('Error on fetch Geoip');
+    var res = JSON.parse(self.responseText);
+    return cb(null, res.countryCode);
+  }
+  xhr.open('GET', 'http://geoip.smart-ip.net/json');
+  xhr.send();
+}
+
+module.exports = {
+  list: list,
+  getCurrentIPCountry: getCurrentIPCountry
+}
+
 },{}],8:[function(require,module,exports){
 module.exports = function() {
   return {
@@ -3015,6 +3050,26 @@ module.exports = {
 };
 
 },{"./env":9,"./gallery":10}],13:[function(require,module,exports){
+var env = require('../env');
+var Base64 = require('../services/base64');
+
+function submitCredentials($http, credentials, cb) {
+  var encoded = Base64.encode(credentials.email + ':' + credentials.password);
+  $http.defaults.headers.common.Authorization = 'Basic ' + encoded;
+  var req = $http.post(env.API.REST_URL + '/_restAuth/login', credentials);
+  req.success(function(res) {
+    return cb(null, res);
+  });
+  req.error(function(res) {
+    return cb(res, null);
+  })
+}
+
+module.exports = {
+  submitCredentials: submitCredentials
+};
+
+},{"../env":9,"../services/base64":14}],14:[function(require,module,exports){
 var keyStr = 'ABCDEFGHIJKLMNOP' +
              'QRSTUVWXYZabcdef' +
              'ghijklmnopqrstuv' +
@@ -3100,7 +3155,7 @@ module.exports = {
 };
 
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 module.exports = {
   get: function(key) {
     return sessionStorage.getItem(key);
@@ -3113,7 +3168,7 @@ module.exports = {
   }
 };
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 require('./vendors/angular');
 
 var env = require('./framework/env');
@@ -3184,7 +3239,7 @@ app.run(function($rootScope, $http, $cookieStore, $sce) {
   
 });
 
-},{"./framework/config":2,"./framework/controllers/dashboard":3,"./framework/controllers/signin":4,"./framework/controllers/signout":5,"./framework/controllers/signup":6,"./framework/directives/bind-once":8,"./framework/env":9,"./framework/navigation":11,"./framework/pages":12,"./framework/services/session":14,"./vendors/angular":23}],16:[function(require,module,exports){
+},{"./framework/config":2,"./framework/controllers/dashboard":3,"./framework/controllers/signin":4,"./framework/controllers/signout":5,"./framework/controllers/signup":6,"./framework/directives/bind-once":8,"./framework/env":9,"./framework/navigation":11,"./framework/pages":12,"./framework/services/session":15,"./vendors/angular":24}],17:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -4802,7 +4857,7 @@ angular.module('ngAnimate', ['ng'])
 
 })(window, window.angular);
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -5000,7 +5055,7 @@ angular.module('ngCookies', ['ng']).
 
 })(window, window.angular);
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 /* global angular, console */
 
 'use strict';
@@ -5348,7 +5403,7 @@ angular.module('angular-google-analytics', [])
 
     });
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -6277,7 +6332,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
 })(window, window.angular);
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -6903,7 +6958,7 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 
 })(window, window.angular);
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -7480,7 +7535,7 @@ makeSwipeDirective('ngSwipeRight', 1, 'swiperight');
 
 })(window, window.angular);
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -28945,7 +29000,7 @@ var styleDirective = valueFn({
 })(window, document);
 
 !angular.$$csp() && angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\\:form{display:block;}.ng-animate-block-transitions{transition:0s all!important;-webkit-transition:0s all!important;}</style>');
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 require('./angular');
 require('./angular-route');
 require('./angular-sanitize');
@@ -28957,5 +29012,5 @@ require('./angular-google-analytics');
 
 module.exports = {};
 
-},{"./angular":22,"./angular-animate":16,"./angular-cookies":17,"./angular-google-analytics":18,"./angular-route":19,"./angular-sanitize":20,"./angular-touch":21}]},{},[15])
+},{"./angular":23,"./angular-animate":17,"./angular-cookies":18,"./angular-google-analytics":19,"./angular-route":20,"./angular-sanitize":21,"./angular-touch":22}]},{},[16])
 ;
