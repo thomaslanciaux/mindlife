@@ -2959,6 +2959,7 @@ module.exports = function() {
 },{}],9:[function(require,module,exports){
 var BASE = 'http://mindlife.co.uk';
 var API = {
+  BASE: BASE,
   REST_URL: BASE + '/AppWebRest',
   ADMIN_URL: BASE + '/AppWebGenie'
 };
@@ -3270,6 +3271,7 @@ app.run(function($rootScope, $http, $cookieStore, $sce) {
   // Get Env vars
   env.getVars($http, function(err, res){ $rootScope.envVars = res; });
   $rootScope.lang = env.getLang();
+  $rootScope.env = env.API;
   
   // Get nav
   nav.getNav($http, function(err, res) { $rootScope.nav = res; });

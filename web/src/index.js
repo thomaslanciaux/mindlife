@@ -24,6 +24,7 @@ app.run(function($rootScope, $http, $cookieStore, $sce) {
   // Get Env vars
   env.getVars($http, function(err, res){ $rootScope.envVars = res; });
   $rootScope.lang = env.getLang();
+  $rootScope.env = env.API;
   
   // Get nav
   nav.getNav($http, function(err, res) { $rootScope.nav = res; });

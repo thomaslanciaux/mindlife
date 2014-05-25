@@ -2,7 +2,8 @@
   h1 Dashboard
   section
     header
-      h1(bind-once) Hello {{user.printable_name}}
+      h1 Hello 
+        strong(ng-bind='user.printable_name', bind-once)
       p(bind-once) {{user.role}} since the {{user.lastUpdate}}
     p
       | Please 

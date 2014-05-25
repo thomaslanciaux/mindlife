@@ -1,5 +1,6 @@
 var BASE = 'http://mindlife.co.uk';
 var API = {
+  BASE: BASE,
   REST_URL: BASE + '/AppWebRest',
   ADMIN_URL: BASE + '/AppWebGenie'
 };
