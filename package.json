@@ -22,5 +22,7 @@
     "stylus": "^0.44.0",
     "svgo": "^0.4.4"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "moment": "^2.6.0"
+  }
 }

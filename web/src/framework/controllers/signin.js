@@ -2,7 +2,7 @@ var env = require('../env');
 var Session = require('../services/session');
 var Auth = require('../services/auth');
 
-function initCtl($rootScope, $http, $sanitize, $cookieStore, $location, $scope) {
+function initCtl($rootScope, $http, $cookieStore, $location, $scope) {
   // Set app state
   $rootScope.activeNav = 'signin';
   $rootScope.pageTitle = 'Sign in';
