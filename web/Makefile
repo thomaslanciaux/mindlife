@@ -1,7 +1,11 @@
-all: js css html
+all: js minjs css html
 	
 js:
 	browserify src/index.js -o index.js
+
+minjs:
+	ngmin index.js index.min.js
+	uglifyjs index.min.js -o index.min.js
 
 css:
 	stylus --include ../node_modules/nib/lib ./src/css/index.styl -o .
