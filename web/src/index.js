@@ -1,4 +1,4 @@
-require('./vendors/angular');
+require('./framework/vendors/angular');
 
 var env = require('./framework/env');
 var nav = require('./framework/navigation');

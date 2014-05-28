@@ -26,6 +26,9 @@
       div(ng-if="section.type == 'Quote'",
           ng-include="'views/components/quote.html'")
 
+      div(ng-if="section.type == 'Audio'",
+          ng-include="'views/components/audio.html'")
+
       div(ng-if="section.type == 'YoutubeVideo'",
           ng-include="'views/components/youtube-embed.html'")
 

@@ -1,0 +1,10 @@
+figure
+  audio(ng-src="{{trustSrc(env.REST_URL + '/uploads/' + section.file_dir)}}",
+        controls)
+    strong Your browser does not support the <code>audio</code> element
+  figcaption
+    div(ng-bind-html='section.document_description',
+        ng-if='section.document_description', bind-once)
+    a(ng-href='{{env.REST_URL}}/uploads/{{section.file_dir}}')
+      | Download file 
+      small(ng-bind='section.file_size')

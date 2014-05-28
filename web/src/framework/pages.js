@@ -40,6 +40,10 @@ function initCtl($rootScope, $scope, sections, $route, $location) {
         });
       });
     }
+
+    if (section.type === 'Audio') {
+      // Do something
+    }
   }
 
   $scope.galleryClass = function(isLeft) {
