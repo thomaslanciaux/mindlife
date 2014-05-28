@@ -23,14 +23,10 @@ function initCtl($rootScope, $scope, sections, $route, $location) {
     
     if (section.type === 'DescriptionGallery') {
       var id = section.description_gallery_id || section.gallery_id;
-      Gallery(id, function(err, res ) {
+      Gallery(id, i, function(err, i, res) {
         if (err) return alert(err);
-        $scope.$apply(function() { section.gallery = res; });
-        $scope.galleryClass = function(isLeft) {
-          return (!!isLeft)? 'gallery-left' : '';
-        }
+        $scope.$apply(function() { $scope.sections[i].gallery = res; });
       });
-      break;
     }
 
     if (section.type === 'Questionnaire' || section.type === 'Form') {
@@ -44,6 +40,10 @@ function initCtl($rootScope, $scope, sections, $route, $location) {
         });
       });
     }
+  }
+
+  $scope.galleryClass = function(isLeft) {
+    return (!!isLeft)? 'gallery-left' : '';
   }
 }
 

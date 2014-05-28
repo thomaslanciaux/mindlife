@@ -48,7 +48,6 @@ app.run(function($rootScope, $http, $cookieStore, $sce, $route) {
       var i = $rootScope.nav.length;
       while (i--) {
         var path = $rootScope.nav[i].path.split('/').pop();
-        console.log(path);
         if (path !== active) continue;
         $rootScope.pageTitle = $rootScope.nav[i].label;
         break;

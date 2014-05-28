@@ -3023,10 +3023,10 @@ module.exports = {
 },{"./env":9}],11:[function(require,module,exports){
 var env = require('./env');
 
-function getGallery(id, cb) {
+function getGallery(id, i, cb) {
   var xhr = new XMLHttpRequest();
   xhr.onload = function() {
-    cb(null, JSON.parse(this.responseText));
+    cb(null, i, JSON.parse(this.responseText));
   };
   xhr.open('get', env.API.REST_URL + '/_restGalleries/' + id, true);
   xhr.send();
@@ -3090,14 +3090,10 @@ function initCtl($rootScope, $scope, sections, $route, $location) {
     
     if (section.type === 'DescriptionGallery') {
       var id = section.description_gallery_id || section.gallery_id;
-      Gallery(id, function(err, res ) {
+      Gallery(id, i, function(err, i, res) {
         if (err) return alert(err);
-        $scope.$apply(function() { section.gallery = res; });
-        $scope.galleryClass = function(isLeft) {
-          return (!!isLeft)? 'gallery-left' : '';
-        }
+        $scope.$apply(function() { $scope.sections[i].gallery = res; });
       });
-      break;
     }
 
     if (section.type === 'Questionnaire' || section.type === 'Form') {
@@ -3111,6 +3107,10 @@ function initCtl($rootScope, $scope, sections, $route, $location) {
         });
       });
     }
+  }
+
+  $scope.galleryClass = function(isLeft) {
+    return (!!isLeft)? 'gallery-left' : '';
   }
 }
 
@@ -3298,7 +3298,6 @@ app.run(function($rootScope, $http, $cookieStore, $sce, $route) {
       var i = $rootScope.nav.length;
       while (i--) {
         var path = $rootScope.nav[i].path.split('/').pop();
-        console.log(path);
         if (path !== active) continue;
         $rootScope.pageTitle = $rootScope.nav[i].label;
         break;
