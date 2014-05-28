@@ -9,11 +9,17 @@ var app = angular.module('ML', [
   'ngRoute', 'ngSanitize', 'ngCookies', 'ngTouch', 'angular-google-analytics'
 ]);
 
+
 app.controller('PagesCtl', pages.initCtl);
 app.controller('SigninCtl', require('./framework/controllers/signin'));
 app.controller('SignupCtl', require('./framework/controllers/signup'));
 app.controller('SignoutCtl', require('./framework/controllers/signout'));
 app.controller('DashboardCtl', require('./framework/controllers/dashboard'));
+
+app.controller('HomeCtl', function($rootScope) {
+  $rootScope.pageTitle = 'Home';
+  $rootScope.activeNav = 'home';
+});
 
 app.directive('bindOnce', require('./framework/directives/bind-once'));
 
@@ -42,6 +48,7 @@ app.run(function($rootScope, $http, $cookieStore, $sce, $route) {
       var i = $rootScope.nav.length;
       while (i--) {
         var path = $rootScope.nav[i].path.split('/').pop();
+        console.log(path);
         if (path !== active) continue;
         $rootScope.pageTitle = $rootScope.nav[i].label;
         break;

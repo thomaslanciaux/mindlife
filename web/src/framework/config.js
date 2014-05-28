@@ -4,7 +4,9 @@ var pages = require('./pages');
 module.exports = function($routeProvider, AnalyticsProvider) {
   var lang = env.getLang() || 'en';
   var base = '/' + lang + '/';
-  $routeProvider.when(base + 'home', { templateUrl: './views/home.html' });
+  $routeProvider.when(base + 'home', { 
+    controller: 'HomeCtl', templateUrl: './views/home.html' 
+  });
   $routeProvider.when(base + 'signin', { 
     templateUrl: './views/signin.html', controller: 'SigninCtl'
   });
