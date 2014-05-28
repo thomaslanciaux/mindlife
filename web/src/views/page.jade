@@ -4,11 +4,18 @@
     header.section-header(ng-if='section.title')
       h1(ng-id='{{section.anchor}}', bind-once, ng-bind='section.title')
     .section-content
+
       div(ng-if="section.type == 'DescriptionOnly'",
           ng-include="'views/components/description-only.html'")
+
       div(ng-if="section.type == 'DescriptionGallery'",
           ng-include="'views/components/description-gallery.html'")
+
+      div(ng-if="section.type == 'CallToAction'",
+          ng-include="'views/components/call-to-action.html'")
+
       div(ng-if="section.type == 'YoutubeVideo'",
           ng-include="'views/components/youtube-embed.html'")
+
       div(ng-if="section.type == 'Questionnaire' || section.type == 'Form'",
           ng-include="'views/components/form.html'")

@@ -1,1 +1,1 @@
-<div bind-once="bind-once" ng-bind-html="section.description_only"></div>
+<div ng-bind-html="section.description_only" bind-once="bind-once"></div><div ng-if="section.more_description"><a role="button" data-toggle="more-{{$index}}" ng-bind="section.button_more_description" bind-once="bind-once"></a><div id="more-{{$index}}" ng-bind-html="section.more_description" bind-once="bind-once"></div></div>
