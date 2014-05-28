@@ -1,0 +1,10 @@
+a(ng-href='{{section.external_link_url}}', 
+  title='This link will open in a new window')
+  figure
+    img(ng-src='{{env.REST_URL}}/uploads/{{section.file_dir}}', style='max-width:100%')
+    figcaption
+      strong(ng-if='section.external_link_name',
+             ng-bind='section.external_link_name', 
+             bind-once)
+      div(ng-if='section.external_link_description', 
+          ng-bind-html='section.external_link_description', bind-once)

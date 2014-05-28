@@ -21,7 +21,7 @@ function initCtl($rootScope, $scope, sections, $route, $location) {
   for (var i = 0; i < sections.length; i++) {
     var section = $scope.sections[i];
     
-    if (section.type === 'DescriptionGallery') {
+    if (section.type === 'DescriptionGallery' || section.type === 'Gallery') {
       var id = section.description_gallery_id || section.gallery_id;
       Gallery(id, i, function(err, i, res) {
         if (err) return alert(err);
@@ -33,10 +33,10 @@ function initCtl($rootScope, $scope, sections, $route, $location) {
       $scope.current = 1;
       $scope.countries = countries.list;
       var id = section.form_template_id;
-      Forms.getFields(id, function(err, res) {
+      Forms.getFields(id, i, function(err, res, i) {
         if (err) return alert(err);
-        $scope.$apply(function() { 
-          $scope.fields = Forms.cleanOptions(res); 
+        $scope.$apply(function() {
+          $scope.sections[i].fields = Forms.cleanOptions(res); 
         });
       });
     }

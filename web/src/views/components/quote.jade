@@ -1,0 +1,5 @@
+blockquote
+  div(ng-bind-html='section.quote_text', bind-once)
+  footer(ng-bind='section.quote_author', bind-once)
+    small(ng-if='section.quote_author_lifespan',
+          ng-bind='section.quote_author_lifespan', bind-once)

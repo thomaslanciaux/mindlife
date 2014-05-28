@@ -15,14 +15,14 @@ function cleanOptions(res) {
   return res;
 }
 
-function getFields(id, cb) {
+function getFields(id, i, cb) {
   var xhr = new XMLHttpRequest();
   xhr.open('GET', env.API.REST_URL + '/_restTemplateFields/' + id);
   xhr.onload = function() {
     var self = this;
     if (self.status !== 200) return cb('Error on fetching form fields');
     var res = JSON.parse(self.responseText);
-    return cb(null, res);
+    return cb(null, res, i);
   }
   xhr.send();
 }
