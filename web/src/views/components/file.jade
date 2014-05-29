@@ -6,7 +6,7 @@ figure
       span(ng-if='section.document_type', 
            ng-bind='section.document_type', bind-once)
       |, 
-      span(ng-bind="section.file_size/1000000 + 'Mb'", bind-once)
+      span(ng-bind='section.file_size | Filesize', bind-once)
       | )
   figcaption(ng-if='section.document_description',
              ng-bind-html='section.document_description', bind-once)

@@ -7,4 +7,6 @@ figure
         ng-if='section.document_description', bind-once)
     a(ng-href='{{env.REST_URL}}/uploads/{{section.file_dir}}')
       | Download file 
-      small(ng-bind='section.file_size')
+      | (
+      small(ng-bind='section.file_size | Filesize')
+      | )

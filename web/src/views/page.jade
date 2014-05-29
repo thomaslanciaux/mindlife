@@ -1,9 +1,12 @@
 .container
   h1.page-title(bind-once ng-bind='pageTitle', ng-if='pageTitle')
-  section.section(ng-repeat='section in sections', style='border-top:1px solid #ccc;padding-bottom:1rem')
+  section.section(ng-repeat='section in sections')
     header.section-header(ng-if='section.title')
       h1(ng-id='{{section.anchor}}', bind-once, ng-bind='section.title')
     .section-content
+
+      div(ng-if="section.type == 'Questionnaire' || section.type == 'Form'",
+          ng-include="'views/components/form.html'")
 
       div(ng-if="section.type == 'DescriptionOnly'",
           ng-include="'views/components/description-only.html'")
@@ -11,14 +14,14 @@
       div(ng-if="section.type == 'DescriptionGallery'",
           ng-include="'views/components/description-gallery.html'")
 
+      div(ng-if="section.type == 'Gallery'",
+          ng-include="'views/components/gallery.html'")
+
       div(ng-if="section.type == 'CallToAction'",
           ng-include="'views/components/call-to-action.html'")
 
       div(ng-if="section.type == 'ExternalLink'",
           ng-include="'views/components/external-link.html'")
-
-      div(ng-if="section.type == 'Gallery'",
-          ng-include="'views/components/gallery.html'")
 
       div(ng-if="section.type == 'File'",
           ng-include="'views/components/file.html'")
@@ -29,8 +32,9 @@
       div(ng-if="section.type == 'Audio'",
           ng-include="'views/components/audio.html'")
 
+      div(ng-if="section.type == 'GoogleMaps'",
+          ng-include="'views/components/gmap.html'")
+
       div(ng-if="section.type == 'YoutubeVideo'",
           ng-include="'views/components/youtube-embed.html'")
 
-      div(ng-if="section.type == 'Questionnaire' || section.type == 'Form'",
-          ng-include="'views/components/form.html'")

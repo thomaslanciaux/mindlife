@@ -22,6 +22,9 @@ app.controller('HomeCtl', function($rootScope) {
 });
 
 app.directive('bindOnce', require('./framework/directives/bind-once'));
+app.directive('googleMap', require('./framework/directives/google-map'));
+
+app.filter('Filesize', require('./framework/filters/filesize'));
 
 app.config(require('./framework/config'));
 
