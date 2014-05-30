@@ -4,7 +4,8 @@
   section.section(ng-repeat='section in sections')
     header.section-header(ng-if='section.title')
       h1
-        small(ng-if="pageType === 'search'", ng-bind="$index + 1 + ' '", bind-once)
+        small(ng-if="pageType === 'search' && sections.length > 1", 
+              ng-bind="$index + 1 + ' '", bind-once)
         strong(ng-id='{{section.anchor}}', bind-once, ng-bind='section.title')
     .section-content
 
