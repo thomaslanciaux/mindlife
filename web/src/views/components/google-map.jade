@@ -1,9 +1,9 @@
 figure
   google-map(latlng='{{section.map_latlng}}',
              marker='{{section.map_marker}}',
-             zoom='{{section.map_zoom}}')
+             zoom='{{section.map_zoom}}',
+             mtitle='{{section.map_name}}')
   figcaption
-    header
-      h1(ng-bind='section.map_name', bind-once)
+    h3(ng-bind='section.map_name', bind-once)
     p(ng-if='section.map_description',
       ng-bind-html='section.map_description', bind-once)

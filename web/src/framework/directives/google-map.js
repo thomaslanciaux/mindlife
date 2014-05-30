@@ -48,7 +48,8 @@ function linkDirective(el, attrs) {
     var map = initMap(el[0], attrs);
     // Get geocode for marker and draw it
     getLatLng(attrs.marker, function(err, res) {
-      var marker = createMarker(map, res[0].geometry.location);
+      var pos = res[0].geometry.location;
+      var marker = createMarker(map, pos, attrs.mtitle);
     });
   });
 }

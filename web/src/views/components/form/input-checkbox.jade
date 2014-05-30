@@ -1,0 +1,8 @@
+ul(ng-switch-when='Checkboxes')
+  li(ng-repeat='opt in field.opts')
+    input(type='checkbox', 
+          name='form-{{section.form_template_id}}-{{$parent.$index}}[]',
+          value='{{$index}}', 
+          id='form-{{section.form_template_id}}-{{$parent.$index}}-{{$index}}') 
+    label(for='form-{{section.form_template_id}}-{{$parent.$index}}-{{$index}}',
+          ng-bind='opt')

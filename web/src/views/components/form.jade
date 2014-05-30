@@ -8,54 +8,21 @@ section
       ng-bind='section.form_description', bind-once)
     ol.form
       li(ng-repeat='field in section.fields')
-        label(for='form-{{section.form_template_id}}-{{$index}}', 
+        label(for='form-{{section.form_template_id}}-{{$index}}',
               ng-bind='field.field_label', bind-once)
-
         span(ng-switch='field.type')
-
-          input(ng-switch-when='Text', type='text', 
-                id='form-{{section.form_template_id}}-{{$index}}')
-
-          textarea(ng-switch-when='Longtext', rows='5',
-                   id='form-{{section.form_template_id}}-{{$index}}')
-
-          input(ng-switch-when='Email', type='email', 
-                id='form-{{section.form_template_id}}-{{$index}}')
-
-          input(ng-switch-when='Date', type='date', 
-                id='form-{{section.form_template_id}}-{{$index}}')
-
-          ul(ng-switch-when='Checkboxes')
-            li(ng-repeat='opt in field.opts')
-              input(type='checkbox', 
-                    name='form-{{section.form_template_id}}-{{$parent.$index}}[]',
-                    value='{{$index}}', 
-                    id='form-{{section.form_template_id}}-{{$parent.$index}}-{{$index}}')
-              label(for='form-{{section.form_template_id}}-{{$parent.$index}}-{{$index}}', 
-                    ng-bind='opt')
-
-          ul(ng-switch-when='Radio')
-            li(ng-repeat='opt in field.opts')
-              input(type='radio', 
-                    name='form-{{section.form_template_id}}-{{$parent.$index}}',
-                    value='{{$index}}', 
-                    id='form-{{section.form_template_id}}-{{$parent.$index}}-{{$index}}')
-              label(for='form-{{section.form_template_id}}-{{$parent.$index}}-{{$index}}', 
-                    ng-bind='opt')
-
-          select(ng-switch-when='Select', 
-                 id='form-{{section.form_template_id}}-{{$index}}')
-            option(ng-repeat='opt in field.opts', value='{{$index}}',
-                   ng-bind='opt') 
-
-          select(ng-switch-when='Country', 
-                 id='form-{{section.form_template_id}}-{{$index}}')
-            option(ng-repeat='opt in countries', value='opt.code', 
-                   ng-bind='opt.name') 
+          include form/input-text.jade
+          include form/input-email.jade
+          include form/input-date.jade
+          include form/input-checkbox
+          include form/input-radio
+          include form/input-file
+          include form/textarea.jade
+          include form/select
+          include form/select-country
         p(ng-if='field.field_description',
           ng-bind-html='field.field_description', bind-once)
     p.submit
       button(type='submit') Submit
-
     p(ng-if='section.form_confirmation_message',
       ng-bind-html='section.form_confirmation_message', bind-once)
