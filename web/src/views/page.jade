@@ -1,11 +1,11 @@
 .container
   h1.page-title(bind-once ng-bind='pageTitle', ng-if='pageTitle')
   include components/search-results
-  section.section(ng-repeat='section in sections')
+  section.section(ng-repeat='section in sections | filter:filter')
     header.section-header(ng-if='section.title')
       h1
         small(ng-if="pageType === 'search' && sections.length > 1", 
-              ng-bind="$index + 1 + ' '", bind-once)
+              ng-bind="$index + 1 + ' '")
         strong(ng-id='{{section.anchor}}', bind-once, ng-bind='section.title')
     .section-content
 

@@ -3,3 +3,18 @@ article(ng-if="pageType == 'search'")
     h1
       span(ng-bind="sections.length + ' '", bind-once) 
       small results found for your search
+  div(ng-if='sections.length > 1')
+    strong Filter results
+    ul
+      li(ng-repeat='type in sectionTypes')
+        a(role='button', 
+          ng-click='filterSearch(type.name)',
+          ng-class='filterClass(type.name)')
+          span(ng-bind='type.name | componentsType')
+        small(ng-bind="' (' + type.count + ')'", bind-once)
+    p(ng-if='filter')
+      strong 
+        | Displaying results in 
+        em(ng-bind='filter.type | componentsType')
+      br
+      a(ng-click='filterReset()') Remove filter
