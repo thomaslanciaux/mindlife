@@ -23,6 +23,10 @@ module.exports = function($routeProvider, AnalyticsProvider) {
     templateUrl: './views/page.html', controller: 'PagesCtl',
     resolve: pages.resolve
   });
+  $routeProvider.when(base + 'search/:query', {
+    templateUrl: './views/page.html', controller: 'PagesCtl',
+    resolve: pages.resolve
+  });
   $routeProvider.otherwise({ redirectTo: '/en/home' });
 
   AnalyticsProvider.setAccount('UA-12411151-8');

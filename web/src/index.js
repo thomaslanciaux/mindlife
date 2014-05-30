@@ -27,10 +27,7 @@ app.filter('Filesize', require('./framework/filters/filesize'));
 
 app.config(require('./framework/config'));
 
-app.run(function($rootScope, $http, $cookieStore, $sce, $route) {
-  // Disable cache of templates (DEV ONLY)
-  $http.defaults.cache = false;
-
+app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location) {
   // Get Env vars
   env.getVars($http, function(err, res){ $rootScope.envVars = res; });
   $rootScope.lang = env.getLang();
@@ -63,6 +60,13 @@ app.run(function($rootScope, $http, $cookieStore, $sce, $route) {
   $rootScope.navClass = function(path) {
     var path = path.split('/').pop();
     return (path === $rootScope.activeNav)? 'active' : '';
+  }
+
+  // Search
+  $rootScope.search = function() {
+    var query = $rootScope.searchString;
+    if (!query || query.length < 2) return;
+    $location.path('/' + $rootScope.lang + '/search/' + query);
   }
 
   // trustAsResourceUrl external URL in data

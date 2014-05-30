@@ -16,7 +16,7 @@ nav.navbar.navbar-default.navbar-fixed-top
       a(ng-switch-default, ng-class="navClass('signin')",
         ng-href='#/{{lang}}/signin') Sign in
 
-  form.navbar-form.navbar-right
+  form.navbar-form.navbar-right(ng-submit="search()")
     .input-group
       input.form-control.input-sm(type='search', 
                                   name='searchInput', 

@@ -5,14 +5,23 @@ var countries = require('./countries');
 
 var authRoute = [ 'life-expectency-calculator', 'private' ];
 
-function initCtl($rootScope, $scope, sections, $route, $location) {
+function initCtl($rootScope, $scope, sections, $location, $route) {
+  var path = $location.path().split('/')[2];
 
   if (!$rootScope.isLoggedIn) {
     var i = authRoute.length;
     while(i--) {
-      if (authRoute[i] !== $route.current.params.page) continue;
+      if (authRoute[i] !== path) continue;
       return $location.path('/');
     }
+  }
+
+  if (path === 'search') {
+    var searchQuery = $route.current.params.query;
+    $rootScope.activeNav = null;
+    $rootScope.pageTitle = 'Search results for "' + searchQuery + '"';
+    $scope.pageType = 'search';
+    $scope.searchQuery = searchQuery;
   }
 
   var sections = sections.data;
@@ -40,10 +49,6 @@ function initCtl($rootScope, $scope, sections, $route, $location) {
         });
       });
     }
-
-    if (section.type === 'Audio') {
-      // Do something
-    }
   }
 
   $scope.galleryClass = function(isLeft) {
@@ -53,7 +58,10 @@ function initCtl($rootScope, $scope, sections, $route, $location) {
 
 function resolvePageSections($q, $http, $route) {
   var routeName = $route.current.params.page;
-  var promise = $http.get(env.API.REST_URL + '/_restPage/' + routeName);
+  // If a routeName is undefined, it is a search query
+  var url = (routeName)? '/_restPage/' + routeName 
+                       : '/_restPublicSearch/' + $route.current.params.query;
+  var promise = $http.get(env.API.REST_URL + url);
   promise.success(function(res) { return res; });
   return promise;
 }
