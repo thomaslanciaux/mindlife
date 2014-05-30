@@ -23,12 +23,13 @@ app.controller('HomeCtl', function($rootScope) {
 
 app.directive('bindOnce', require('./framework/directives/bind-once'));
 app.directive('googleMap', require('./framework/directives/google-map'));
-
 app.filter('Filesize', require('./framework/filters/filesize'));
 
 app.config(require('./framework/config'));
 
 app.run(function($rootScope, $http, $cookieStore, $sce, $route) {
+  // Disable cache of templates (DEV ONLY)
+  $http.defaults.cache = false;
 
   // Get Env vars
   env.getVars($http, function(err, res){ $rootScope.envVars = res; });
