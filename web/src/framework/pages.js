@@ -80,7 +80,6 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
       return (type === $scope.filter.type)? 'active' : '';
     }
   }
-
 }
 
 function resolvePageSections($q, $http, $route) {
