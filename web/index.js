@@ -10030,6 +10030,7 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
     console.log($location.search());
     $rootScope.activeNav = null;
     $rootScope.pageTitle = 'Search results for "' + searchQuery + '"';
+    $rootScope.searchString = searchQuery;
     $scope.pageType = 'search';
     $scope.searchQuery = searchQuery;
     $scope.sectionTypes = sectionTypes;
