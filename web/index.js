@@ -10049,7 +10049,7 @@ function resolvePageSections($q, $http, $route) {
     url = '/_restPage/' + page;
   } else { // If page is undefined, it is a search query
     // Add | character if there are more than 1 keyword on the query
-    var query = encodeURI($route.current.params.query.replace(' ', '|'));
+    var query = encodeURI($route.current.params.query.replace(/ +/g, '|'));
     url = '/_restPublicSearch/' + query;
   }
   var promise = $http.get(env.API.REST_URL + url);
