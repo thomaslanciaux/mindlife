@@ -84,10 +84,14 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
 
 function resolvePageSections($q, $http, $route) {
   var page = $route.current.params.page;
-  // Add | character if there are more than 1 keyword on the query
-  var query = encodeURI($route.current.params.query.replace(' ', '|'));
-  // If page is undefined, it is a search query
-  var url = (page)? '/_restPage/' + page : '/_restPublicSearch/' + query;
+  var url = '';
+  if (page) {
+    url = '/_restPage/' + page;
+  } else { // If page is undefined, it is a search query
+    // Add | character if there are more than 1 keyword on the query
+    var query = encodeURI($route.current.params.query.replace(' ', '|'));
+    url = '/_restPublicSearch/' + query;
+  }
   var promise = $http.get(env.API.REST_URL + url);
   promise.success(function(res) { return res; });
   return promise;
