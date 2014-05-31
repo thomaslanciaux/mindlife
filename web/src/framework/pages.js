@@ -67,7 +67,7 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
   if (path === 'search') {
     var searchQuery = $route.current.params.query;
     if (!searchQuery) return $location.path('/');
-
+    console.log($location.search());
     $rootScope.activeNav = null;
     $rootScope.pageTitle = 'Search results for "' + searchQuery + '"';
     $scope.pageType = 'search';
@@ -84,9 +84,10 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
 
 function resolvePageSections($q, $http, $route) {
   var page = $route.current.params.page;
-  var url = (page)? '/_restPage/' + page
-                       : '/_restPublicSearch/' + $route.current.params.query;
-                       // If page is undefined, it is a search query
+  // Add | character if there are more than 1 keyword on the query
+  var query = encodeURI($route.current.params.query.replace(' ', '|'));
+  // If page is undefined, it is a search query
+  var url = (page)? '/_restPage/' + page : '/_restPublicSearch/' + query;
   var promise = $http.get(env.API.REST_URL + url);
   promise.success(function(res) { return res; });
   return promise;

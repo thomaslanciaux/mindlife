@@ -25,7 +25,7 @@ module.exports = function($routeProvider, AnalyticsProvider) {
   });
   $routeProvider.when(base + 'search/:query', {
     templateUrl: './views/page.html', controller: 'PagesCtl',
-    resolve: pages.resolve
+    resolve: pages.resolve, reloadOnSearch: false
   });
   $routeProvider.otherwise({ redirectTo: '/en/home' });
 

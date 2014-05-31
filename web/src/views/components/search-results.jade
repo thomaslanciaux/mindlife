@@ -7,14 +7,15 @@ article(ng-if="pageType == 'search'")
     strong Filter results
     ul
       li(ng-repeat='type in sectionTypes')
-        a(role='button', 
+        a(role='button', tabindex='0',
+          ng-href='#/{{lang}}/search/{{searchQuery}}?filter={{type.name}}',
           ng-click='filterSearch(type.name)',
           ng-class='filterClass(type.name)')
           span(ng-bind='type.name | componentsType')
-        small(ng-bind="' (' + type.count + ')'", bind-once)
+          small(ng-bind="' (' + type.count + ')'", bind-once)
     p(ng-if='filter')
       strong 
         | Displaying results in 
         em(ng-bind='filter.type | componentsType')
       br
-      a(ng-click='filterReset()') Remove filter
+      a(ng-click='filterReset()', tabindex='0', href='') Remove filter

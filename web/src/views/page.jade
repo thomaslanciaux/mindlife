@@ -9,36 +9,36 @@
         strong(ng-id='{{section.anchor}}', bind-once, ng-bind='section.title')
     .section-content
 
-      div(ng-if="section.type == 'Questionnaire' || section.type == 'Form'",
+      div(ng-if="section.type === 'Questionnaire' || section.type == 'Form'",
           ng-include="'views/components/form.html'")
 
-      div(ng-if="section.type == 'DescriptionOnly'",
+      div(ng-if="section.type === 'DescriptionOnly'",
           ng-include="'views/components/description-only.html'")
 
-      div(ng-if="section.type == 'DescriptionGallery'",
+      div(ng-if="section.type === 'DescriptionGallery'",
           ng-include="'views/components/description-gallery.html'")
 
-      div(ng-if="section.type == 'Gallery'",
+      div(ng-if="section.type === 'Gallery'",
           ng-include="'views/components/gallery.html'")
 
-      div(ng-if="section.type == 'CallToAction'",
+      div(ng-if="section.type === 'CallToAction'",
           ng-include="'views/components/call-to-action.html'")
 
-      div(ng-if="section.type == 'ExternalLink'",
+      div(ng-if="section.type === 'ExternalLink'",
           ng-include="'views/components/external-link.html'")
 
-      div(ng-if="section.type == 'File'",
+      div(ng-if="section.type === 'File'",
           ng-include="'views/components/file.html'")
 
-      div(ng-if="section.type == 'Quote'",
+      div(ng-if="section.type === 'Quote'",
           ng-include="'views/components/quote.html'")
 
-      div(ng-if="section.type == 'Audio'",
+      div(ng-if="section.type === 'Audio'",
           ng-include="'views/components/audio.html'")
 
-      div(ng-if="section.type == 'GoogleMaps'",
+      div(ng-if="section.type === 'GoogleMaps'",
           ng-include="'views/components/google-map.html'")
 
-      div(ng-if="section.type == 'YoutubeVideo'",
+      div(ng-if="section.type === 'YoutubeVideo'",
           ng-include="'views/components/youtube-embed.html'")
 

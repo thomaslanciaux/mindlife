@@ -8,6 +8,7 @@ module.exports = function() {
       case 'Form'              : humanType = 'Forms'; break;
       case 'GoogleMaps'        : humanType = 'Maps'; break;
       case 'Gallery'           : humanType = 'Galleries'; break;
+      case 'Files'           : humanType = 'Files'; break;
     }
     return humanType;
   }
