@@ -3,4 +3,4 @@ figure
          frameborder='0', seamless)
   figcaption
     div(bind-once, ng-if='section.youtube_video_description',
-      ng-bind-html='section.youtube_video_description')
+      ng-bind-html='section.youtube_video_description | hl:searchQuery')

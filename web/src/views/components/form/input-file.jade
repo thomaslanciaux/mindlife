@@ -1,4 +1,18 @@
-span(ng-switch-when='Image')
-  input(type='file', 
-    id='form-{{section.form_template_id}}-{{$index}}',
-    placeholder='Select a file to attach')
+div.file-upload(ng-switch-when='Image', restrict='image.*')
+  p.preview(ng-if='preview')
+    img(ng-if='preview.img', height='128px', ng-src='{{preview.img}}', alt='') 
+    span.preview-desc
+      strong(ng-bind='preview.name')
+      |  (
+      span(ng-bind='preview.size | Filesize')
+      | )
+
+  label(for='form-{{section.form_template_id}}-{{$index}}').btn.btn-upload
+    input(type='file', 
+          id='form-{{section.form_template_id}}-{{$index}}',
+          class='visually-hidden')
+    span(ng-switch='!!preview')
+      span(ng-switch-when='true') Replace the file to attach
+      span(ng-switch-default) Select the file to attach
+
+  span(ng-if='!fileAPI') Your browser doesn't support the <code>file API<code>

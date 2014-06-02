@@ -1,6 +1,5 @@
 figure
-  a(role='button', 
-    ng-href='section.button_link',
-    ng-bind='section.button_name', bind-once)
-    strong(ng-bind='section.button_name', bind-once)
-  figcaption(ng-bind='section.button_description', bind-once)
+  a(role='button', ng-href='{{section.button_link}}',)
+    strong(ng-bind-html='section.button_name | hl:searchQuery', bind-once)
+  figcaption
+    p(ng-bind-html='section.button_description | hl:searchQuery', bind-once)

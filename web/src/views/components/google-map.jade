@@ -4,6 +4,6 @@ figure
              zoom='{{section.map_zoom}}',
              mtitle='{{section.map_name}}')
   figcaption
-    h3(ng-bind='section.map_name', bind-once)
+    h3(ng-bind-html='section.map_name | hl:searchQuery', bind-once)
     p(ng-if='section.map_description',
-      ng-bind-html='section.map_description', bind-once)
+      ng-bind-html='section.map_description | hl:searchQuery', bind-once)

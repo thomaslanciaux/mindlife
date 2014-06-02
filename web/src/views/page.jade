@@ -6,7 +6,8 @@
       h1
         small(ng-if="pageType === 'search' && sections.length > 1", 
               ng-bind="$index + 1 + ' '")
-        strong(ng-id='{{section.anchor}}', bind-once, ng-bind='section.title')
+        strong(ng-id='{{section.anchor}}', bind-once, 
+               ng-bind-html='section.title | hl:searchQuery')
     .section-content
 
       div(ng-if="section.type === 'Questionnaire' || section.type == 'Form'",

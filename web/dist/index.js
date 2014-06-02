@@ -9277,6 +9277,102 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 }).call(this);
 
 },{}],3:[function(require,module,exports){
+/*!
+  * @preserve Qwery - A selector engine
+  * https://github.com/ded/qwery
+  * (c) Dustin Diaz 2014 | License MIT
+  */
+
+(function (name, context, definition) {
+  if (typeof module != 'undefined' && module.exports) module.exports = definition()
+  else if (typeof define == 'function' && define.amd) define(definition)
+  else context[name] = definition()
+})('qwery', this, function () {
+
+  var classOnly = /^\.([\w\-]+)$/
+    , doc = document
+    , win = window
+    , html = doc.documentElement
+    , nodeType = 'nodeType'
+  var isAncestor = 'compareDocumentPosition' in html ?
+    function (element, container) {
+      return (container.compareDocumentPosition(element) & 16) == 16
+    } :
+    function (element, container) {
+      container = container == doc || container == window ? html : container
+      return container !== element && container.contains(element)
+    }
+
+  function toArray(ar) {
+    return [].slice.call(ar, 0)
+  }
+
+  function isNode(el) {
+    var t
+    return el && typeof el === 'object' && (t = el.nodeType) && (t == 1 || t == 9)
+  }
+
+  function arrayLike(o) {
+    return (typeof o === 'object' && isFinite(o.length))
+  }
+
+  function flatten(ar) {
+    for (var r = [], i = 0, l = ar.length; i < l; ++i) arrayLike(ar[i]) ? (r = r.concat(ar[i])) : (r[r.length] = ar[i])
+    return r
+  }
+
+  function uniq(ar) {
+    var a = [], i, j
+    label:
+    for (i = 0; i < ar.length; i++) {
+      for (j = 0; j < a.length; j++) {
+        if (a[j] == ar[i]) {
+          continue label
+        }
+      }
+      a[a.length] = ar[i]
+    }
+    return a
+  }
+
+
+  function normalizeRoot(root) {
+    if (!root) return doc
+    if (typeof root == 'string') return qwery(root)[0]
+    if (!root[nodeType] && arrayLike(root)) return root[0]
+    return root
+  }
+
+  /**
+   * @param {string|Array.<Element>|Element|Node} selector
+   * @param {string|Array.<Element>|Element|Node=} opt_root
+   * @return {Array.<Element>}
+   */
+  function qwery(selector, opt_root) {
+    var m, root = normalizeRoot(opt_root)
+    if (!root || !selector) return []
+    if (selector === win || isNode(selector)) {
+      return !opt_root || (selector !== win && isNode(root) && isAncestor(selector, root)) ? [selector] : []
+    }
+    if (selector && arrayLike(selector)) return flatten(selector)
+
+
+    if (doc.getElementsByClassName && selector == 'string' && (m = selector.match(classOnly))) {
+      return toArray((root).getElementsByClassName(m[1]))
+    }
+    // using duck typing for 'a' window or 'a' document (not 'the' window || document)
+    if (selector && (selector.document || (selector.nodeType && selector.nodeType == 9))) {
+      return !opt_root ? [selector] : []
+    }
+    return toArray((root).querySelectorAll(selector))
+  }
+
+  qwery.uniq = uniq
+
+  return qwery
+}, this);
+
+},{}],4:[function(require,module,exports){
 var env = require('./env');
 var pages = require('./pages');
 
@@ -9318,7 +9414,7 @@ module.exports = function($routeProvider, AnalyticsProvider) {
   AnalyticsProvider.setPageEvent('$stateChangeSuccess');
 }
 
-},{"./env":11,"./pages":17}],4:[function(require,module,exports){
+},{"./env":13,"./pages":20}],5:[function(require,module,exports){
 var moment = require('moment');
 
 function initCtl($rootScope, $location) {
@@ -9333,7 +9429,7 @@ function initCtl($rootScope, $location) {
 
 module.exports = initCtl;
 
-},{"moment":2}],5:[function(require,module,exports){
+},{"moment":2}],6:[function(require,module,exports){
 var env = require('../env');
 var Session = require('../services/session');
 var Auth = require('../services/auth');
@@ -9365,7 +9461,7 @@ function initCtl($rootScope, $http, $cookieStore, $location, $scope) {
 
 module.exports = initCtl;
 
-},{"../env":11,"../services/auth":18,"../services/session":20}],6:[function(require,module,exports){
+},{"../env":13,"../services/auth":21,"../services/session":23}],7:[function(require,module,exports){
 var env = require('../env');
 var Session = require('../services/session');
 
@@ -9387,7 +9483,7 @@ function initCtl($rootScope, $http, $cookieStore) {
 
 module.exports = initCtl;
 
-},{"../env":11,"../services/session":20}],7:[function(require,module,exports){
+},{"../env":13,"../services/session":23}],8:[function(require,module,exports){
 var env = require('../env');
 var Auth = require('../services/auth');
 var Session = require('../services/session');
@@ -9470,7 +9566,7 @@ function initCtl($rootScope, $scope, $http, $location, $cookieStore) {
 
 module.exports = initCtl;
 
-},{"../countries":8,"../env":11,"../services/auth":18,"../services/session":20}],8:[function(require,module,exports){
+},{"../countries":9,"../env":13,"../services/auth":21,"../services/session":23}],9:[function(require,module,exports){
 var list = [
   {name: 'Please select', code: 'null'},
   {name: 'Afghanistan', code: 'AF'}, 
@@ -9736,7 +9832,7 @@ module.exports = {
   getCurrentIPCountry: getCurrentIPCountry
 }
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 module.exports = function() {
   return {
     scope: true,
@@ -9749,7 +9845,53 @@ module.exports = function() {
   }
 }
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
+var qwery = require('qwery');
+
+function hasFileAPI() {
+  return (!!window.File && !!window.FileReader && 
+          !!window.FileList && !!window.Blob);
+}
+
+
+module.exports = function() {
+  return {
+    restrict: 'C',
+    scope: true,
+    link: function(scope, el, attrs) {
+      var fileAPI = hasFileAPI();
+      scope.fileAPI = fileAPI;
+      if (!fileAPI) return;
+
+      function fileSelect(e) {
+        var file = e.target.files[0];
+        var reader = new FileReader();
+        if (!file.type.match(attrs.restrict)) {
+          return alert('The format is not correct ' + 
+                       '(required: ' + attrs.restrict + ')')
+        }
+        reader.onload = function(ev) {
+          scope.$apply(function() {
+            scope.preview = {
+              img: ev.target.result,
+              name: file.name,
+              size: file.size,
+              file: file
+            }
+          });
+        }
+        reader.readAsDataURL(file);
+      }
+
+      var input = qwery('input[type=file]', el[0])[0];
+      input.addEventListener('change', fileSelect, false);
+
+      scope.hasFile = false;
+    }
+  }
+}
+
+},{"qwery":3}],12:[function(require,module,exports){
 var APILoaded = false;
 var injecting = false;
 var queue = [];
@@ -9822,7 +9964,7 @@ module.exports = function() {
   }
 }
 
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 var BASE = 'http://mindlife.co.uk';
 var API = {
   BASE: BASE,
@@ -9849,7 +9991,7 @@ module.exports = {
   getVars: getVars
 };
 
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports = function() {
   return function(type) {
     var humanType = type;
@@ -9866,7 +10008,7 @@ module.exports = function() {
   }
 }
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 module.exports = function() {
   return function(bytes, precision) {
     if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
@@ -9878,7 +10020,30 @@ module.exports = function() {
   }
 }
 
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
+module.exports = function () {
+  /**
+   * @param text {string} haystack to search through
+   * @param search {string} needle to search for
+   * @param [caseSensitive] {boolean} optional boolean to use case-sensitive
+   * searching
+   */
+  return function (text, search, caseSensitive) {
+    if (search || angular.isNumber(search)) {
+      text = text.toString();
+      search = search.toString();
+      if (caseSensitive) {
+        return text.split(search).join('<span class="search-match">' + search + '</span>');
+      } else {
+        return text.replace(new RegExp(search, 'gi'), '<span class="search-match">$&</span>');
+      }
+    } else {
+      return text;
+    }
+  }
+}
+
+},{}],17:[function(require,module,exports){
 var env = require('./env');
 
 function cleanOptions(res) {
@@ -9913,7 +10078,7 @@ module.exports = {
   cleanOptions: cleanOptions
 };
 
-},{"./env":11}],15:[function(require,module,exports){
+},{"./env":13}],18:[function(require,module,exports){
 var env = require('./env');
 
 function getGallery(id, i, cb) {
@@ -9927,7 +10092,7 @@ function getGallery(id, i, cb) {
 
 module.exports = getGallery;
 
-},{"./env":11}],16:[function(require,module,exports){
+},{"./env":13}],19:[function(require,module,exports){
 var env = require('./env');
 
 function formatNav(raw) {
@@ -9957,7 +10122,7 @@ module.exports = {
   getNav: getNav
 };
 
-},{"./env":11}],17:[function(require,module,exports){
+},{"./env":13}],20:[function(require,module,exports){
 var env = require('./env');
 var Gallery = require('./gallery');
 var Forms = require('./forms');
@@ -10027,14 +10192,17 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
   if (path === 'search') {
     var searchQuery = $route.current.params.query;
     if (!searchQuery) return $location.path('/');
-    console.log($location.search());
     $rootScope.activeNav = null;
     $rootScope.pageTitle = 'Search results for "' + searchQuery + '"';
     $rootScope.searchString = searchQuery;
     $scope.pageType = 'search';
     $scope.searchQuery = searchQuery;
     $scope.sectionTypes = sectionTypes;
-    $scope.filter = '';
+    if ( $location.search().filter ) {
+      $scope.filter = { type: $location.search().filter };
+    } else {
+      $scope.filter = '';
+    }
     $scope.filterSearch = function(type) { $scope.filter = { type: type }; }
     $scope.filterReset = function() { $scope.filter = ''; }
     $scope.filterClass = function(type) {
@@ -10065,7 +10233,7 @@ module.exports = {
   }
 };
 
-},{"./countries":8,"./env":11,"./forms":14,"./gallery":15,"lodash":1}],18:[function(require,module,exports){
+},{"./countries":9,"./env":13,"./forms":17,"./gallery":18,"lodash":1}],21:[function(require,module,exports){
 var env = require('../env');
 var Base64 = require('../services/base64');
 
@@ -10085,7 +10253,7 @@ module.exports = {
   submitCredentials: submitCredentials
 };
 
-},{"../env":11,"../services/base64":19}],19:[function(require,module,exports){
+},{"../env":13,"../services/base64":22}],22:[function(require,module,exports){
 var keyStr = 'ABCDEFGHIJKLMNOP' +
              'QRSTUVWXYZabcdef' +
              'ghijklmnopqrstuv' +
@@ -10171,7 +10339,7 @@ module.exports = {
 };
 
 
-},{}],20:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 module.exports = {
   get: function(key) {
     return sessionStorage.getItem(key);
@@ -10184,7 +10352,7 @@ module.exports = {
   }
 };
 
-},{}],21:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -10382,7 +10550,7 @@ angular.module('ngCookies', ['ng']).
 
 })(window, window.angular);
 
-},{}],22:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 /* global angular, console */
 
 'use strict';
@@ -10730,7 +10898,7 @@ angular.module('angular-google-analytics', [])
 
     });
 
-},{}],23:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -11659,7 +11827,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
 })(window, window.angular);
 
-},{}],24:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -12285,7 +12453,7 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 
 })(window, window.angular);
 
-},{}],25:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -12862,7 +13030,7 @@ makeSwipeDirective('ngSwipeRight', 1, 'swiperight');
 
 })(window, window.angular);
 
-},{}],26:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -34327,7 +34495,7 @@ var styleDirective = valueFn({
 })(window, document);
 
 !angular.$$csp() && angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\\:form{display:block;}.ng-animate-block-transitions{transition:0s all!important;-webkit-transition:0s all!important;}</style>');
-},{}],27:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 require('./angular');
 require('./angular-route');
 require('./angular-sanitize');
@@ -34339,7 +34507,7 @@ require('./angular-google-analytics');
 
 module.exports = {};
 
-},{"./angular":26,"./angular-cookies":21,"./angular-google-analytics":22,"./angular-route":23,"./angular-sanitize":24,"./angular-touch":25}],28:[function(require,module,exports){
+},{"./angular":29,"./angular-cookies":24,"./angular-google-analytics":25,"./angular-route":26,"./angular-sanitize":27,"./angular-touch":28}],31:[function(require,module,exports){
 require('./framework/vendors/angular');
 
 var env = require('./framework/env');
@@ -34365,8 +34533,11 @@ app.controller('HomeCtl', function($rootScope) {
 
 app.directive('bindOnce', require('./framework/directives/bind-once'));
 app.directive('googleMap', require('./framework/directives/google-map'));
+app.directive('fileUpload', require('./framework/directives/file-upload'));
+
 app.filter('Filesize', require('./framework/filters/filesize'));
 app.filter('componentsType', require('./framework/filters/components-type'));
+app.filter('hl', require('./framework/filters/highlight'));
 
 app.config(require('./framework/config'));
 
@@ -34424,5 +34595,5 @@ app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location) {
   
 });
 
-},{"./framework/config":3,"./framework/controllers/dashboard":4,"./framework/controllers/signin":5,"./framework/controllers/signout":6,"./framework/controllers/signup":7,"./framework/directives/bind-once":9,"./framework/directives/google-map":10,"./framework/env":11,"./framework/filters/components-type":12,"./framework/filters/filesize":13,"./framework/navigation":16,"./framework/pages":17,"./framework/services/session":20,"./framework/vendors/angular":27}]},{},[28])
+},{"./framework/config":4,"./framework/controllers/dashboard":5,"./framework/controllers/signin":6,"./framework/controllers/signout":7,"./framework/controllers/signup":8,"./framework/directives/bind-once":10,"./framework/directives/file-upload":11,"./framework/directives/google-map":12,"./framework/env":13,"./framework/filters/components-type":14,"./framework/filters/filesize":15,"./framework/filters/highlight":16,"./framework/navigation":19,"./framework/pages":20,"./framework/services/session":23,"./framework/vendors/angular":30}]},{},[31])
 ;

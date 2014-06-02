@@ -1,5 +1,6 @@
 blockquote
-  div(ng-bind-html='section.quote_text', bind-once)
-  footer(ng-bind='section.quote_author', bind-once)
+  div(ng-bind-html='section.quote_text | hl:searchQuery', bind-once)
+  footer
+    span(ng-bind-html='section.quote_author | hl:searchQuery', bind-once)
     small(ng-if='section.quote_author_lifespan',
           ng-bind='section.quote_author_lifespan', bind-once)

@@ -1,1 +1,1 @@
-<figure><a role="button" ng-href="section.button_link" ng-bind="section.button_name" bind-once="bind-once"><strong ng-bind="section.button_name" bind-once="bind-once"></strong></a><figcaption ng-bind="section.button_description" bind-once="bind-once"></figcaption></figure>
+<figure><a role="button" ng-href="{{section.button_link}}"><strong ng-bind-html="section.button_name | hl:searchQuery" bind-once="bind-once"></strong></a><figcaption><p ng-bind-html="section.button_description | hl:searchQuery" bind-once="bind-once"></p></figcaption></figure>

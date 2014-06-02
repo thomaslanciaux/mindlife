@@ -67,14 +67,17 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
   if (path === 'search') {
     var searchQuery = $route.current.params.query;
     if (!searchQuery) return $location.path('/');
-    console.log($location.search());
     $rootScope.activeNav = null;
     $rootScope.pageTitle = 'Search results for "' + searchQuery + '"';
     $rootScope.searchString = searchQuery;
     $scope.pageType = 'search';
     $scope.searchQuery = searchQuery;
     $scope.sectionTypes = sectionTypes;
-    $scope.filter = '';
+    if ( $location.search().filter ) {
+      $scope.filter = { type: $location.search().filter };
+    } else {
+      $scope.filter = '';
+    }
     $scope.filterSearch = function(type) { $scope.filter = { type: type }; }
     $scope.filterReset = function() { $scope.filter = ''; }
     $scope.filterClass = function(type) {

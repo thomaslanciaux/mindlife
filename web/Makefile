@@ -1,20 +1,17 @@
 all: js minjs css html
 	
 js:
-	browserify src/index.js -o index.js
+	browserify src/index.js -o dist/index.js
 
 minjs:
-	ngmin index.js index.js
-	uglifyjs index.js -o index.js
+	ngmin dist/index.js dist/index.js
+	uglifyjs dist/index.js -o dist/index.js
 
 css:
-	stylus -c --include ../node_modules/nib/lib ./src/css/index.styl -o .
+	stylus -c --include ../node_modules/nib/lib ./src/css/index.styl -o dist/
 
 html:
 	jade src/views/index.jade -o .
-	jade src/views/home.jade -o ./views
-	jade src/views/page.jade -o ./views
-	jade src/views/signin.jade -o ./views
-	jade src/views/signup.jade -o ./views
-	jade src/views/dashboard.jade -o ./views
-	jade src/views/components/* -o ./views/components
+	jade src/views/*.jade -o ./views/
+	jade src/views/components/*.jade -o ./views/components
+	jade src/views/components/form/* -o ./views/components/form

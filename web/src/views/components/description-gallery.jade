@@ -1,3 +1,3 @@
 include gallery
-div(bind-once, ng-bind-html='section.description')
-div(bind-once, ng-bind-html='section.description_only')
+div(bind-once, ng-bind-html='section.description | hl:searchQuery')
+div(bind-once, ng-bind-html='section.description_only | hl:searchQuery')

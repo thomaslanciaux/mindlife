@@ -1,4 +1,4 @@
-select(ng-switch-when='Country', 
+select(ng-switch-when='Country', required='{{field.required}}',
        id='form-{{section.form_template_id}}-{{$index}}')
   option(ng-repeat='opt in countries', value='opt.code',
          ng-bind='opt.name') 
