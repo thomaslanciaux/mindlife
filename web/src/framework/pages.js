@@ -55,6 +55,10 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
           $scope.sections[i].fields = Forms.cleanOptions(res); 
         });
       });
+      
+      $scope.sections[i].submitForm = function() {
+        // Submit this form
+      }
     }
   }
   
