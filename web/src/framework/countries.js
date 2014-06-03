@@ -1,5 +1,4 @@
 var list = [
-  {name: 'Please select', code: 'null'},
   {name: 'Afghanistan', code: 'AF'}, 
   {name: 'Åland Islands', code: 'AX'}, 
   {name: 'Albania', code: 'AL'}, 

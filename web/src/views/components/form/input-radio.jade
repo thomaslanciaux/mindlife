@@ -2,7 +2,7 @@ ul(ng-switch-when='Radio')
   li(ng-repeat='opt in field.opts')
     input(type='radio', 
           name='form-{{section.form_template_id}}-{{$parent.$index}}',
-          value='{{$index}}', 
+          ng-model='field.submit_input', value='{{$index}}',
           id='form-{{section.form_template_id}}-{{$parent.$index}}-{{$index}}') 
     label(for='form-{{section.form_template_id}}-{{$parent.$index}}-{{$index}}',
           ng-bind='opt')

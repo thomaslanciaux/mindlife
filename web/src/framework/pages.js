@@ -52,13 +52,19 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
       Forms.getFields(id, i, function(err, res, i) {
         if (err) return alert(err);
         $scope.$apply(function() {
-          $scope.sections[i].fields = Forms.cleanOptions(res); 
+          $scope.sections[i].fields = Forms.cleanOptions(res);
+          var j = $scope.sections[i].fields.length;
+          while(j--) {
+            var field = $scope.sections[i].fields[j];
+            if (field.type === 'Checkboxes') { field.submit_input = []; }
+          }
         });
       });
-      
-      $scope.sections[i].submitForm = function() {
-        // Submit this form
-      }
+    }
+
+    $scope.submitForm = function(formID, fields) {
+      var submittedFields = Forms.formatSubmittedFields(fields, $rootScope.user);
+      console.log(submittedFields)
     }
   }
   
