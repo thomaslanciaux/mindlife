@@ -1,4 +1,5 @@
 var env = require('./env');
+var randomstring = require('randomstring');
 
 function cleanOptions(res) {
   var i = res.length;
@@ -23,17 +24,6 @@ function getFields(id, i, cb) {
     return cb(null, res, i);
   }
   xhr.send();
-}
-
-function randomString() {
-  var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-  var string_length = 255;
-  var randomstring = '';
-  for (var i=0; i<string_length; i++) {
-    var rnum = Math.floor(Math.random() * chars.length);
-    randomstring += chars.substring(rnum,rnum+1);
-  }
-  return randomstring;
 }
 
 function formatAnswer(field) {
@@ -61,13 +51,13 @@ function scoreField(field, submittedField) {
 }
 
 function formatSubmittedFields(fields, user) {
-  var randomstring = randomString();
+  var randomString = randomstring.generate(255);
   var submittedFields = [];
   for (var i in fields) {
     var field = fields[i];
     // if (!field.submit_input || !field.submit_input.length) continue;
     var submittedField = {
-      template_random_string: randomstring,
+      template_random_string: randomString,
       template_id: field.template_id,
       template_name: field.template_name,
       template_description: field.template_description,

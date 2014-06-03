@@ -9373,6 +9373,23 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 }, this);
 
 },{}],4:[function(require,module,exports){
+module.exports = require("./lib/randomstring");
+},{"./lib/randomstring":5}],5:[function(require,module,exports){
+var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghiklmnopqrstuvwxyz';
+
+exports.generate = function(length) {
+  length = length ? length : 32;
+  
+  var string = '';
+  
+  for (var i = 0; i < length; i++) {
+    var randomNumber = Math.floor(Math.random() * chars.length);
+    string += chars.substring(randomNumber, randomNumber + 1);
+  }
+  
+  return string;
+}
+},{}],6:[function(require,module,exports){
 var env = require('./env');
 var pages = require('./pages');
 
@@ -9414,7 +9431,7 @@ module.exports = function($routeProvider, AnalyticsProvider) {
   AnalyticsProvider.setPageEvent('$stateChangeSuccess');
 }
 
-},{"./env":13,"./pages":20}],5:[function(require,module,exports){
+},{"./env":15,"./pages":22}],7:[function(require,module,exports){
 var moment = require('moment');
 
 function initCtl($rootScope, $location) {
@@ -9429,7 +9446,7 @@ function initCtl($rootScope, $location) {
 
 module.exports = initCtl;
 
-},{"moment":2}],6:[function(require,module,exports){
+},{"moment":2}],8:[function(require,module,exports){
 var env = require('../env');
 var Session = require('../services/session');
 var Auth = require('../services/auth');
@@ -9461,7 +9478,7 @@ function initCtl($rootScope, $http, $cookieStore, $location, $scope) {
 
 module.exports = initCtl;
 
-},{"../env":13,"../services/auth":21,"../services/session":23}],7:[function(require,module,exports){
+},{"../env":15,"../services/auth":23,"../services/session":25}],9:[function(require,module,exports){
 var env = require('../env');
 var Session = require('../services/session');
 
@@ -9483,7 +9500,7 @@ function initCtl($rootScope, $http, $cookieStore) {
 
 module.exports = initCtl;
 
-},{"../env":13,"../services/session":23}],8:[function(require,module,exports){
+},{"../env":15,"../services/session":25}],10:[function(require,module,exports){
 var env = require('../env');
 var Auth = require('../services/auth');
 var Session = require('../services/session');
@@ -9566,7 +9583,7 @@ function initCtl($rootScope, $scope, $http, $location, $cookieStore) {
 
 module.exports = initCtl;
 
-},{"../countries":9,"../env":13,"../services/auth":21,"../services/session":23}],9:[function(require,module,exports){
+},{"../countries":11,"../env":15,"../services/auth":23,"../services/session":25}],11:[function(require,module,exports){
 var list = [
   {name: 'Afghanistan', code: 'AF'}, 
   {name: 'Åland Islands', code: 'AX'}, 
@@ -9831,7 +9848,7 @@ module.exports = {
   getCurrentIPCountry: getCurrentIPCountry
 }
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 module.exports = function() {
   return {
     scope: true,
@@ -9844,7 +9861,7 @@ module.exports = function() {
   }
 }
 
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 var qwery = require('qwery');
 
 function hasFileAPI() {
@@ -9890,7 +9907,7 @@ module.exports = function() {
   }
 }
 
-},{"qwery":3}],12:[function(require,module,exports){
+},{"qwery":3}],14:[function(require,module,exports){
 var APILoaded = false;
 var injecting = false;
 var queue = [];
@@ -9963,7 +9980,7 @@ module.exports = function() {
   }
 }
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var BASE = 'http://mindlife.co.uk';
 var API = {
   BASE: BASE,
@@ -9990,7 +10007,7 @@ module.exports = {
   getVars: getVars
 };
 
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 module.exports = function() {
   return function(type) {
     var humanType = type;
@@ -10009,7 +10026,7 @@ module.exports = function() {
   }
 }
 
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 module.exports = function() {
   return function(bytes, precision) {
     if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
@@ -10021,7 +10038,7 @@ module.exports = function() {
   }
 }
 
-},{}],16:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 module.exports = function () {
   /**
    * @param text {string} haystack to search through
@@ -10044,8 +10061,9 @@ module.exports = function () {
   }
 }
 
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 var env = require('./env');
+var randomstring = require('randomstring');
 
 function cleanOptions(res) {
   var i = res.length;
@@ -10072,17 +10090,6 @@ function getFields(id, i, cb) {
   xhr.send();
 }
 
-function randomString() {
-  var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-  var string_length = 255;
-  var randomstring = '';
-  for (var i=0; i<string_length; i++) {
-    var rnum = Math.floor(Math.random() * chars.length);
-    randomstring += chars.substring(rnum,rnum+1);
-  }
-  return randomstring;
-}
-
 function formatAnswer(field) {
   var type = field.type;
   var answer = '';
@@ -10100,38 +10107,21 @@ function formatAnswer(field) {
 }
 
 function scoreField(field, submittedField) {
-  // console.log(field)
   for (var i = 0; i < 16; i++) {
     var prop = 'dim' + (i+1) + '_field_score';
     submittedField[prop] = null;
   }
-  // dim1_field_score: field.dim1_field_score,
-  // dim2_field_score: field.dim2_field_score,
-  // dim3_field_score: field.dim3_field_score,
-  // dim4_field_score: field.dim4_field_score,
-  // dim5_field_score: field.dim5_field_score,
-  // dim6_field_score: field.dim6_field_score,
-  // dim7_field_score: field.dim7_field_score,
-  // dim8_field_score: field.dim8_field_score,
-  // dim9_field_score: field.dim9_field_score,
-  // dim10_field_score: field.dim10_field_score,
-  // dim11_field_score: field.dim11_field_score,
-  // dim12_field_score: field.dim12_field_score,
-  // dim13_field_score: field.dim13_field_score,
-  // dim14_field_score: field.dim14_field_score,
-  // dim15_field_score: field.dim15_field_score,
-  // dim16_field_score: field.dim16_field_score,
   return submittedField;
 }
 
 function formatSubmittedFields(fields, user) {
-  var randomstring = randomString();
+  var randomString = randomstring.generate(255);
   var submittedFields = [];
   for (var i in fields) {
     var field = fields[i];
     // if (!field.submit_input || !field.submit_input.length) continue;
     var submittedField = {
-      template_random_string: randomstring,
+      template_random_string: randomString,
       template_id: field.template_id,
       template_name: field.template_name,
       template_description: field.template_description,
@@ -10140,7 +10130,7 @@ function formatSubmittedFields(fields, user) {
       field_description: field.field_description,   
       field_value: formatAnswer(field) || null,
       field_type: field.type,
-      required: field.required,         
+      required: field.required,
       lang: field.lang,
       position: parseInt(i),
       searchable: field.searchable,
@@ -10161,7 +10151,7 @@ module.exports = {
   formatSubmittedFields: formatSubmittedFields
 };
 
-},{"./env":13}],18:[function(require,module,exports){
+},{"./env":15,"randomstring":4}],20:[function(require,module,exports){
 var env = require('./env');
 
 function getGallery(id, i, cb) {
@@ -10175,7 +10165,7 @@ function getGallery(id, i, cb) {
 
 module.exports = getGallery;
 
-},{"./env":13}],19:[function(require,module,exports){
+},{"./env":15}],21:[function(require,module,exports){
 var env = require('./env');
 
 function formatNav(raw) {
@@ -10205,7 +10195,7 @@ module.exports = {
   getNav: getNav
 };
 
-},{"./env":13}],20:[function(require,module,exports){
+},{"./env":15}],22:[function(require,module,exports){
 var env = require('./env');
 var Gallery = require('./gallery');
 var Forms = require('./forms');
@@ -10326,7 +10316,7 @@ module.exports = {
   }
 };
 
-},{"./countries":9,"./env":13,"./forms":17,"./gallery":18,"lodash":1}],21:[function(require,module,exports){
+},{"./countries":11,"./env":15,"./forms":19,"./gallery":20,"lodash":1}],23:[function(require,module,exports){
 var env = require('../env');
 var Base64 = require('../services/base64');
 
@@ -10346,7 +10336,7 @@ module.exports = {
   submitCredentials: submitCredentials
 };
 
-},{"../env":13,"../services/base64":22}],22:[function(require,module,exports){
+},{"../env":15,"../services/base64":24}],24:[function(require,module,exports){
 var keyStr = 'ABCDEFGHIJKLMNOP' +
              'QRSTUVWXYZabcdef' +
              'ghijklmnopqrstuv' +
@@ -10432,7 +10422,7 @@ module.exports = {
 };
 
 
-},{}],23:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 module.exports = {
   get: function(key) {
     return sessionStorage.getItem(key);
@@ -10445,7 +10435,7 @@ module.exports = {
   }
 };
 
-},{}],24:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -10643,7 +10633,7 @@ angular.module('ngCookies', ['ng']).
 
 })(window, window.angular);
 
-},{}],25:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 /* global angular, console */
 
 'use strict';
@@ -10991,7 +10981,7 @@ angular.module('angular-google-analytics', [])
 
     });
 
-},{}],26:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -11920,7 +11910,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
 })(window, window.angular);
 
-},{}],27:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -12546,7 +12536,7 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 
 })(window, window.angular);
 
-},{}],28:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -13123,7 +13113,7 @@ makeSwipeDirective('ngSwipeRight', 1, 'swiperight');
 
 })(window, window.angular);
 
-},{}],29:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -34588,7 +34578,7 @@ var styleDirective = valueFn({
 })(window, document);
 
 !angular.$$csp() && angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\\:form{display:block;}.ng-animate-block-transitions{transition:0s all!important;-webkit-transition:0s all!important;}</style>');
-},{}],30:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 require('./angular');
 require('./angular-route');
 require('./angular-sanitize');
@@ -34600,7 +34590,7 @@ require('./angular-google-analytics');
 
 module.exports = {};
 
-},{"./angular":29,"./angular-cookies":24,"./angular-google-analytics":25,"./angular-route":26,"./angular-sanitize":27,"./angular-touch":28}],31:[function(require,module,exports){
+},{"./angular":31,"./angular-cookies":26,"./angular-google-analytics":27,"./angular-route":28,"./angular-sanitize":29,"./angular-touch":30}],33:[function(require,module,exports){
 require('./framework/vendors/angular');
 
 var env = require('./framework/env');
@@ -34688,5 +34678,5 @@ app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location) {
   
 });
 
-},{"./framework/config":4,"./framework/controllers/dashboard":5,"./framework/controllers/signin":6,"./framework/controllers/signout":7,"./framework/controllers/signup":8,"./framework/directives/bind-once":10,"./framework/directives/file-upload":11,"./framework/directives/google-map":12,"./framework/env":13,"./framework/filters/components-type":14,"./framework/filters/filesize":15,"./framework/filters/highlight":16,"./framework/navigation":19,"./framework/pages":20,"./framework/services/session":23,"./framework/vendors/angular":30}]},{},[31])
+},{"./framework/config":6,"./framework/controllers/dashboard":7,"./framework/controllers/signin":8,"./framework/controllers/signout":9,"./framework/controllers/signup":10,"./framework/directives/bind-once":12,"./framework/directives/file-upload":13,"./framework/directives/google-map":14,"./framework/env":15,"./framework/filters/components-type":16,"./framework/filters/filesize":17,"./framework/filters/highlight":18,"./framework/navigation":21,"./framework/pages":22,"./framework/services/session":25,"./framework/vendors/angular":32}]},{},[33])
 ;
