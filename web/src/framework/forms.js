@@ -100,13 +100,12 @@ function formatSubmittedFields(fields, user) {
   return submittedFields;
 }
 
-function postField(field, index, total, cb) {
+function postField(field, index, cb) {
   var xhr = new XMLHttpRequest();
   xhr.onload = function() {
     var self = this;
-    var isComplete = (index+1 === total)? true : false;
     if (self.status !== 200) return cb('Error on posting field');
-    return cb(null, JSON.parse(self.responseText), isComplete);
+    return cb(null, JSON.parse(self.responseText), parseInt(index));
   }
   xhr.open('POST', env.API.REST_URL + '/_restFormFields');
   xhr.setRequestHeader('Content-Type','application/json;charset=UTF-8');

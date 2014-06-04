@@ -53,8 +53,8 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
         if (err) return alert(err);
         $scope.$apply(function() {
           $scope.sections[i].fields = Forms.cleanOptions(res);
-          var j = $scope.sections[i].fields.length;
           // Set the default values
+          var j = $scope.sections[i].fields.length;
           while(j--) {
             var field = $scope.sections[i].fields[j];
             switch(field.type) {
@@ -72,16 +72,24 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
     $scope.submitForm = function(index, fields) {
       var submittedFields = Forms.formatSubmittedFields(fields, $rootScope.user);
       var len = submittedFields.length;
+      var progress = 0;
+
       for (var i in submittedFields) {
         var field = submittedFields[i];
+
         if (!!field.required && !field.field_value) {
           $scope.sections[index].feedback = 'Q.' + (parseInt(i)+1) + ' required';
           break;
         }
-        Forms.postField(field, parseInt(i), len, function(err, res, isComplete) {
-          if (!isComplete) return;
+
+        Forms.postField(field, parseInt(i), function(err, res, j) {
+          var isComplete = (j+1 === len)? true : false;
+          progress = ((j+1)/len)*100;
           $scope.$apply(function() {
+            $scope.sections[index].submitProgress = progress;
+            if (!isComplete) return;
             $scope.sections[index].isComplete = true;
+            delete $scope.sections[index].feedback;
           });
         });
       }

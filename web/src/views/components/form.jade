@@ -32,4 +32,7 @@ section
       ng-bind-html='section.form_confirmation_message', bind-once)
 
     p.submit
-      button(type='submit') Submit
+      button(type='submit') 
+        | Submit 
+        span(ng-if='section.submitProgress > 0 && !section.isComplete',
+             ng-bind='section.submitProgress')
