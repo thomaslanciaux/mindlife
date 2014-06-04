@@ -61,7 +61,8 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
         });
       });
     }
-
+    // Bind the submitForm function only once
+    if ($scope.submitForm) continue;
     $scope.submitForm = function(formID, fields) {
       var submittedFields = Forms.formatSubmittedFields(fields, $rootScope.user);
       console.log(submittedFields)

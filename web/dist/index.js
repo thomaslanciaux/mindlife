@@ -10108,16 +10108,27 @@ function formatAnswer(field) {
 
 function scoreField(field, submittedField) {
   var rawSubmit = field.submit_input || null;
-  rawSubmit = parseInt(rawSubmit);
+  var scoreCase = (rawSubmit && typeof rawSubmit === 'object')
+                  ? 'multiple' : 'single';
+
+  if (scoreCase === 'multiple') {
+    var total = 0;
+    for (var i in rawSubmit) {
+      var coef = field['combo_' + (i+1) + '_coef'];
+      if (coef) total = total+coef;
+    }
+  }
+
   for (var i = 0; i < 16; i++) {
     var prop = 'dim' + (i+1) + '_field_score';
+    var dim = field['dimension_' + (i+1) + '_coef'];
     var score = null;
-
-    if (!isNaN(rawSubmit)) {
-      var coef = field['combo_' + (rawSubmit+1) + '_coef'];
-      var dim = field['dimension_' + (i+1) + '_coef'];
+    if (scoreCase === 'single' && rawSubmit) {
+      var coef = field['combo_' + (parseInt(rawSubmit)+1) + '_coef'];
       score = coef*dim;
+      if (score === -0) score = 0;
     }
+    if (scoreCase === 'multiple' && rawSubmit.length) score = total*dim; 
     submittedField[prop] = score;
   }
   return submittedField;
@@ -10128,7 +10139,6 @@ function formatSubmittedFields(fields, user) {
   var submittedFields = [];
   for (var i in fields) {
     var field = fields[i];
-    // if (!field.submit_input || !field.submit_input.length) continue;
     var submittedField = {
       template_random_string: randomString,
       template_id: field.template_id,
@@ -10268,7 +10278,8 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
         });
       });
     }
-
+    // Bind the submitForm function only once
+    if ($scope.submitForm) continue;
     $scope.submitForm = function(formID, fields) {
       var submittedFields = Forms.formatSubmittedFields(fields, $rootScope.user);
       console.log(submittedFields)
