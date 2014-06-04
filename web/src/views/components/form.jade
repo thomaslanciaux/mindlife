@@ -3,9 +3,11 @@ section
     h1(ng-switch-default, ng-bind='section.form_name')
     h1(ng-switch-when='Questionnaire',
        ng-bind="'Question ' + current + ' of ' + section.fields.length")
+
   form(ng-submit='submitForm($index, section.fields)')
     p(ng-if='section.form_description',
       ng-bind='section.form_description', bind-once)
+
     ol.form
       li(ng-repeat='field in section.fields')
         label(for='form-{{section.form_template_id}}-{{$index}}',
@@ -22,7 +24,11 @@ section
           include form/select-country
         p(ng-if='field.field_description',
           ng-bind-html='field.field_description', bind-once)
-    p.submit
-      button(type='submit') Submit
+
+    p(ng-if='section.feedback && !section.isComplete') {{section.feedback}}
+
     p(ng-if='section.form_confirmation_message && section.isComplete',
       ng-bind-html='section.form_confirmation_message', bind-once)
+
+    p.submit
+      button(type='submit') Submit
