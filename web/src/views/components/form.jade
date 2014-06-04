@@ -3,7 +3,7 @@ section
     h1(ng-switch-default, ng-bind='section.form_name')
     h1(ng-switch-when='Questionnaire',
        ng-bind="'Question ' + current + ' of ' + section.fields.length")
-  form(ng-submit='submitForm(section.form_template_id, section.fields)')
+  form(ng-submit='submitForm($index, section.fields)')
     p(ng-if='section.form_description',
       ng-bind='section.form_description', bind-once)
     ol.form
@@ -24,5 +24,5 @@ section
           ng-bind-html='field.field_description', bind-once)
     p.submit
       button(type='submit') Submit
-    p(ng-if='section.form_confirmation_message',
+    p(ng-if='section.form_confirmation_message && section.isComplete',
       ng-bind-html='section.form_confirmation_message', bind-once)

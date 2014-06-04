@@ -63,9 +63,23 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
     }
     // Bind the submitForm function only once
     if ($scope.submitForm) continue;
-    $scope.submitForm = function(formID, fields) {
+    $scope.submitForm = function(index, fields) {
       var submittedFields = Forms.formatSubmittedFields(fields, $rootScope.user);
-      console.log(submittedFields)
+      var len = submittedFields.length;
+      for (var i in submittedFields) {
+        var field = submittedFields[i];
+        if (!!field.required && !field.field_value) {
+          return console.log('Form ' + index + ' - Q.' + (parseInt(i)+1) + ' required');
+          break;
+        }
+        Forms.postField(field, parseInt(i), len, function(err, res, isComplete) {
+          // console.log(err, res);
+          if (isComplete) console.log('Form complete !');
+          $scope.$apply(function() {
+            $scope.sections[index].isComplete = true;
+          });
+        });
+      }
     }
   }
   

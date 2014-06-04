@@ -10164,8 +10164,22 @@ function formatSubmittedFields(fields, user) {
   return submittedFields;
 }
 
+function postField(field, index, total, cb) {
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function() {
+    var self = this;
+    var isComplete = (index+1 === total)? true : false;
+    if (self.status !== 200) return cb('Error on posting field');
+    return cb(null, JSON.parse(self.responseText), isComplete);
+  }
+  xhr.open('POST', env.API.REST_URL + '/_restFormFields');
+  xhr.setRequestHeader('Content-Type','application/json;charset=UTF-8');
+  xhr.send(JSON.stringify(field));
+}
+
 module.exports = {
   getFields: getFields,
+  postField: postField,
   cleanOptions: cleanOptions,
   formatSubmittedFields: formatSubmittedFields
 };
@@ -10280,9 +10294,23 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
     }
     // Bind the submitForm function only once
     if ($scope.submitForm) continue;
-    $scope.submitForm = function(formID, fields) {
+    $scope.submitForm = function(index, fields) {
       var submittedFields = Forms.formatSubmittedFields(fields, $rootScope.user);
-      console.log(submittedFields)
+      var len = submittedFields.length;
+      for (var i in submittedFields) {
+        var field = submittedFields[i];
+        if (!!field.required && !field.field_value) {
+          return console.log('Form ' + index + ' - Q.' + (parseInt(i)+1) + ' required');
+          break;
+        }
+        Forms.postField(field, parseInt(i), len, function(err, res, isComplete) {
+          // console.log(err, res);
+          if (isComplete) console.log('Form complete !');
+          $scope.$apply(function() {
+            $scope.sections[index].isComplete = true;
+          });
+        });
+      }
     }
   }
   
