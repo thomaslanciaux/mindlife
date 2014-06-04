@@ -48,10 +48,10 @@ function scoreField(field, submittedField) {
                   ? 'multiple' : 'single';
 
   if (scoreCase === 'multiple') {
-    var total = 0;
+    var totalCoef = 0;
     for (var i in rawSubmit) {
       var coef = field['combo_' + (i+1) + '_coef'];
-      if (coef) total = total+coef;
+      if (coef) totalCoef = totalCoef+coef;
     }
   }
 
@@ -64,7 +64,7 @@ function scoreField(field, submittedField) {
       score = coef*dim;
       if (score === -0) score = 0;
     }
-    if (scoreCase === 'multiple' && rawSubmit.length) score = total*dim; 
+    if (scoreCase === 'multiple' && rawSubmit.length) score = totalCoef*dim; 
     submittedField[prop] = score;
   }
   return submittedField;
