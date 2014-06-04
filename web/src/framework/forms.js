@@ -89,7 +89,7 @@ function formatSubmittedFields(fields, user) {
       lang: field.lang,
       position: parseInt(i),
       searchable: field.searchable,
-      user_id: user.id,
+      user_id: user.id || null,
       printable_name: user.printable_name || 'Anonynous user',
       username: user.username || 'anonymous'
     };
