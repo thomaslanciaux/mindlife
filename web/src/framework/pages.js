@@ -73,6 +73,7 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
       var submittedFields = Forms.formatSubmittedFields(fields, $rootScope.user);
       var len = submittedFields.length;
       var progress = 0;
+      $scope.sections[index].isComplete = false;
 
       for (var i in submittedFields) {
         var field = submittedFields[i];
