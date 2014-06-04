@@ -43,9 +43,17 @@ function formatAnswer(field) {
 }
 
 function scoreField(field, submittedField) {
+  var rawSubmit = field.submit_input || null;
+  rawSubmit = parseInt(rawSubmit);
   for (var i = 0; i < 16; i++) {
     var prop = 'dim' + (i+1) + '_field_score';
-    submittedField[prop] = null;
+    var score = null;
+    if (!isNaN(rawSubmit)) {
+      var coef = field['combo_' + (rawSubmit+1) + '_coef'];
+      var dim = field['dimension_' + (i+1) + '_coef'];
+      score = coef*dim;
+    }
+    submittedField[prop] = score;
   }
   return submittedField;
 }
