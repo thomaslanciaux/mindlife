@@ -1,1 +1,1 @@
-<select ng-switch-when="Select" ng-model="field.submit_input" id="form-{{section.form_template_id}}-{{$index}}"><option value="null">Please select one option</option><option ng-repeat="opt in field.opts" value="{{$index}}" ng-bind="opt"></option></select>
+<select ng-switch-when="Select" ng-model="field.submit_input" ng-required="field.required" id="form-{{section.form_template_id}}-{{$index}}"><option ng-repeat="opt in field.opts" value="{{$index}}" ng-bind="opt"></option></select>

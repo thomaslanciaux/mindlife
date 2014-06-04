@@ -28,7 +28,7 @@ section
     p(ng-if='section.feedback && !section.isComplete')
       strong(ng-bind='section.feedback')
 
-    p(ng-if='section.form_confirmation_message && section.isComplete',
+    div(ng-if='section.form_confirmation_message && section.isComplete',
       ng-bind-html='section.form_confirmation_message', bind-once)
 
     p.submit

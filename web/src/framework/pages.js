@@ -54,9 +54,14 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
         $scope.$apply(function() {
           $scope.sections[i].fields = Forms.cleanOptions(res);
           var j = $scope.sections[i].fields.length;
+          // Set the default values
           while(j--) {
             var field = $scope.sections[i].fields[j];
-            if (field.type === 'Checkboxes') { field.submit_input = []; }
+            switch(field.type) {
+              case 'Checkboxes': field.submit_input = []; break;
+              case 'Select': field.submit_input = 0; break;
+              case 'Country': field.submit_input = 0; break;
+            }
           }
         });
       });

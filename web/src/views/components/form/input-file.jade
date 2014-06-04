@@ -9,6 +9,7 @@ div.file-upload(ng-switch-when='Image', restrict='image.*')
 
   label(for='form-{{section.form_template_id}}-{{$index}}').btn.btn-upload
     input(type='file', ng-model='field.submit_input'
+          ng-required='field.required',
           id='form-{{section.form_template_id}}-{{$index}}',
           class='visually-hidden')
     span(ng-switch='!!preview')

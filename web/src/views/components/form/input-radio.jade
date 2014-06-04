@@ -3,6 +3,7 @@ ul(ng-switch-when='Radio')
     input(type='radio', 
           name='form-{{section.form_template_id}}-{{$parent.$index}}',
           ng-model='field.submit_input', value='{{$index}}',
+          ng-required='field.required',
           id='form-{{section.form_template_id}}-{{$parent.$index}}-{{$index}}') 
     label(for='form-{{section.form_template_id}}-{{$parent.$index}}-{{$index}}',
           ng-bind='opt')
