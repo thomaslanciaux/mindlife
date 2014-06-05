@@ -9,17 +9,12 @@ var app = angular.module('ML', [
   'ngRoute', 'ngSanitize', 'ngCookies', 'ngTouch', 'angular-google-analytics'
 ]);
 
-
 app.controller('PagesCtl', pages.initCtl);
 app.controller('SigninCtl', require('./framework/controllers/signin'));
 app.controller('SignupCtl', require('./framework/controllers/signup'));
 app.controller('SignoutCtl', require('./framework/controllers/signout'));
 app.controller('DashboardCtl', require('./framework/controllers/dashboard'));
-
-app.controller('HomeCtl', function($rootScope) {
-  $rootScope.pageTitle = 'Home';
-  $rootScope.activeNav = 'home';
-});
+app.controller('HomeCtl', require('./framework/controllers/home'));
 
 app.directive('bindOnce', require('./framework/directives/bind-once'));
 app.directive('googleMap', require('./framework/directives/google-map'));
@@ -82,5 +77,4 @@ app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location) {
   // Get user info if logged in
   if (!$rootScope.isLoggedIn) return;
   $rootScope.user = $cookieStore.get('userdata');
-  
 });
