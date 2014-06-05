@@ -81,6 +81,7 @@ function postField(field, index, cb) {
     if (self.status !== 200) return cb('Error on posting field');
     return cb(null, JSON.parse(self.responseText), parseInt(index));
   }
+
   xhr.open('POST', env.API.REST_URL + '/_restFormFields');
   xhr.setRequestHeader('Content-Type','application/json;charset=UTF-8');
   xhr.send(JSON.stringify(field));

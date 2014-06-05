@@ -1,3 +1,4 @@
+var Files = require('../services/files');
 var qwery = require('qwery');
 
 function hasFileAPI() {
@@ -6,13 +7,16 @@ function hasFileAPI() {
 }
 
 
-module.exports = function() {
+module.exports = function($timeout) {
   return {
     restrict: 'C',
     scope: true,
     link: function(scope, el, attrs) {
       var fileAPI = hasFileAPI();
+      scope.file = null;
       scope.fileAPI = fileAPI;
+      scope.status = null;
+
       if (!fileAPI) return;
 
       function fileSelect(e) {
@@ -29,15 +33,28 @@ module.exports = function() {
               name: file.name,
               size: file.size,
               file: file
-            }
+            };
+            scope.status = null;
           });
         }
         reader.readAsDataURL(file);
+        scope.file = file;
+      }
+
+      scope.uploadFile = function() {
+        scope.status = 'loading';
+        $timeout(function() {
+          Files.uploadFile(scope.file, function(err, res) {
+            if (err) return alert(err);
+            scope.$apply(function() {
+              scope.status = 'loaded';
+            });
+          });
+        }, 100);
       }
 
       var input = qwery('input[type=file]', el[0])[0];
       input.addEventListener('change', fileSelect, false);
-
       scope.hasFile = false;
     }
   }

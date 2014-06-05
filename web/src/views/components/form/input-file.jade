@@ -1,18 +1,23 @@
 div.file-upload(ng-switch-when='Image', restrict='image.*')
-  p.preview(ng-if='preview')
+  figure.preview(ng-if='preview')
     img(ng-if='preview.img', height='128px', ng-src='{{preview.img}}', alt='') 
-    span.preview-desc
-      strong(ng-bind='preview.name')
-      |  (
-      span(ng-bind='preview.size | Filesize')
-      | )
+    figcaption
+      p
+        strong(ng-bind='preview.name')
+        |  (
+        span(ng-bind='preview.size | Filesize')
+        | )
+      p
+        span(ng-if="status == 'loading'") Uploading file…
+        span(ng-if="status == 'loaded'") File uploaded.
+        button(type='button', ng-if='!status',
+               ng-click='uploadFile()') Upload file
 
-  label(for='form-{{section.form_template_id}}-{{$index}}').btn.btn-upload
-    input(type='file', ng-model='field.submit_input'
-          ng-required='field.required',
-          id='form-{{section.form_template_id}}-{{$index}}',
-          class='visually-hidden')
-    span(ng-switch='!!preview')
+  label.btn.btn-upload(for='form-{{section.form_template_id}}-{{$index}}',
+                       ng-show="status !== 'loaded'")
+    input(type='file', ng-required='field.required', class='visually-hidden',
+          id='form-{{section.form_template_id}}-{{$index}}')
+    span(ng-switch="!!preview")
       span(ng-switch-when='true') Replace the file to attach
       span(ng-switch-default) Select the file to attach
 
