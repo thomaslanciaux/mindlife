@@ -14,13 +14,17 @@ function formatNav(raw) {
   return nav;
 }
 
-function getNav($http, cb) {
+function getNav(cb) {
   var lang = env.getLang();
   var url = env.API.REST_URL + '/_restPublicNav/' + lang;
-  var q = $http.get(url);
-  q.then(function(res) {
-    return cb(null, formatNav(res.data));
-  });
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function() {
+    var self = this;
+    if (self.status !== 200) return cb('Error while fetching nav');
+    return cb(null, formatNav(JSON.parse(self.responseText)));
+  }
+  xhr.open('GET', url, false);
+  xhr.send();
 }
 
 module.exports = {

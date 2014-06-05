@@ -125,7 +125,7 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
   if (path === 'search') {
     var searchQuery = $route.current.params.query;
     if (!searchQuery) return $location.path('/');
-    $rootScope.activeNav = null;
+    $rootScope.activeNav = 'search';
     $rootScope.pageTitle = 'Search results for "' + searchQuery + '"';
     $rootScope.searchString = searchQuery;
     $scope.pageType = 'search';

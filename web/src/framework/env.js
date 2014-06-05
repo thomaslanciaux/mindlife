@@ -11,11 +11,15 @@ function getLang() {
   return url[1];
 }
 
-function getVars($http, cb) {
-  var q = $http.get(API.REST_URL + '/_restEnvVars');
-  q.then(function(res) {
-    return cb(null, res.data[0]);
-  });
+function getVars(cb) {
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function() {
+    var self = this;
+    if (self.status !== 200) return cb('Error on fetching ENV vars');
+    return cb(null, JSON.parse(self.responseText)[0]);
+  }
+  xhr.open('GET', API.REST_URL + '/_restEnvVars', false);
+  xhr.send();
 }
 
 module.exports = {

@@ -1,5 +1,5 @@
 doctype html
-html(lang='en', ng-app='ML')
+html(lang='en')
   head
     meta(charset='utf-8')
     title(ng-if='pageTitle') {{envVars.website_name}} - {{pageTitle}}
@@ -8,7 +8,7 @@ html(lang='en', ng-app='ML')
          href='http://fonts.googleapis.com/css?family=Lato:300,400,700')
     link(rel='stylesheet', href='dist/index.css')
 
-  body(style='overflow-x:hidden', ng-class='activeNav')
+  body(style='overflow-x:hidden', ng-class='activeNav', ng-show='nav')
     .header
       include mixins/header
     .content(ng-view)

@@ -10020,11 +10020,15 @@ function getLang() {
   return url[1];
 }
 
-function getVars($http, cb) {
-  var q = $http.get(API.REST_URL + '/_restEnvVars');
-  q.then(function(res) {
-    return cb(null, res.data[0]);
-  });
+function getVars(cb) {
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function() {
+    var self = this;
+    if (self.status !== 200) return cb('Error on fetching ENV vars');
+    return cb(null, JSON.parse(self.responseText)[0]);
+  }
+  xhr.open('GET', API.REST_URL + '/_restEnvVars', false);
+  xhr.send();
 }
 
 module.exports = {
@@ -10215,13 +10219,17 @@ function formatNav(raw) {
   return nav;
 }
 
-function getNav($http, cb) {
+function getNav(cb) {
   var lang = env.getLang();
   var url = env.API.REST_URL + '/_restPublicNav/' + lang;
-  var q = $http.get(url);
-  q.then(function(res) {
-    return cb(null, formatNav(res.data));
-  });
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function() {
+    var self = this;
+    if (self.status !== 200) return cb('Error while fetching nav');
+    return cb(null, formatNav(JSON.parse(self.responseText)));
+  }
+  xhr.open('GET', url, false);
+  xhr.send();
 }
 
 module.exports = {
@@ -10356,7 +10364,7 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
   if (path === 'search') {
     var searchQuery = $route.current.params.query;
     if (!searchQuery) return $location.path('/');
-    $rootScope.activeNav = null;
+    $rootScope.activeNav = 'search';
     $rootScope.pageTitle = 'Search results for "' + searchQuery + '"';
     $rootScope.searchString = searchQuery;
     $scope.pageType = 'search';
@@ -34776,7 +34784,7 @@ var nav = require('./framework/navigation');
 var pages = require('./framework/pages');
 var SessionService = require('./framework/services/session');
 
-var app = angular.module('ML', [
+var app = angular.module('App', [
   'ngRoute', 'ngSanitize', 'ngCookies', 'ngTouch', 'angular-google-analytics'
 ]);
 
@@ -34800,12 +34808,12 @@ app.config(require('./framework/config'));
 app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location,
                  $timeout) {
   // Get Env vars
-  env.getVars($http, function(err, res){ $rootScope.envVars = res; });
+  $rootScope.envVars = angular.envVars;
   $rootScope.lang = env.getLang();
   $rootScope.env = env.API;
   
   // Get nav
-  nav.getNav($http, function(err, res) { $rootScope.nav = res; });
+  $rootScope.nav = angular.nav;
 
   // Active state of nav on route changes
   $rootScope.$on('$routeChangeSuccess', function(e, current, prev) {
@@ -34845,11 +34853,24 @@ app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location,
   $rootScope.trustSrc = function(src) { return $sce.trustAsResourceUrl(src); }
 
   // Check if user is logged in
-  $rootScope.isLoggedIn = !!SessionService.get('authenticated');
+  $rootScope.isLoggedIn = angular.isLoggedIn;
 
   // Get user info if logged in
   if (!$rootScope.isLoggedIn) return;
   $rootScope.user = $cookieStore.get('userdata');
+});
+
+angular.element(document).ready(function() {
+  angular.isLoggedIn = !!SessionService.get('authenticated');
+  env.getVars(function(err, res){ 
+    if (err) return alert(err);
+    angular.envVars = res;
+    nav.getNav(function(err, res) { 
+      if (err) return alert(err);
+      angular.nav = res; 
+      angular.bootstrap(document, ['App']);
+    }); 
+  });
 });
 
 },{"./framework/config":6,"./framework/controllers/dashboard":7,"./framework/controllers/home":8,"./framework/controllers/signin":9,"./framework/controllers/signout":10,"./framework/controllers/signup":11,"./framework/directives/bind-once":13,"./framework/directives/file-upload":14,"./framework/directives/google-map":15,"./framework/env":16,"./framework/filters/components-type":17,"./framework/filters/filesize":18,"./framework/filters/highlight":19,"./framework/navigation":22,"./framework/pages":23,"./framework/services/session":28,"./framework/vendors/angular":35}]},{},[36])
