@@ -1,5 +1,6 @@
 var env = require('./env');
 var randomstring = require('randomstring');
+var Score = require('./score');
 
 function cleanOptions(res) {
   var i = res.length;
@@ -42,33 +43,6 @@ function formatAnswer(field) {
   return answer = field.submit_input;
 }
 
-function scoreField(field, submittedField) {
-  var rawSubmit = field.submit_input || null;
-  var scoreCase = (rawSubmit && typeof rawSubmit === 'object')
-                  ? 'multiple' : 'single';
-
-  if (scoreCase === 'multiple') {
-    var totalCoef = 0;
-    for (var i in rawSubmit) {
-      var coef = field['combo_' + (i+1) + '_coef'];
-      if (coef) totalCoef = totalCoef+coef;
-    }
-  }
-
-  for (var i = 0; i < 16; i++) {
-    var prop = 'dim' + (i+1) + '_field_score';
-    var dim = field['dimension_' + (i+1) + '_coef'];
-    var score = null;
-    if (scoreCase === 'single' && rawSubmit) {
-      var coef = field['combo_' + (parseInt(rawSubmit)+1) + '_coef'];
-      score = coef*dim;
-      if (score === -0) score = 0;
-    }
-    if (scoreCase === 'multiple' && rawSubmit.length) score = totalCoef*dim; 
-    submittedField[prop] = score;
-  }
-  return submittedField;
-}
 
 function formatSubmittedFields(fields, user) {
   var randomString = randomstring.generate(255);
@@ -94,7 +68,7 @@ function formatSubmittedFields(fields, user) {
       username: user.username || 'anonymous'
     };
     // Create score fields in object
-    var scored = scoreField(field, submittedField);
+    var scored = Score.scoreField(field, submittedField);
     submittedFields.push(scored);
   }
   return submittedFields;

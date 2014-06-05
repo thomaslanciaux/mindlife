@@ -31,6 +31,15 @@ section
     div(ng-if='section.form_confirmation_message && section.isComplete',
       ng-bind-html='section.form_confirmation_message', bind-once)
 
+    article(ng-if='section.scores')
+      header
+        h1 Your results
+      ol
+        li(ng-repeat='score in section.scores')
+          strong
+            | {{score.label}}: 
+            em(ng-bind='score.total')
+
     p.submit
       button(type='submit') 
         | Submit 

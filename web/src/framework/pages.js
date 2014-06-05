@@ -1,6 +1,7 @@
 var env = require('./env');
 var Gallery = require('./gallery');
 var Forms = require('./forms');
+var Score = require('./score');
 var countries = require('./countries');
 var _ = require('lodash');
 
@@ -73,7 +74,16 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
       var submittedFields = Forms.formatSubmittedFields(fields, $rootScope.user);
       var len = submittedFields.length;
       var progress = 0;
+      var isQuiz = ($scope.sections[index].type === 'Questionnaire')
+                   ? true : false;
+
       $scope.sections[index].isComplete = false;
+
+      if (isQuiz) {
+        var scores = [];
+        var fieldSample = $scope.sections[index].fields[0];
+        var finalScoreTags = Score.createFinalScoreTags(fieldSample);
+      }
 
       for (var i in submittedFields) {
         var field = submittedFields[i];
@@ -85,12 +95,21 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
 
         Forms.postField(field, parseInt(i), function(err, res, j) {
           var isComplete = (j+1 === len)? true : false;
-          progress = ((j+1)/len)*100;
+          progress = Math.round(((j+1)/len)*100);
           $scope.$apply(function() {
+            // Progress of submission
             $scope.sections[index].submitProgress = progress;
+
+            // Adding to final score
+            if (isQuiz) scores = Score.addScore(scores, finalScoreTags, res);
+
+            // Complete callback
             if (!isComplete) return;
             $scope.sections[index].isComplete = true;
             delete $scope.sections[index].feedback;
+
+            if (!isQuiz) return;
+            $scope.sections[index].scores = scores;
           });
         });
       }

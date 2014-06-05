@@ -9478,7 +9478,7 @@ function initCtl($rootScope, $http, $cookieStore, $location, $scope) {
 
 module.exports = initCtl;
 
-},{"../env":15,"../services/auth":23,"../services/session":25}],9:[function(require,module,exports){
+},{"../env":15,"../services/auth":24,"../services/session":26}],9:[function(require,module,exports){
 var env = require('../env');
 var Session = require('../services/session');
 
@@ -9500,7 +9500,7 @@ function initCtl($rootScope, $http, $cookieStore) {
 
 module.exports = initCtl;
 
-},{"../env":15,"../services/session":25}],10:[function(require,module,exports){
+},{"../env":15,"../services/session":26}],10:[function(require,module,exports){
 var env = require('../env');
 var Auth = require('../services/auth');
 var Session = require('../services/session');
@@ -9583,7 +9583,7 @@ function initCtl($rootScope, $scope, $http, $location, $cookieStore) {
 
 module.exports = initCtl;
 
-},{"../countries":11,"../env":15,"../services/auth":23,"../services/session":25}],11:[function(require,module,exports){
+},{"../countries":11,"../env":15,"../services/auth":24,"../services/session":26}],11:[function(require,module,exports){
 var list = [
   {name: 'Please Select', code: 0},
   {name: 'Afghanistan', code: 'AF'}, 
@@ -10065,6 +10065,7 @@ module.exports = function () {
 },{}],19:[function(require,module,exports){
 var env = require('./env');
 var randomstring = require('randomstring');
+var Score = require('./score');
 
 function cleanOptions(res) {
   var i = res.length;
@@ -10107,33 +10108,6 @@ function formatAnswer(field) {
   return answer = field.submit_input;
 }
 
-function scoreField(field, submittedField) {
-  var rawSubmit = field.submit_input || null;
-  var scoreCase = (rawSubmit && typeof rawSubmit === 'object')
-                  ? 'multiple' : 'single';
-
-  if (scoreCase === 'multiple') {
-    var totalCoef = 0;
-    for (var i in rawSubmit) {
-      var coef = field['combo_' + (i+1) + '_coef'];
-      if (coef) totalCoef = totalCoef+coef;
-    }
-  }
-
-  for (var i = 0; i < 16; i++) {
-    var prop = 'dim' + (i+1) + '_field_score';
-    var dim = field['dimension_' + (i+1) + '_coef'];
-    var score = null;
-    if (scoreCase === 'single' && rawSubmit) {
-      var coef = field['combo_' + (parseInt(rawSubmit)+1) + '_coef'];
-      score = coef*dim;
-      if (score === -0) score = 0;
-    }
-    if (scoreCase === 'multiple' && rawSubmit.length) score = totalCoef*dim; 
-    submittedField[prop] = score;
-  }
-  return submittedField;
-}
 
 function formatSubmittedFields(fields, user) {
   var randomString = randomstring.generate(255);
@@ -10159,7 +10133,7 @@ function formatSubmittedFields(fields, user) {
       username: user.username || 'anonymous'
     };
     // Create score fields in object
-    var scored = scoreField(field, submittedField);
+    var scored = Score.scoreField(field, submittedField);
     submittedFields.push(scored);
   }
   return submittedFields;
@@ -10184,7 +10158,7 @@ module.exports = {
   formatSubmittedFields: formatSubmittedFields
 };
 
-},{"./env":15,"randomstring":4}],20:[function(require,module,exports){
+},{"./env":15,"./score":23,"randomstring":4}],20:[function(require,module,exports){
 var env = require('./env');
 
 function getGallery(id, i, cb) {
@@ -10232,6 +10206,7 @@ module.exports = {
 var env = require('./env');
 var Gallery = require('./gallery');
 var Forms = require('./forms');
+var Score = require('./score');
 var countries = require('./countries');
 var _ = require('lodash');
 
@@ -10304,7 +10279,16 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
       var submittedFields = Forms.formatSubmittedFields(fields, $rootScope.user);
       var len = submittedFields.length;
       var progress = 0;
+      var isQuiz = ($scope.sections[index].type === 'Questionnaire')
+                   ? true : false;
+
       $scope.sections[index].isComplete = false;
+
+      if (isQuiz) {
+        var scores = [];
+        var fieldSample = $scope.sections[index].fields[0];
+        var finalScoreTags = Score.createFinalScoreTags(fieldSample);
+      }
 
       for (var i in submittedFields) {
         var field = submittedFields[i];
@@ -10316,12 +10300,21 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
 
         Forms.postField(field, parseInt(i), function(err, res, j) {
           var isComplete = (j+1 === len)? true : false;
-          progress = ((j+1)/len)*100;
+          progress = Math.round(((j+1)/len)*100);
           $scope.$apply(function() {
+            // Progress of submission
             $scope.sections[index].submitProgress = progress;
+
+            // Adding to final score
+            if (isQuiz) scores = Score.addScore(scores, finalScoreTags, res);
+
+            // Complete callback
             if (!isComplete) return;
             $scope.sections[index].isComplete = true;
             delete $scope.sections[index].feedback;
+
+            if (!isQuiz) return;
+            $scope.sections[index].scores = scores;
           });
         });
       }
@@ -10378,7 +10371,63 @@ module.exports = {
   }
 };
 
-},{"./countries":11,"./env":15,"./forms":19,"./gallery":20,"lodash":1}],23:[function(require,module,exports){
+},{"./countries":11,"./env":15,"./forms":19,"./gallery":20,"./score":23,"lodash":1}],23:[function(require,module,exports){
+function createFinalScoreTags(fieldSample) {
+  var tags = [];
+  for (var key in fieldSample) {
+    if (key.indexOf('tag_name') === -1 || !fieldSample[key]) continue;
+    tags.push(fieldSample[key]);
+  }
+  return tags;
+}
+
+function addScore(score, tags, res) {
+  for (var i = 0; i < tags.length; i++) {
+    var itemScore = res['dim' + (i+1) + '_field_score'];
+    var total = (!!score[i])? score[i].total : 0;
+    score[i] = {
+      label: tags[i],
+      total: total+itemScore
+    }
+  }
+  return score;
+}
+
+function scoreField(field, submittedField) {
+  var rawSubmit = field.submit_input || null;
+  var scoreCase = (rawSubmit && typeof rawSubmit === 'object')
+                  ? 'multiple' : 'single';
+
+  if (scoreCase === 'multiple') {
+    var totalCoef = 0;
+    for (var i in rawSubmit) {
+      var coef = field['combo_' + (i+1) + '_coef'];
+      if (coef) totalCoef = totalCoef+coef;
+    }
+  }
+
+  for (var i = 0; i < 16; i++) {
+    var prop = 'dim' + (i+1) + '_field_score';
+    var dim = field['dimension_' + (i+1) + '_coef'];
+    var score = null;
+    if (scoreCase === 'single' && rawSubmit) {
+      var coef = field['combo_' + (parseInt(rawSubmit)+1) + '_coef'];
+      score = coef*dim;
+      if (score === -0) score = 0;
+    }
+    if (scoreCase === 'multiple' && rawSubmit.length) score = totalCoef*dim; 
+    submittedField[prop] = score;
+  }
+  return submittedField;
+}
+
+module.exports = {
+  scoreField: scoreField,
+  addScore: addScore,
+  createFinalScoreTags: createFinalScoreTags
+};
+
+},{}],24:[function(require,module,exports){
 var env = require('../env');
 var Base64 = require('../services/base64');
 
@@ -10398,7 +10447,7 @@ module.exports = {
   submitCredentials: submitCredentials
 };
 
-},{"../env":15,"../services/base64":24}],24:[function(require,module,exports){
+},{"../env":15,"../services/base64":25}],25:[function(require,module,exports){
 var keyStr = 'ABCDEFGHIJKLMNOP' +
              'QRSTUVWXYZabcdef' +
              'ghijklmnopqrstuv' +
@@ -10484,7 +10533,7 @@ module.exports = {
 };
 
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 module.exports = {
   get: function(key) {
     return sessionStorage.getItem(key);
@@ -10497,7 +10546,7 @@ module.exports = {
   }
 };
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -10695,7 +10744,7 @@ angular.module('ngCookies', ['ng']).
 
 })(window, window.angular);
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 /* global angular, console */
 
 'use strict';
@@ -11043,7 +11092,7 @@ angular.module('angular-google-analytics', [])
 
     });
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -11972,7 +12021,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
 })(window, window.angular);
 
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -12598,7 +12647,7 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 
 })(window, window.angular);
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -13175,7 +13224,7 @@ makeSwipeDirective('ngSwipeRight', 1, 'swiperight');
 
 })(window, window.angular);
 
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.16
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -34640,7 +34689,7 @@ var styleDirective = valueFn({
 })(window, document);
 
 !angular.$$csp() && angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\\:form{display:block;}.ng-animate-block-transitions{transition:0s all!important;-webkit-transition:0s all!important;}</style>');
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 require('./angular');
 require('./angular-route');
 require('./angular-sanitize');
@@ -34652,7 +34701,7 @@ require('./angular-google-analytics');
 
 module.exports = {};
 
-},{"./angular":31,"./angular-cookies":26,"./angular-google-analytics":27,"./angular-route":28,"./angular-sanitize":29,"./angular-touch":30}],33:[function(require,module,exports){
+},{"./angular":32,"./angular-cookies":27,"./angular-google-analytics":28,"./angular-route":29,"./angular-sanitize":30,"./angular-touch":31}],34:[function(require,module,exports){
 require('./framework/vendors/angular');
 
 var env = require('./framework/env');
@@ -34740,5 +34789,5 @@ app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location) {
   
 });
 
-},{"./framework/config":6,"./framework/controllers/dashboard":7,"./framework/controllers/signin":8,"./framework/controllers/signout":9,"./framework/controllers/signup":10,"./framework/directives/bind-once":12,"./framework/directives/file-upload":13,"./framework/directives/google-map":14,"./framework/env":15,"./framework/filters/components-type":16,"./framework/filters/filesize":17,"./framework/filters/highlight":18,"./framework/navigation":21,"./framework/pages":22,"./framework/services/session":25,"./framework/vendors/angular":32}]},{},[33])
+},{"./framework/config":6,"./framework/controllers/dashboard":7,"./framework/controllers/signin":8,"./framework/controllers/signout":9,"./framework/controllers/signup":10,"./framework/directives/bind-once":12,"./framework/directives/file-upload":13,"./framework/directives/google-map":14,"./framework/env":15,"./framework/filters/components-type":16,"./framework/filters/filesize":17,"./framework/filters/highlight":18,"./framework/navigation":21,"./framework/pages":22,"./framework/services/session":26,"./framework/vendors/angular":33}]},{},[34])
 ;
