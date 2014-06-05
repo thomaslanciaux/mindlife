@@ -26,7 +26,8 @@ app.filter('hl', require('./framework/filters/highlight'));
 
 app.config(require('./framework/config'));
 
-app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location) {
+app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location,
+                 $timeout) {
   // Get Env vars
   env.getVars($http, function(err, res){ $rootScope.envVars = res; });
   $rootScope.lang = env.getLang();
@@ -41,7 +42,7 @@ app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location) {
     $rootScope.activeNav = active;
 
     // Go to top of the page
-    document.body.scrollTop = 0;
+    $timeout(function() { document.body.scrollTop = 0; });
 
     // Get active page title
     if ($rootScope.nav && active) {
@@ -65,6 +66,7 @@ app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location) {
   $rootScope.search = function() {
     var query = $rootScope.searchString;
     if (!query || query.length < 2) return;
+    $location.search('');
     $location.path('/' + $rootScope.lang + '/search/' + query);
   }
 
