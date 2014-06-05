@@ -35,6 +35,7 @@ app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location,
   
   // Get nav
   $rootScope.nav = angular.nav;
+  $rootScope.authRoutes = ['life-expectency-calculator', 'private'];
 
   // Active state of nav on route changes
   $rootScope.$on('$routeChangeSuccess', function(e, current, prev) {

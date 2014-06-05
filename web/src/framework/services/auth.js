@@ -13,6 +13,17 @@ function submitCredentials($http, credentials, cb) {
   })
 }
 
+function isAuthRoute(path, authPaths) {
+  var i = authPaths.length;
+  var check = false;
+  while(i--) {
+    if (authPaths[i] !== path) continue;
+    check = true;
+  }
+  return check;
+}
+
 module.exports = {
-  submitCredentials: submitCredentials
+  submitCredentials: submitCredentials,
+  isAuthRoute: isAuthRoute
 };

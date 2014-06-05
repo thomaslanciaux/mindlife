@@ -3,20 +3,15 @@ var Gallery = require('./gallery');
 var Forms = require('./forms');
 var Score = require('./score');
 var countries = require('./countries');
+var Auth = require('./services/auth');
 var _ = require('lodash');
-
-var authRoute = [ 'life-expectency-calculator', 'private' ];
 
 function initCtl($rootScope, $scope, sections, $location, $route) {
   var path = $location.path().split('/')[2];
   
   // Check if the user is logged in and redirect if on a private route
-  if (!$rootScope.isLoggedIn) {
-    var i = authRoute.length;
-    while(i--) {
-      if (authRoute[i] !== path) continue;
-      return $location.path('/');
-    }
+  if (!$rootScope.isLoggedIn && Auth.isAuthRoute(path, $rootScope.authRoutes)) {
+    return $location.path('/');
   }
 
   // sections.data is the data return by the resolve promise of the route
