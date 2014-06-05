@@ -63,9 +63,9 @@ function formatSubmittedFields(fields, user) {
       lang: field.lang,
       position: parseInt(i),
       searchable: field.searchable,
-      user_id: user.id || null,
-      printable_name: user.printable_name || 'Anonynous user',
-      username: user.username || 'anonymous'
+      user_id: (user)? user.id : null,
+      printable_name: (user)? user.printable_name : 'Anonynous user',
+      username: (user)? user.username : 'anonymous'
     };
     // Create score fields in object
     var scored = Score.scoreField(field, submittedField);
