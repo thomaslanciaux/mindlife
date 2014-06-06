@@ -19,6 +19,7 @@ app.controller('HomeCtl', require('./framework/controllers/home'));
 app.directive('bindOnce', require('./framework/directives/bind-once'));
 app.directive('googleMap', require('./framework/directives/google-map'));
 app.directive('fileUpload', require('./framework/directives/file-upload'));
+app.directive('lazySrc', require('./framework/directives/image-load'));
 
 app.filter('Filesize', require('./framework/filters/filesize'));
 app.filter('componentsType', require('./framework/filters/components-type'));
