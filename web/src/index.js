@@ -62,6 +62,7 @@ app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location,
   });
 
   $rootScope.$on('$routeChangeStart', function() {
+    if (window.stop !== undefined) window.stop();
     $rootScope.routeLoading = true;
   });
 
@@ -112,7 +113,7 @@ angular.element(document).ready(function() {
       // Emulate a small timeout for the load of app
       window.setTimeout(function() { 
         angular.bootstrap(document, ['App']); 
-      }, 1000);
+      }, 300);
     }); 
   });
 });

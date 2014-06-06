@@ -1,4 +1,4 @@
-module.exports = function() {
+module.exports = function($rootScope) {
   return {
     restrict: 'A',
     link: function(scope, el, attrs) {
@@ -8,7 +8,7 @@ module.exports = function() {
       img.onload = function() {
         el[0].src = img.src;
         el.removeClass('img-loading');
-      };
+      }
     }
   }
 }

@@ -13,13 +13,14 @@ section
         label(for='form-{{section.form_template_id}}-{{$index}}',
               ng-bind='field.field_label', bind-once)
         span(ng-switch='field.type')
-          include form/input-text.jade
-          include form/input-email.jade
-          include form/input-date.jade
+          include form/input-text
+          include form/input-email
+          include form/input-date
           include form/input-checkbox
           include form/input-radio
           include form/input-file
-          include form/textarea.jade
+          include form/input-range
+          include form/textarea
           include form/select
           include form/select-country
         p(ng-if='field.field_description',
