@@ -1,6 +1,6 @@
 figure
-  iframe(bind-once, ng-src="{{trustSrc(section.youtube_video_link)}}", 
-         frameborder='0', seamless)
+  iframe(bind-once, frameborder='0', seamless, allowfullscreen,
+         ng-src="{{trustSrc(section.youtube_video_link + '?rel=0&autohide=1&showinfo=0')}}")
   figcaption
     div(bind-once, ng-if='section.youtube_video_description',
       ng-bind-html='section.youtube_video_description | hl:searchQuery')
