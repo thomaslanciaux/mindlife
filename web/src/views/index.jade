@@ -2,17 +2,25 @@ doctype html
 html(lang='en')
   head
     meta(charset='utf-8')
-    title(ng-if='pageTitle') {{envVars.website_name}} - {{pageTitle}}
-    title(ng-if='!pageTitle') {{envVars.website_name}}
+    title(ng-bind='pageTitleBind') MINDLIFE
+    link(rel='stylesheet', href='dist/index.css')
     link(rel='stylesheet', 
          href='http://fonts.googleapis.com/css?family=Lato:300,400,700')
-    link(rel='stylesheet', href='dist/index.css')
 
-  body(style='overflow-x:hidden', ng-class='activeNav', ng-show='nav')
-    .header
-      include mixins/header
-    .content(ng-view)
-    .footer
-      include mixins/footer
+  body(style='overflow-x:hidden', ng-class='activeNav')
+
+    .app-loader(ng-hide='appLoaded')
+      img(style='display:block;margin:0 auto',
+          src='assets/loader.gif', alt='', width='128', height='128')
+      p Loading…
+
+    #app.app(ng-class='{loaded: appLoaded}', style='display:none')
+      .header
+        include mixins/header
+      .content(ng-view)
+      .footer
+        include mixins/footer
+      .route-loader(ng-show='routeLoading')
+        span Loading…
 
     script(src='dist/index.js')

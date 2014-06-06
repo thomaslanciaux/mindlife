@@ -28,18 +28,20 @@ app.config(require('./framework/config'));
 
 app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location,
                  $timeout) {
-  // Get Env vars
+
+  $rootScope.appLoaded = true;
+
+  // Get Env
   $rootScope.envVars = angular.envVars;
   $rootScope.lang = env.getLang();
   $rootScope.env = env.API;
-  
-  // Get nav
   $rootScope.nav = angular.nav;
   $rootScope.authRoutes = ['life-expectency-calculator', 'private'];
 
   // Active state of nav on route changes
   $rootScope.$on('$routeChangeSuccess', function(e, current, prev) {
-    var active = current.params.page || 'home';
+    var active = $location.path().split('/')[2] || 'home';
+    $rootScope.routeLoading = false;
     $rootScope.activeNav = active;
 
     // Go to top of the page
@@ -55,6 +57,15 @@ app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location,
         break;
        }
     }
+  });
+
+  $rootScope.$on('$routeChangeStart', function() {
+    $rootScope.routeLoading = true;
+  });
+
+  $rootScope.$watch('pageTitle', function(val) {
+    if (!val) return;
+    $rootScope.pageTitleBind = $rootScope.envVars.website_name + ' - ' + val;
   });
 
   // Active class on current route
@@ -74,23 +85,29 @@ app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location,
   // trustAsResourceUrl external URL in data
   $rootScope.trustSrc = function(src) { return $sce.trustAsResourceUrl(src); }
 
-  // Check if user is logged in
   $rootScope.isLoggedIn = angular.isLoggedIn;
-
   // Get user info if logged in
   if (!$rootScope.isLoggedIn) return;
   $rootScope.user = $cookieStore.get('userdata');
 });
 
 angular.element(document).ready(function() {
+
+  document.getElementById('app').removeAttribute('style');
+
+  // Check if user is logged in
   angular.isLoggedIn = !!SessionService.get('authenticated');
+  
+  // Get env var
   env.getVars(function(err, res){ 
     if (err) return alert(err);
     angular.envVars = res;
+    
+    // Get nav
     nav.getNav(function(err, res) { 
       if (err) return alert(err);
       angular.nav = res; 
-      angular.bootstrap(document, ['App']);
+      window.setTimeout(function() { angular.bootstrap(document, ['App']); }, 1000);
     }); 
   });
 });

@@ -27,6 +27,11 @@ function getNav(cb) {
   xhr.send();
 }
 
+function setPageTitle(appName, title) {
+  return appName + '-' + title;
+}
+
 module.exports = {
+  setPageTitle: setPageTitle,
   getNav: getNav
 };

@@ -3,3 +3,34 @@
 @import 'header'
 @import 'highlight'
 @import 'file-upload'
+
+.app-loader
+  display flex
+  flex-direction column
+  justify-content center
+  position absolute
+  top 0
+  right 0
+  bottom 0
+  left 0
+  text-align center
+
+.app
+  display none
+
+.app.loaded
+  display block
+
+.route-loader
+  position fixed
+  overflow hidden
+  bottom 1rem
+  right 1rem
+  height 64px
+  width 64px
+  font-size 0
+  text-indent -99999px
+  background url('../assets/loader.gif') center center no-repeat
+  background-size contain
+  border-radius 64px
+  opacity .9
