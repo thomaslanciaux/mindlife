@@ -19,6 +19,7 @@ app.controller('HomeCtl', require('./framework/controllers/home'));
 app.directive('bindOnce', require('./framework/directives/bind-once'));
 app.directive('googleMap', require('./framework/directives/google-map'));
 app.directive('fileUpload', require('./framework/directives/file-upload'));
+app.directive('routeLoader', require('./framework/directives/route-loader'));
 app.directive('lazySrc', require('./framework/directives/image-load'));
 
 app.filter('Filesize', require('./framework/filters/filesize'));
@@ -108,7 +109,10 @@ angular.element(document).ready(function() {
     nav.getNav(function(err, res) { 
       if (err) return alert(err);
       angular.nav = res; 
-      window.setTimeout(function() { angular.bootstrap(document, ['App']); }, 1000);
+      // Emulate a small timeout for the load of app
+      window.setTimeout(function() { 
+        angular.bootstrap(document, ['App']); 
+      }, 1000);
     }); 
   });
 });

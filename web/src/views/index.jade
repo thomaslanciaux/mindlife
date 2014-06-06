@@ -20,7 +20,6 @@ html(lang='en')
       .content(ng-view)
       .footer
         include mixins/footer
-      .route-loader(ng-show='routeLoading')
-        span Loading…
+      route-loader(rel='routeLoading')
 
     script(src='dist/index.js')
