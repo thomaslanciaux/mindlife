@@ -59,10 +59,12 @@ app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location,
         break;
        }
     }
+
+    // Cancel eventual async load related to prev route
+    if (window.stop !== undefined) window.stop();
   });
 
   $rootScope.$on('$routeChangeStart', function() {
-    if (window.stop !== undefined) window.stop();
     $rootScope.routeLoading = true;
   });
 
