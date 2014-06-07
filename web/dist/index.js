@@ -10338,8 +10338,11 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
             var field = $scope.sections[i].fields[j];
             switch(field.type) {
               case 'Checkboxes': field.submit_input = []; break;
-              case 'Select': field.submit_input = 0; break;
-              case 'Country': field.submit_input = 0; break;
+              case 'Select'    : field.submit_input = 0; break;
+              case 'Country'   : field.submit_input = 0; break;
+              case 'Slider'    : field.submit_input = (field.slider_ceiling-
+                                                       field.slider_floor)/2; 
+              break;
             }
           }
         });
@@ -34859,6 +34862,8 @@ app.config(require('./framework/config'));
 
 app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location,
                  $timeout) {
+  // Desactivate angular cache for templates (DEV ONLY)
+  $http.defaults.cache = false;
 
   $rootScope.appLoaded = true;
 

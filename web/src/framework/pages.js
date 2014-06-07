@@ -55,8 +55,11 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
             var field = $scope.sections[i].fields[j];
             switch(field.type) {
               case 'Checkboxes': field.submit_input = []; break;
-              case 'Select': field.submit_input = 0; break;
-              case 'Country': field.submit_input = 0; break;
+              case 'Select'    : field.submit_input = 0; break;
+              case 'Country'   : field.submit_input = 0; break;
+              case 'Slider'    : field.submit_input = (field.slider_ceiling-
+                                                       field.slider_floor)/2; 
+              break;
             }
           }
         });

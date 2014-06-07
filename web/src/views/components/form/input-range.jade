@@ -1,6 +1,14 @@
-span.form-slider(ng-switch-when='Slider')
-  input(ng-switch-when='Slider', type='range', 
+div.form-slider(ng-switch-when='Slider')
+  span.floor-label(ng-click='field.submit_input = field.slider_floor')
+    | {{field.slider_floor_label}} 
+  input(type='range', 
         ng-model='field.submit_input', 
+        ng-required='field.required',
         min='{{field.slider_floor}}',
         max='{{field.slider_ceiling}}',
-        step='{{field.slider_step}}')
+        step='{{field.slider_step}}') 
+  span.ceiling-label(ng-click='field.submit_input = field.slider_ceiling')
+    | {{field.slider_ceiling_label}} 
+  br
+  strong
+    | {{field.submit_input}}/{{field.slider_ceiling}}

@@ -30,6 +30,8 @@ app.config(require('./framework/config'));
 
 app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location,
                  $timeout) {
+  // Desactivate angular cache for templates (DEV ONLY)
+  $http.defaults.cache = false;
 
   $rootScope.appLoaded = true;
 
