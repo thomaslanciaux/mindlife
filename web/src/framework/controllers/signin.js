@@ -11,7 +11,9 @@ function initCtl($rootScope, $http, $cookieStore, $location, $scope) {
   $rootScope.pageTitle = 'Sign in';
 
   $scope.login = function() {
+    $rootScope.routeLoading = true;
     Auth.submitCredentials($http, $scope.credentials, function(err, res) {
+      $rootScope.routeLoading = false;
       if (err) return alert(err.flash);
       $rootScope.isLoggedIn = true;
       Session.set('authenticated', true);
