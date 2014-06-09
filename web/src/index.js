@@ -114,10 +114,7 @@ angular.element(document).ready(function() {
     nav.getNav(function(err, res) { 
       if (err) return alert(err);
       angular.nav = res; 
-      // Emulate a small timeout for the load of app
-      window.setTimeout(function() { 
-        angular.bootstrap(document, ['App']); 
-      }, 300);
+      angular.bootstrap(document, ['App']); 
     }); 
   });
 });

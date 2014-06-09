@@ -15,3 +15,22 @@ html:
 	jade src/views/*.jade -o ./views/
 	jade src/views/components/*.jade -o ./views/components
 	jade src/views/components/form/* -o ./views/components/form
+
+favicon:
+	inkscape -f src/app-icon/favicon.svg -w 16 -e assets/app-icon/favicon-16x16.png
+	inkscape -f src/app-icon/favicon.svg -w 32 -e assets/app-icon/favicon-32x32.png
+	inkscape -f src/app-icon/app-icon.svg -w 96 -e assets/app-icon/favicon-96x96.png
+	inkscape -f src/app-icon/app-icon.svg -w 160 -e assets/app-icon/favicon-160x160.png
+	inkscape -f src/app-icon/app-icon.svg -w 196 -e assets/app-icon/favicon-196x196.png
+	inkscape -f src/app-icon/app-icon.svg -w 57 -b "#34495e" -e assets/app-icon/apple-touch-icon-57x57.png
+	inkscape -f src/app-icon/app-icon.svg -w 60 -b "#34495e" -e assets/app-icon/apple-touch-icon-60x60.png
+	inkscape -f src/app-icon/app-icon.svg -w 72 -b "#34495e" -e assets/app-icon/apple-touch-icon-72x72.png
+	inkscape -f src/app-icon/app-icon.svg -w 76 -b "#34495e" -e assets/app-icon/apple-touch-icon-76x76.png
+	inkscape -f src/app-icon/app-icon.svg -w 114 -b "#34495e" -e assets/app-icon/apple-touch-icon-114x114.png
+	inkscape -f src/app-icon/app-icon.svg -w 120 -b "#34495e" -e assets/app-icon/apple-touch-icon-120x120.png
+	inkscape -f src/app-icon/app-icon.svg -w 144 -b "#34495e" -e assets/app-icon/apple-touch-icon-144x144.png
+	inkscape -f src/app-icon/app-icon.svg -w 152 -b "#34495e" -e assets/app-icon/apple-touch-icon-152x152.png
+	inkscape -f src/app-icon/app-icon.svg -w 70 -e assets/app-icon/mstile-70x70.png
+	inkscape -f src/app-icon/app-icon.svg -w 144 -e assets/app-icon/mstile-144x144.png
+	inkscape -f src/app-icon/app-icon.svg -w 150 -e assets/app-icon/mstile-150x150.png
+	inkscape -f src/app-icon/app-icon.svg -w 310 -e assets/app-icon/mstile-310x310.png
