@@ -21,6 +21,7 @@ app.directive('googleMap', require('./framework/directives/google-map'));
 app.directive('fileUpload', require('./framework/directives/file-upload'));
 app.directive('routeLoader', require('./framework/directives/route-loader'));
 app.directive('lazySrc', require('./framework/directives/image-load'));
+app.directive('toggleBtn', require('./framework/directives/toggle-button'));
 
 app.filter('Filesize', require('./framework/filters/filesize'));
 app.filter('componentsType', require('./framework/filters/components-type'));

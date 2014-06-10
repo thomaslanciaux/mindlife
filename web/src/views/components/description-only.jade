@@ -1,6 +1,6 @@
 div(ng-bind-html='section.description_only | hl:searchQuery', bind-once)
 div(ng-if='section.more_description') 
-  div(id='more-{{$index}}', 
+  div.toggle-content(id='more-{{$index}}', 
       ng-bind-html='section.more_description | hl:searchQuery', bind-once)
-  a(role='button', data-toggle='more-{{$index}}',
+  button.toggle-btn(role='button', rel='more-{{$index}}',
     ng-bind='section.button_more_description', bind-once)
