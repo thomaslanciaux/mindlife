@@ -16,13 +16,10 @@
     "url": "https://github.com/thomaslanciaux/mindlife/issues"
   },
   "homepage": "https://github.com/thomaslanciaux/mindlife",
-  "dependencies": {
+  "devDependencies": {
     "browserify": "^3.46.0",
     "nib": "^1.0.2",
     "stylus": "^0.44.0",
-    "svgo": "^0.4.4"
-  },
-  "devDependencies": {
     "lodash": "^2.4.1",
     "moment": "^2.6.0",
     "ngmin": "^0.5.0",

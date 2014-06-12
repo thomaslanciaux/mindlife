@@ -10,9 +10,9 @@ module.exports = function () {
       text = text.toString();
       search = search.toString();
       if (caseSensitive) {
-        return text.split(search).join('<span class="search-match">' + search + '</span>');
+        return text.split(search).join('<mark class="search-match">' + search + '</mark>');
       } else {
-        return text.replace(new RegExp(search, 'gi'), '<span class="search-match">$&</span>');
+        return text.replace(new RegExp(search, 'gi'), '<mark class="search-match">$&</mark>');
       }
     } else {
       return text;
