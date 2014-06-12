@@ -144,7 +144,6 @@ function initCtl($rootScope, $scope, sections, $location, $route) {
 
 function resolvePageSections($q, $http, $route) {
   var page = $route.current.params.page;
-  console.log(page);
   var url = '';
   if (page) {
     url = '/_restPage/' + page;
