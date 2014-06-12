@@ -1,20 +1,22 @@
+BIN=./node_modules/.bin
+
 all: js minjs css html
 	
 js:
-	browserify src/index.js -o dist/index.js
+	$(BIN)/browserify src/index.js -o dist/index.js
 
 minjs:
-	ngmin dist/index.js dist/index.js
-	uglifyjs dist/index.js -o dist/index.js
+	$(BIN)/ngmin dist/index.js dist/index.js
+	$(BIN)/uglifyjs dist/index.js -o dist/index.js
 
 css:
-	stylus -c --include ../node_modules/nib/lib ./src/css/index.styl -o dist/
+	$(BIN)/stylus -c --include ./node_modules/nib/lib ./src/css/index.styl -o dist/
 
 html:
-	jade src/views/index.jade -o .
-	jade src/views/*.jade -o ./views/
-	jade src/views/components/*.jade -o ./views/components
-	jade src/views/components/form/* -o ./views/components/form
+	$(BIN)/jade src/views/index.jade -o .
+	$(BIN)/jade src/views/*.jade -o ./views/
+	$(BIN)/jade src/views/components/*.jade -o ./views/components
+	$(BIN)/jade src/views/components/form/* -o ./views/components/form
 
 favicon:
 	inkscape -f src/app-icon/favicon.svg -w 16 -e assets/app-icon/favicon-16x16.png
