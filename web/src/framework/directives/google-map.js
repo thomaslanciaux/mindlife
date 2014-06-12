@@ -62,9 +62,7 @@ module.exports = function() {
     scope: true,
     link: function(scope, el, attrs) {
       if (APILoaded) return linkDirective(el, attrs);
-      queue.push(function() {
-        linkDirective(el, attrs);
-      });
+      queue.push(function() { linkDirective(el, attrs); });
       if (!injecting) injectGMap();
     }
   }

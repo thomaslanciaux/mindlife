@@ -1,7 +1,8 @@
 figure
   .wide-16-9
-    iframe(bind-once, frameborder='0', seamless, allowfullscreen,
-           ng-src="{{trustSrc(section.youtube_video_link + '?rel=0&autohide=1&showinfo=0')}}")
+    iframe(class='yt-player', bind-once,
+           frameborder='0', seamless, allowfullscreen,
+           ng-src="{{trustSrc(section.youtube_video_link + '?rel=0&autohide=1&showinfo=0&enablejsapi=1')}}")
   figcaption
     div(bind-once, ng-if='section.youtube_video_description',
       ng-bind-html='section.youtube_video_description | hl:searchQuery')
