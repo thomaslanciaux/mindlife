@@ -26,7 +26,6 @@
     "qwery": "^4.0.0",
     "randomstring": "^1.0.3",
     "stylus": "^0.44.0",
-    "uglify-js": "^2.4.14",
-    "uglifyjs": "^2.3.6"
+    "uglify-js": "^2.4.14"
   }
 }
