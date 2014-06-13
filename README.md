@@ -25,6 +25,16 @@ $ npm install
 
 ## Development
 
+All developped files are uncompressed and located in the `./src/` directory
+
+- `./src/css/` Stylus files (will be compiled in `./dist/index.css`)
+- `./src/views/` Jade files (will be compiled in `./views/`)
+- `./src/framework` Framework JS files (will be compiled in `./dist/index.js`)
+- `./src/index.js` App file (will be compiled in `./dist/index.js`)
+
+
+## Compilations
+
 make sure you are in the root directory of the app:
 
 Compile the app (compilation and minification of the JS files, compilation of
