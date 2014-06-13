@@ -27,10 +27,10 @@ $ npm install
 
 All developped files are uncompressed and located in the `./src/` directory
 
-- `./src/css/` Stylus files (will be compiled in `./dist/index.css`)
-- `./src/views/` Jade files (will be compiled in `./views/`)
-- `./src/framework` Framework JS files (will be compiled in `./dist/index.js`)
-- [`./src/index.js`](https://github.com/thomaslanciaux/mindlife/blob/master/src/index.js) App file (will be compiled in `./dist/index.js`)
+- [`./src/css/`](https://github.com/thomaslanciaux/mindlife/blob/master/src/css/) Stylus files (will be compiled in [`./dist/index.css`](https://github.com/thomaslanciaux/mindlife/blob/master/dist/))
+- [`./src/views/`](https://github.com/thomaslanciaux/mindlife/blob/master/src/views/) Jade files (will be compiled in [`./views/`](https://github.com/thomaslanciaux/mindlife/tree/master/views/))
+- [`./src/framework`](https://github.com/thomaslanciaux/mindlife/blob/master/src/framework/) Framework JS files (will be compiled in [`./dist/index.js`](https://github.com/thomaslanciaux/mindlife/tree/master/dist/))
+- [`./src/index.js`](https://github.com/thomaslanciaux/mindlife/blob/master/src/index.js) App file (will be compiled in [`./dist/index.js`](https://github.com/thomaslanciaux/mindlife/tree/master/dist/))
 
 
 ## Compilations
