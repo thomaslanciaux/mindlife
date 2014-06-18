@@ -22,8 +22,8 @@ html:
 	$(BIN)/jade src/views/components/form/* -o ./views/components/form
 
 favicon:
-	inkscape -f $(APPICON_SRC)/favicon.svg -w 16 -e $(APPICON_DIST)/favicon-16x16.png
-	inkscape -f $(APPICON_SRC)/favicon.svg -w 32 -e $(APPICON_DIST)/favicon-32x32.png
+	inkscape -f $(APPICON_SRC)/favicon.svg -w 16 -b "#ffffff" -e $(APPICON_DIST)/favicon-16x16.png
+	inkscape -f $(APPICON_SRC)/favicon.svg -w 32 -b "#ffffff" -e $(APPICON_DIST)/favicon-32x32.png
 	inkscape -f $(APPICON_SRC)/app-icon.svg -w 96 -e $(APPICON_DIST)/favicon-96x96.png
 	inkscape -f $(APPICON_SRC)/app-icon.svg -w 160 -e $(APPICON_DIST)/favicon-160x160.png
 	inkscape -f $(APPICON_SRC)/app-icon.svg -w 196 -e $(APPICON_DIST)/favicon-196x196.png
