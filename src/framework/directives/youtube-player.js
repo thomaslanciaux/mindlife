@@ -16,7 +16,7 @@ function injectYT() {
 window.onYouTubePlayerAPIReady = function() {
   APILoaded = true;
   var cb = null;
-  while (cb = queue.pop()) cb();
+  while(cb = queue.pop()) cb();
 }
 
 function onPlayerStateChange(e) {
@@ -38,6 +38,7 @@ module.exports = function() {
     restrict: 'C',
     scope: true,
     link: function(scope, el, attrs) {
+      console.log(el);
       if (APILoaded) return linkDirective(el[0].id);
       queue.push(function() { linkDirective(el[0].id); });
       if (!injecting) injectYT();

@@ -1,6 +1,6 @@
 figure
   .wide-16-9
-    iframe(class='yt-player', bind-once,
+    iframe(class='yt-player', bind-once, id='yt-player-{{$index}}', 
            frameborder='0', seamless, allowfullscreen,
            ng-src="{{trustSrc(section.youtube_video_link + '?rel=0&autohide=1&showinfo=0&enablejsapi=1')}}")
   figcaption
