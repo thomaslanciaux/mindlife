@@ -31,7 +31,7 @@ app.filter('hl', require('./framework/filters/highlight'));
 app.config(require('./framework/config'));
 
 app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location,
-                 $timeout) {
+                 $timeout, $anchorScroll) {
   // Desactivate angular cache for templates (DEV ONLY)
   $http.defaults.cache = false;
 

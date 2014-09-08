@@ -2,12 +2,11 @@
   h1.page-title(bind-once ng-bind='pageTitle', ng-if='pageTitle')
   include components/search-results
   section.section(ng-repeat='section in sections | filter:filter')
-    header.section-header(ng-if='section.title')
+    header.section-header(ng-if='section.title', id='{{section.anchor}}')
       h1
         small(ng-if="pageType === 'search' && sections.length > 1", 
               ng-bind="$index + 1 + ' '")
-        strong(ng-id='{{section.anchor}}', bind-once, 
-               ng-bind-html='section.title | hl:searchQuery')
+        strong(bind-once, ng-bind-html='section.title | hl:searchQuery')
     .section-content
 
       div(ng-if="section.type === 'Questionnaire' || section.type == 'Form'",

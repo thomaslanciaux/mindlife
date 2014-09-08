@@ -6,16 +6,6 @@ nav.navbar.navbar-default.navbar-fixed-top
       a(ng-href='#{{item.path}}', ng-class='navClass(item.path)',
         ng-bind='item.label')
 
-    li(ng-switch='isLoggedIn')
-      span(ng-switch-when='true')
-        a(ng-class="navClass('dashboard')", 
-          ng-href='#/{{lang}}/dashboard') Dashboard
-        br
-        a(ng-class="navClass('signout')", 
-          ng-href='#/{{lang}}/signout') Sign out 
-      a(ng-switch-default, ng-class="navClass('signin')",
-        ng-href='#/{{lang}}/signin') Sign in
-
   form.navbar-form.navbar-right(ng-submit="search()")
     .input-group
       input.form-control.input-sm(type='search', 
