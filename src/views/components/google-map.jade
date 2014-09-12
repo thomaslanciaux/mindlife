@@ -2,7 +2,8 @@ figure
   google-map(latlng='{{section.map_latlng}}',
              marker='{{section.map_marker}}',
              zoom='{{section.map_zoom}}',
-             mtitle='{{section.map_name}}')
+             mtitle='{{section.map_name}}',
+             class='negative-margin')
   figcaption
     h3(ng-bind-html='section.map_name | hl:searchQuery', bind-once)
     p(ng-if='section.map_description',

@@ -8,24 +8,26 @@ function drawImg(el, src) {
   }
 }
 
+var scrollElt = document.querySelector('#app');
+
 module.exports = function($rootScope) {
   return {
     restrict: 'A',
     scope: true,
     link: function(scope, el, attrs) {
       var loaded = false;
-      if (el[0].offsetTop < document.body.scrollTop + window.innerHeight) {
+      if (el[0].offsetTop < scrollElt.scrollTop + window.innerHeight) {
         drawImg(el, attrs.lazySrc);
         return loaded = true;
       }
       var listener = function() {
-        var pos = document.body.scrollTop + window.innerHeight;
+        var pos = scrollElt.scrollTop + window.innerHeight;
         if (pos + 100 < el[0].offsetTop || loaded) return;
         drawImg(el, attrs.lazySrc);
         loaded = true;
-        window.removeEventListener('scroll', listener, false);
+        scrollElt.removeEventListener('scroll', listener, false);
       }
-      window.addEventListener('scroll', listener, false);
+      scrollElt.addEventListener('scroll', listener, false);
     }
   }
 }

@@ -3,8 +3,92 @@ body
   height 100%
 
 body
-  position relative
+  overflow hidden
   margin 0
 
+$v-scroller
+  overflow hidden
+  overflow-y auto
+  -webkit-overflow-scrolling touch
+
 .app
-  margin 0 2%
+  position absolute
+  top 0
+  left 0
+  bottom 0
+  right 0
+  padding-left 20rem
+  @extends $v-scroller
+
+.header
+  position fixed
+  top 0
+  left 0
+  bottom 0
+  width 20rem
+  border-right 1px solid #ccc
+  box-sizing border-box
+  z-index 99
+  background #fff
+  @extends $v-scroller
+
+.content
+  margin 0 auto
+  padding 0 1rem
+  max-width 600px
+
+.footer
+  border-top 1px solid #ccc
+  padding 1rem
+
+.screen
+  position fixed
+  top 0
+  left 0
+  bottom 0
+  right 0
+  z-index 9999
+  padding 2rem 1rem
+  box-sizing border-box
+  background #fff
+  background rgba(#fff, .98)
+  @extends $v-scroller
+  .btn-close
+    position absolute
+    top 0
+    right 1rem
+    color #999
+    font-size 2rem
+
+.screen-hidden
+  top 0
+  left -100%
+  right auto
+  width 100%
+
+.page-title
+  color #999
+
+.gallery
+  border-right 10% solid white
+
+@media screen and (max-width: 750px)
+  .app
+    top 46px
+    padding-left 0
+  .header
+    top 0
+    left 0
+    right 0
+    height 46px
+    border-right 0
+    border-bottom 1px solid #ccc
+    line-height 46px
+    width 100%
+    overflow hidden
+    .navbar-brand
+      margin 0
+      text-align center
+      font-size 1.5rem
+    .navbar
+      display none

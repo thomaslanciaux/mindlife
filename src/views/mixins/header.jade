@@ -1,20 +1,2 @@
 h1.navbar-brand(ng-bind='envVars.website_name')
-
-nav.navbar.navbar-default.navbar-fixed-top
-  ul
-    li(ng-repeat='item in nav')
-      a(ng-href='#{{item.path}}', ng-class='navClass(item.path)',
-        ng-bind='item.label')
-
-  form.navbar-form.navbar-right(ng-submit="search()")
-    .input-group
-      input.form-control.input-sm(type='search', 
-                                  name='searchInput', 
-                                  ng-model='searchString',
-                                  autocomplete='off',
-                                  placeholder='Type your query here…',
-                                  spellcheck='false',
-                                  required
-                                 ) 
-      span.form-group-btn
-        button.btn.btn-primary(type='submit') Search
+include navbar

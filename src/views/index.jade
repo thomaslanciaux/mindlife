@@ -15,9 +15,10 @@ html(lang='en')
     #app.app(ng-class='{loaded: appLoaded}', style='display:none')
       .header
         include mixins/header
-      .content(ng-view)
+      #content.content(ng-view)
       .footer
         include mixins/footer
       route-loader(rel='routeLoading')
+      include mixins/search
 
     script(src='dist/index.js')

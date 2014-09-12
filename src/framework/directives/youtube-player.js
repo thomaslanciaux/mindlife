@@ -38,7 +38,6 @@ module.exports = function() {
     restrict: 'C',
     scope: true,
     link: function(scope, el, attrs) {
-      console.log(el);
       if (APILoaded) return linkDirective(el[0].id);
       queue.push(function() { linkDirective(el[0].id); });
       if (!injecting) injectYT();

@@ -1,0 +1,19 @@
+form#search.screen(ng-submit="search()")
+  a.btn.btn-close(data-screen='search', title='Close') X
+  legend
+    strong 
+      | Search 
+      span(ng-bind='envVars.website_name')
+  .input-group
+    input.form-control.input-sm(type='search', 
+                                id='search-input',
+                                name='searchInput', 
+                                ng-model='searchString',
+                                autocomplete='off',
+                                placeholder='Type your query here…',
+                                spellcheck='false',
+                                required
+                               ) 
+    .span.info 
+      | Hit "enter" key to get results for your query
+    button.btn.btn-primary(type='submit') Search

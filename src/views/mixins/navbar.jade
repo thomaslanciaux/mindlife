@@ -1,0 +1,8 @@
+nav.navbar
+  ul
+    li(ng-repeat='item in nav', ng-if="item.label !== 'Home'")
+      a(ng-href='#{{item.path}}', 
+        ng-class='navClass(item.path)',
+        ng-bind='item.label')
+    li
+      label.screen-ctl(for='search-input', data-screen='search') Search

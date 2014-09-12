@@ -23,6 +23,8 @@ app.directive('routeLoader', require('./framework/directives/route-loader'));
 app.directive('lazySrc', require('./framework/directives/image-load'));
 app.directive('toggleBtn', require('./framework/directives/toggle-button'));
 app.directive('ytPlayer', require('./framework/directives/youtube-player'));
+app.directive('negativeMargin', require('./framework/directives/negative-margin'));
+app.directive('screen', require('./framework/directives/screen'));
 
 app.filter('Filesize', require('./framework/filters/filesize'));
 app.filter('componentsType', require('./framework/filters/components-type'));
@@ -51,7 +53,7 @@ app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location,
     $rootScope.activeNav = active;
 
     // Go to top of the page
-    $timeout(function() { document.body.scrollTop = 0; });
+    $timeout(function() { document.querySelector('#app').scrollTop = 0; });
 
     // Get active page title
     if ($rootScope.nav && active) {
@@ -88,6 +90,7 @@ app.run(function($rootScope, $http, $cookieStore, $sce, $route, $location,
     var query = $rootScope.searchString;
     if (!query || query.length < 2) return;
     $location.search('');
+    document.getElementById('search').classList.add('screen-hidden');
     $location.path('/' + $rootScope.lang + '/search/' + query);
   }
 
